@@ -2,8 +2,9 @@ export KUBECONFIG=$(pwd)/tools/devmode-kubeconfig
 export OBOT_DEV_MODE=true
 export WORKSPACE_PROVIDER_IGNORE_WORKSPACE_NOT_FOUND=true
 
-# Custom tool registry for Entra ID auth provider
-export OBOT_SERVER_TOOL_REGISTRIES=github.com/obot-platform/tools,./tools
+# Custom tool registry - forked obot-platform/tools with EntraID and Keycloak auth providers
+# Contains complete tool registry structure (tools, system, modelProviders, authProviders)
+export OBOT_SERVER_TOOL_REGISTRIES=./custom-obot-tools
 
 # Default MCP catalog (required for registry entries to appear)
 export OBOT_SERVER_DEFAULT_MCPCATALOG_PATH=https://github.com/obot-platform/mcp-catalog

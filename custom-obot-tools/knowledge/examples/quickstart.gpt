@@ -1,0 +1,3 @@
+tools: github.com/jrmatherly/obot-entraid/custom-obot-tools/knowledge
+
+Answer any question using context retrieved from knowledge.

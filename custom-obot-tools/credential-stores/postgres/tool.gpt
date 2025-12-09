@@ -1,0 +1,31 @@
+Name: PostgreSQL Credential Store Helper
+Share Tools: store, get, list, erase
+
+---
+name: store
+tools: service
+
+#!http://service.daemon.gptscript.local/store
+
+---
+name: get
+tools: service
+
+#!http://service.daemon.gptscript.local/get
+
+---
+name: list
+tools: service
+
+#!http://service.daemon.gptscript.local/list
+
+---
+name: erase
+tools: service
+
+#!http://service.daemon.gptscript.local/erase
+
+---
+name: service
+
+#!sys.daemon ${GPTSCRIPT_TOOL_DIR}/bin/gptscript-go-tool

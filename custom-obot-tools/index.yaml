@@ -1,0 +1,73 @@
+tools:
+  images:
+    reference: ./images
+  time:
+    reference: ./time
+  workspace-files:
+    reference: ./workspace-files
+  tasks:
+    reference: ./tasks
+  knowledge:
+    reference: ./knowledge
+  threads:
+    reference: ./threads
+  memory:
+    reference: ./memory
+  file-summarizer:
+    reference: ./file-summarizer
+
+system:
+  knowledge-retrieval:
+    reference: ./knowledge
+  knowledge-ingest:
+    reference: ./knowledge/ingest.gpt
+  knowledge-load:
+    reference: ./knowledge/load.gpt
+  knowledge-delete:
+    reference: ./knowledge/delete.gpt
+  knowledge-delete-file:
+    reference: ./knowledge/delete-file.gpt
+  workflow:
+    reference: ./workflow
+  result-formatter:
+    reference: ./result-formatter
+  obot-model-provider:
+    reference: ./obot-model-provider
+  existing-credential:
+    reference: ./existing-credential
+  tasks-workflow:
+    reference: ./tasks-workflow
+  task-invoke:
+    reference: ./task-invoke
+  loop-data:
+    reference: ./loop-data
+
+modelProviders:
+  openai-model-provider:
+    reference: ./openai-model-provider
+  anthropic-model-provider:
+    reference: ./anthropic-model-provider-go
+  ollama-model-provider:
+    reference: ./ollama-model-provider
+  groq-model-provider:
+    reference: ./groq-model-provider
+  voyage-model-provider:
+    reference: ./voyage-model-provider
+  vllm-model-provider:
+    reference: ./vllm-model-provider
+  xai-model-provider:
+    reference: ./xai-model-provider
+  deepseek-model-provider:
+    reference: ./deepseek-model-provider
+  generic-openai-model-provider:
+    reference: ./generic-openai-model-provider
+
+authProviders:
+  github-auth-provider:
+    reference: ./github-auth-provider
+  google-auth-provider:
+    reference: ./google-auth-provider
+  entra-auth-provider:
+    reference: ./entra-auth-provider
+  keycloak-auth-provider:
+    reference: ./keycloak-auth-provider

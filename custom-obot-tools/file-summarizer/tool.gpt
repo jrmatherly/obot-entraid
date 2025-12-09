@@ -1,0 +1,15 @@
+Name: File Summarizer
+Description: Summarize large files
+Credential: sys.model.provider.credential
+Params: input_file: (Required) Name of the file in the workspace to summarize.
+Params: output_file: (Optional) Name of the file to save the summary, default to empty string. If not provided, a summary file will be created in the same directory as the input file. To print to the console, set this to "NONE".
+
+#!/usr/bin/env python3 ${GPTSCRIPT_TOOL_DIR}/main.py
+
+---
+!metadata:*:category
+Utilities
+
+---
+!metadata:*:icon
+https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2/assets/duotone/note-pencil-duotone.svg

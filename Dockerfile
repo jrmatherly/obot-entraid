@@ -17,7 +17,8 @@ RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
   --mount=type=cache,target=/root/.cache/uv \
   --mount=type=cache,target=/root/go/pkg/mod \
   make all && \
-  cd tools/entra-auth-provider && make build
+  cd custom-obot-tools/entra-auth-provider && make build && \
+  cd ../keycloak-auth-provider && make build
 
 FROM cgr.dev/chainguard/wolfi-base:latest AS final-base
 RUN addgroup -g 70 postgres && \
@@ -72,13 +73,10 @@ COPY --link --from=tools /obot-tools /obot-tools
 COPY --link --from=enterprise-tools /obot-tools /obot-tools
 COPY --link --from=provider /obot-tools /obot-tools
 
-# Copy custom Entra ID auth provider to separate directory to avoid conflicts
-# CRITICAL: Must include placeholder-credential - referenced by tool.gpt via "Credential: ../placeholder-credential"
-# CRITICAL: Binary must be in bin/ subdirectory - tool.gpt references ${GPTSCRIPT_TOOL_DIR}/bin/gptscript-go-tool
-COPY --from=bin /app/tools/index.yaml /obot-tools-custom/
-COPY --from=bin /app/tools/placeholder-credential/ /obot-tools-custom/placeholder-credential/
-COPY --from=bin /app/tools/entra-auth-provider/tool.gpt /obot-tools-custom/entra-auth-provider/
-COPY --from=bin /app/tools/entra-auth-provider/bin/gptscript-go-tool /obot-tools-custom/entra-auth-provider/bin/
+# Copy custom-obot-tools (forked from obot-platform/tools with EntraID and Keycloak providers added)
+# This directory has the COMPLETE index.yaml structure with tools, system, modelProviders, and authProviders
+# Binaries for entra-auth-provider and keycloak-auth-provider are built during the build stage
+COPY --from=bin /app/custom-obot-tools/ /obot-tools-custom/
 COPY --chmod=0755 /tools/combine-envrc.sh /
 RUN /combine-envrc.sh && rm /combine-envrc.sh
 COPY --from=provider /bin/*-encryption-provider /bin/
@@ -92,10 +90,9 @@ ENV XDG_CACHE_HOME=/data/cache
 ENV OBOT_SERVER_AGENTS_DIR=/agents
 ENV TERM=vt100
 ENV OBOT_CONTAINER_ENV=true
-# Include both upstream tools and custom Entra ID auth provider registries
-# Upstream tools (GitHub, Google auth providers) + Custom (EntraID, Keycloak)
-# Note: /obot-tools/tools contains the index.yaml, not /obot-tools root
-ENV OBOT_SERVER_TOOL_REGISTRIES=/obot-tools/tools,/obot-tools-custom
+# Custom tool registry - complete fork of obot-platform/tools with EntraID and Keycloak auth providers
+# Contains full tool registry structure: tools, system, modelProviders, authProviders
+ENV OBOT_SERVER_TOOL_REGISTRIES=/obot-tools-custom
 WORKDIR /data
 VOLUME /data
 ENTRYPOINT ["run.sh"]
