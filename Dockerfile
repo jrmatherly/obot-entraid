@@ -73,7 +73,9 @@ COPY --link --from=enterprise-tools /obot-tools /obot-tools
 COPY --link --from=provider /obot-tools /obot-tools
 
 # Copy custom Entra ID auth provider to separate directory to avoid conflicts
+# CRITICAL: Must include placeholder-credential - referenced by tool.gpt via "Credential: ../placeholder-credential"
 COPY --from=bin /app/tools/index.yaml /obot-tools-custom/
+COPY --from=bin /app/tools/placeholder-credential/ /obot-tools-custom/placeholder-credential/
 COPY --from=bin /app/tools/entra-auth-provider/tool.gpt /obot-tools-custom/entra-auth-provider/
 COPY --from=bin /app/tools/entra-auth-provider/bin/gptscript-go-tool /obot-tools-custom/entra-auth-provider/
 COPY --chmod=0755 /tools/combine-envrc.sh /
