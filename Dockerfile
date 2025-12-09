@@ -74,10 +74,11 @@ COPY --link --from=provider /obot-tools /obot-tools
 
 # Copy custom Entra ID auth provider to separate directory to avoid conflicts
 # CRITICAL: Must include placeholder-credential - referenced by tool.gpt via "Credential: ../placeholder-credential"
+# CRITICAL: Binary must be in bin/ subdirectory - tool.gpt references ${GPTSCRIPT_TOOL_DIR}/bin/gptscript-go-tool
 COPY --from=bin /app/tools/index.yaml /obot-tools-custom/
 COPY --from=bin /app/tools/placeholder-credential/ /obot-tools-custom/placeholder-credential/
 COPY --from=bin /app/tools/entra-auth-provider/tool.gpt /obot-tools-custom/entra-auth-provider/
-COPY --from=bin /app/tools/entra-auth-provider/bin/gptscript-go-tool /obot-tools-custom/entra-auth-provider/
+COPY --from=bin /app/tools/entra-auth-provider/bin/gptscript-go-tool /obot-tools-custom/entra-auth-provider/bin/
 COPY --chmod=0755 /tools/combine-envrc.sh /
 RUN /combine-envrc.sh && rm /combine-envrc.sh
 COPY --from=provider /bin/*-encryption-provider /bin/
