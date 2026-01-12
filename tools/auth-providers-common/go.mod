@@ -4,7 +4,7 @@ go 1.25.5
 
 replace github.com/oauth2-proxy/oauth2-proxy/v7 => github.com/obot-platform/oauth2-proxy/v7 v7.0.0-20250124171719-bb98e29a2903
 
-require github.com/oauth2-proxy/oauth2-proxy/v7 v7.8.1
+require github.com/oauth2-proxy/oauth2-proxy/v7 v7.13.0
 
 require (
 	cloud.google.com/go/auth v0.10.1 // indirect
