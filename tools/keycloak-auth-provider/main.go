@@ -17,10 +17,13 @@ import (
 	"github.com/hashicorp/golang-lru/v2/expirable"
 	oauth2proxy "github.com/oauth2-proxy/oauth2-proxy/v7"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/options"
+	sessionsapi "github.com/oauth2-proxy/oauth2-proxy/v7/pkg/apis/sessions"
 	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/validation"
 	"github.com/obot-platform/obot-entraid/tools/keycloak-auth-provider/pkg/profile"
+	"github.com/obot-platform/tools/auth-providers-common/pkg/database"
 	"github.com/obot-platform/tools/auth-providers-common/pkg/env"
 	"github.com/obot-platform/tools/auth-providers-common/pkg/groups"
+	"github.com/obot-platform/tools/auth-providers-common/pkg/secrets"
 	"github.com/obot-platform/tools/auth-providers-common/pkg/state"
 	"github.com/sahilm/fuzzy"
 )
@@ -42,7 +45,8 @@ type Options struct {
 	KeycloakRealm            string `env:"OBOT_KEYCLOAK_AUTH_PROVIDER_REALM"` // e.g., "obot"
 	ObotServerURL            string `env:"OBOT_SERVER_PUBLIC_URL,OBOT_SERVER_URL"`
 	PostgresConnectionDSN    string `env:"OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN" optional:"true"`
-	AuthCookieSecret         string `env:"OBOT_AUTH_PROVIDER_COOKIE_SECRET"`
+	// Cookie secret - provider-specific takes precedence, falls back to shared secret
+	AuthCookieSecret         string `env:"OBOT_KEYCLOAK_AUTH_PROVIDER_COOKIE_SECRET,OBOT_AUTH_PROVIDER_COOKIE_SECRET"`
 	AuthEmailDomains         string `env:"OBOT_AUTH_PROVIDER_EMAIL_DOMAINS" default:"*"`
 	AuthTokenRefreshDuration string `env:"OBOT_AUTH_PROVIDER_TOKEN_REFRESH_DURATION" optional:"true" default:"1h"`
 	AllowedGroups            string `env:"OBOT_KEYCLOAK_AUTH_PROVIDER_ALLOWED_GROUPS" optional:"true"`
@@ -51,6 +55,27 @@ type Options struct {
 	// Admin service account credentials for Keycloak Admin API (optional - uses ClientID/ClientSecret if not provided)
 	AdminClientID     string `env:"OBOT_KEYCLOAK_AUTH_PROVIDER_ADMIN_CLIENT_ID" optional:"true"`
 	AdminClientSecret string `env:"OBOT_KEYCLOAK_AUTH_PROVIDER_ADMIN_CLIENT_SECRET" optional:"true"`
+}
+
+// sessionManagerAdapter implements state.SessionManager interface
+// This adapter wraps OAuthProxy methods via closures to satisfy the interface
+// without needing to import the OAuthProxy type (which is in package main)
+type sessionManagerAdapter struct {
+	loadSession func(*http.Request) (*sessionsapi.SessionState, error)
+	serveHTTP   func(http.ResponseWriter, *http.Request)
+	cookieOpts  *options.Cookie
+}
+
+func (s *sessionManagerAdapter) LoadCookiedSession(r *http.Request) (*sessionsapi.SessionState, error) {
+	return s.loadSession(r)
+}
+
+func (s *sessionManagerAdapter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.serveHTTP(w, r)
+}
+
+func (s *sessionManagerAdapter) GetCookieOptions() *options.Cookie {
+	return s.cookieOpts
 }
 
 func main() {
@@ -78,6 +103,14 @@ func main() {
 
 	if refreshDuration < 0 {
 		fmt.Printf("ERROR: keycloak-auth-provider: token refresh duration must be greater than 0\n")
+		os.Exit(1)
+	}
+
+	// Validate cookie secret entropy and format
+	if err := secrets.ValidateCookieSecret(opts.AuthCookieSecret); err != nil {
+		fmt.Printf("ERROR: keycloak-auth-provider: %v\n", err)
+		fmt.Printf("Generate a valid secret with: openssl rand -base64 32\n")
+		fmt.Printf("Or set OBOT_KEYCLOAK_AUTH_PROVIDER_COOKIE_SECRET for provider-specific secret\n")
 		os.Exit(1)
 	}
 
@@ -142,9 +175,25 @@ func main() {
 
 	// Session storage configuration
 	if opts.PostgresConnectionDSN != "" {
+		fmt.Printf("INFO: keycloak-auth-provider: validating PostgreSQL connection...\n")
+
+		if err := database.ValidatePostgresConnection(opts.PostgresConnectionDSN); err != nil {
+			fmt.Printf("ERROR: keycloak-auth-provider: PostgreSQL connection failed: %v\n", err)
+			fmt.Printf("ERROR: Set session storage to PostgreSQL but cannot connect\n")
+			fmt.Printf("ERROR: Check OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN\n")
+			os.Exit(1)
+		}
+
+		fmt.Printf("INFO: keycloak-auth-provider: PostgreSQL connection validated successfully\n")
+
 		oauthProxyOpts.Session.Type = options.PostgresSessionStoreType
 		oauthProxyOpts.Session.Postgres.ConnectionDSN = opts.PostgresConnectionDSN
 		oauthProxyOpts.Session.Postgres.TableNamePrefix = "keycloak_"
+
+		fmt.Printf("INFO: keycloak-auth-provider: using PostgreSQL session storage (table prefix: keycloak_)\n")
+	} else {
+		fmt.Printf("INFO: keycloak-auth-provider: using cookie-only session storage\n")
+		fmt.Printf("WARNING: Cookie-only sessions do not persist across pod restarts\n")
 	}
 
 	// Cookie configuration
@@ -244,6 +293,19 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Create SessionManager adapter for state package
+	// This adapter wraps the OAuthProxy instance to satisfy the state.SessionManager interface
+	// We use a closure-based approach because OAuthProxy is in package main and cannot be imported
+	sessionManager := &sessionManagerAdapter{
+		loadSession: func(r *http.Request) (*sessionsapi.SessionState, error) {
+			return oauthProxy.LoadCookiedSession(r)
+		},
+		serveHTTP: func(w http.ResponseWriter, r *http.Request) {
+			oauthProxy.ServeHTTP(w, r)
+		},
+		cookieOpts: oauthProxy.CookieOptions,
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "9999"
@@ -278,7 +340,7 @@ func main() {
 	})
 
 	// State endpoint - returns auth state with group enrichment from token claims
-	mux.HandleFunc("/obot-get-state", getState(oauthProxy, allowedGroups, groupCacheTTL))
+	mux.HandleFunc("/obot-get-state", getState(sessionManager, allowedGroups, groupCacheTTL))
 
 	// User info endpoint - fetches profile from Keycloak userinfo endpoint
 	mux.HandleFunc("/obot-get-user-info", func(w http.ResponseWriter, r *http.Request) {
@@ -335,13 +397,13 @@ func main() {
 }
 
 // getState returns an HTTP handler that wraps the state.ObotGetState with group enrichment from Keycloak token
-func getState(p *oauth2proxy.OAuthProxy, allowedGroups []string, groupCacheTTL time.Duration) http.HandlerFunc {
+func getState(sm state.SessionManager, allowedGroups []string, groupCacheTTL time.Duration) http.HandlerFunc {
 	// Cache for user groups to avoid repeated token parsing
 	groupCache := expirable.NewLRU[string, []string](5000, nil, groupCacheTTL)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Get base state from oauth2-proxy
-		ss, err := getSerializableStateFromRequest(p, r)
+		ss, err := getSerializableStateFromRequest(sm, r)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("failed to get state: %v", err), http.StatusInternalServerError)
 			return
@@ -397,7 +459,7 @@ func getState(p *oauth2proxy.OAuthProxy, allowedGroups []string, groupCacheTTL t
 }
 
 // getSerializableStateFromRequest decodes the request and gets state from oauth2-proxy
-func getSerializableStateFromRequest(p *oauth2proxy.OAuthProxy, r *http.Request) (state.SerializableState, error) {
+func getSerializableStateFromRequest(sm state.SessionManager, r *http.Request) (state.SerializableState, error) {
 	var sr state.SerializableRequest
 	if err := json.NewDecoder(r.Body).Decode(&sr); err != nil {
 		return state.SerializableState{}, fmt.Errorf("failed to decode request body: %v", err)
@@ -409,7 +471,7 @@ func getSerializableStateFromRequest(p *oauth2proxy.OAuthProxy, r *http.Request)
 	}
 	reqObj.Header = sr.Header
 
-	return state.GetSerializableState(p, reqObj)
+	return state.GetSerializableState(sm, reqObj)
 }
 
 // fetchUserProfile fetches user profile from Keycloak's userinfo endpoint
