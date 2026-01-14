@@ -2,7 +2,6 @@
 	import Layout from '$lib/components/Layout.svelte';
 	import McpServerCompositeInfo from '$lib/components/admin/McpServerCompositeInfo.svelte';
 	import McpServerK8sInfo from '$lib/components/admin/McpServerK8sInfo.svelte';
-	import McpServerRemoteInfo from '$lib/components/admin/McpServerRemoteInfo.svelte';
 	import McpServerActions from '$lib/components/mcp/McpServerActions.svelte';
 	import { DEFAULT_MCP_CATALOG_ID, PAGE_TRANSITION_DURATION } from '$lib/constants';
 	import {
@@ -53,17 +52,7 @@
 	{/snippet}
 	<div class="flex flex-col gap-6 pb-8" in:fly={{ x: 100, delay: duration, duration }}>
 		{#if mcpServerId}
-			{#if catalogEntry?.manifest.runtime === 'remote'}
-				<McpServerRemoteInfo
-					{mcpServerId}
-					name={catalogEntryName}
-					{connectedUsers}
-					entity="catalog"
-					entityId={DEFAULT_MCP_CATALOG_ID}
-					{catalogEntry}
-					{compositeParentName}
-				/>
-			{:else if catalogEntry?.manifest.runtime === 'composite'}
+			{#if catalogEntry?.manifest.runtime === 'composite'}
 				<McpServerCompositeInfo
 					{mcpServerId}
 					name={catalogEntryName}
@@ -79,6 +68,7 @@
 					{connectedUsers}
 					readonly={profile.current.isAdminReadonly?.()}
 					{catalogEntry}
+					{mcpServer}
 					{compositeParentName}
 				/>
 			{/if}

@@ -2,8 +2,9 @@ module github.com/obot-platform/obot-entraid/tools/keycloak-auth-provider
 
 go 1.25.5
 
-// Use obot-platform's fork of oauth2-proxy with custom enhancements
-replace github.com/oauth2-proxy/oauth2-proxy/v7 => github.com/obot-platform/oauth2-proxy/v7 v7.0.0-20251112215948-0f320f3720bb
+// Use obot-platform's fork of oauth2-proxy with custom enhancements (branch: v7.13.0-obot1)
+// Pinned to v7.0.0-20251212211434-21828db641ee (package oauth2proxy, not main)
+replace github.com/oauth2-proxy/oauth2-proxy/v7 => github.com/obot-platform/oauth2-proxy/v7 v7.0.0-20251212211434-21828db641ee
 
 // Use local auth-providers-common with new packages (groups)
 replace github.com/obot-platform/tools/auth-providers-common => ../auth-providers-common
@@ -12,7 +13,8 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.3
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/oauth2-proxy/oauth2-proxy/v7 v7.8.1
-	github.com/obot-platform/tools/auth-providers-common v0.0.0-20251106020319-94c074309ab3
+	github.com/obot-platform/tools/auth-providers-common v0.0.0-20251224150716-751b37797a83
+	github.com/sahilm/fuzzy v0.1.1
 )
 
 require (
@@ -41,12 +43,13 @@ require (
 	github.com/googleapis/gax-go/v2 v2.15.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
-	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
-	github.com/jackc/pgx/v5 v5.8.0 // indirect
-	github.com/jackc/puddle/v2 v2.2.2 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/pgx/v5 v5.5.4 // indirect
+	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/justinas/alice v1.2.0 // indirect
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/mbland/hmacauth v0.0.0-20170912233209-44256dfd4bfa // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
@@ -62,6 +65,7 @@ require (
 	github.com/spf13/cast v1.9.2 // indirect
 	github.com/spf13/pflag v1.0.7 // indirect
 	github.com/spf13/viper v1.20.1 // indirect
+	github.com/stretchr/testify v1.11.1 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect

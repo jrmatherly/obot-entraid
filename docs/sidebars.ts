@@ -58,6 +58,7 @@ const sidebars = {
       items: [
         "configuration/auth-providers",
         "configuration/entra-id-authentication",
+        "configuration/keycloak-authentication",
         "configuration/model-providers",
         "configuration/workspace-provider",
         "configuration/user-roles",
@@ -78,6 +79,15 @@ const sidebars = {
             "configuration/encryption-providers/custom-provider",
           ],
         },
+        {
+          type: "category",
+          label: "Operations",
+          items: [
+            "operations/secret-rotation",
+            "operations/auth-provider-testing",
+            "operations/caching-strategy",
+          ],
+        },
       ],
     },
     "enterprise/overview",
@@ -86,6 +96,8 @@ const sidebars = {
       label: "Contributing",
       items: [
         "contributing/upstream-merge-process",
+        "contributing/documentation-versioning",
+        "contributing/local-development",
       ],
     },
     "faq",

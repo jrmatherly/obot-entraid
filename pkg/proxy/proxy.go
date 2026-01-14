@@ -18,6 +18,7 @@ import (
 	"github.com/obot-platform/obot/pkg/api"
 	"github.com/obot-platform/obot/pkg/auth"
 	"github.com/obot-platform/obot/pkg/gateway/server/dispatcher"
+	"github.com/obot-platform/obot/pkg/metrics"
 	"github.com/obot-platform/obot/pkg/system"
 	"k8s.io/apiserver/pkg/authentication/authenticator"
 	"k8s.io/apiserver/pkg/authentication/user"
@@ -255,6 +256,9 @@ type serializableState struct {
 }
 
 func (p *Proxy) authenticateRequest(req *http.Request) (*authenticator.Response, bool, error) {
+	// Track authentication attempt start time for metrics
+	startTime := time.Now()
+
 	sr := serializableRequest{
 		Method: req.Method,
 		URL:    req.URL.String(),
@@ -263,25 +267,38 @@ func (p *Proxy) authenticateRequest(req *http.Request) (*authenticator.Response,
 
 	srJSON, err := json.Marshal(sr)
 	if err != nil {
+		metrics.RecordAuthenticationError(p.name)
 		return nil, false, err
 	}
 
 	stateRequest, err := http.NewRequest(http.MethodPost, p.url+"/obot-get-state", strings.NewReader(string(srJSON)))
 	if err != nil {
+		metrics.RecordAuthenticationError(p.name)
 		return nil, false, err
 	}
 
 	stateResponse, err := http.DefaultClient.Do(stateRequest)
 	if err != nil {
+		metrics.RecordAuthenticationError(p.name)
 		return nil, false, err
 	}
 	defer stateResponse.Body.Close()
 	body, err := io.ReadAll(stateResponse.Body)
 	if err != nil {
+		metrics.RecordAuthenticationError(p.name)
 		return nil, false, err
 	}
 
-	if stateResponse.StatusCode == http.StatusInternalServerError && (strings.Contains(string(body), "record not found") || strings.Contains(string(body), "session ticket cookie failed validation")) {
+	// Handle session-related errors that should redirect to login
+	// (instead of returning HTTP 500 to the client)
+	if IsSessionError(stateResponse.StatusCode, string(body)) {
+		// Record token refresh failure (session error indicates token refresh failed)
+		duration := time.Since(startTime).Seconds()
+		metrics.RecordTokenRefreshFailure(p.name, duration)
+		metrics.RecordSessionStorageError(p.name, "token_refresh")
+
+		log.Warnf("session error detected for provider %s (status %d), redirecting to login: %s",
+			p.name, stateResponse.StatusCode, string(body))
 		return nil, false, ErrInvalidSession
 	}
 
@@ -311,6 +328,15 @@ func (p *Proxy) authenticateRequest(req *http.Request) (*authenticator.Response,
 	*req = *req.WithContext(accesstoken.ContextWithAccessToken(req.Context(), ss.AccessToken))
 	*req = *req.WithContext(auth.ContextWithProviderURL(req.Context(), p.url))
 
+	// Record successful authentication
+	duration := time.Since(startTime).Seconds()
+	metrics.RecordAuthenticationSuccess(p.name)
+
+	// If SetCookies is populated, a token refresh occurred
+	if len(ss.SetCookies) != 0 {
+		metrics.RecordTokenRefreshSuccess(p.name, duration)
+	}
+
 	return &authenticator.Response{
 		User: u,
 	}, true, nil
@@ -319,10 +345,10 @@ func (p *Proxy) authenticateRequest(req *http.Request) (*authenticator.Response,
 // Important: do not change the order of these checks.
 // We rely on the preferred username from GitHub being the user ID in the sessions table.
 // See pkg/gateway/server/logout_all.go for more details, as well as the GitHub auth provider code.
-// Entra follows the same pattern: ss.User contains the stable Azure OID, while
-// ss.PreferredUsername contains the human-readable UPN (user@domain.com).
+// Entra and Keycloak follow the same pattern: ss.User contains the stable provider ID (Azure OID / Keycloak Subject),
+// while ss.PreferredUsername contains the human-readable username (UPN / preferred_username).
 func getUsername(providerName string, ss serializableState) string {
-	if providerName == "github-auth-provider" || providerName == "entra-auth-provider" {
+	if providerName == "github-auth-provider" || providerName == "entra-auth-provider" || providerName == "keycloak-auth-provider" {
 		if ss.PreferredUsername != "" {
 			return ss.PreferredUsername
 		}

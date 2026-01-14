@@ -214,6 +214,22 @@
       ],
       "semanticCommitScope": "npm",
       "commitMessageTopic": "package {{depName}}"
+    },
+    {
+      "description": "Block moby/api and moby/client upgrades until docker/cli transitive dependency is resolved. Blocked at v1.52.0-alpha.1 + v0.1.0-alpha.0 due to: gptscript → docker/cli v26.0.0 → requires removed packages (types/versions, types/time, types/filters). See: https://github.com/moby/moby/discussions/51463",
+      "matchPackageNames": [
+        "github.com/moby/moby/api",
+        "github.com/moby/moby/client"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Pin oauth2-proxy to v7.0.0-20251212211434-21828db641ee (commit 21828db641ee). This version uses 'package oauth2proxy' which is importable. Newer commits revert to 'package main' causing build failures. Block all updates until upstream stabilizes. See: commit c4ffd2e6 (original fix), PR #43 (regression), commit c440527c (revert fix)",
+      "matchPackageNames": [
+        "github.com/obot-platform/oauth2-proxy/v7",
+        "github.com/oauth2-proxy/oauth2-proxy/v7"
+      ],
+      "enabled": false
     }
   ]
 }

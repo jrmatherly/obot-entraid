@@ -11,7 +11,25 @@ RUN if [ "${BASE_IMAGE}" = "cgr.dev/chainguard/wolfi-base" ]; then \
 
 FROM base AS bin
 WORKDIR /app
+
+# Copy dependency manifests and local replace dependencies first (rarely change)
+COPY go.mod go.sum ./
+COPY apiclient/go.mod apiclient/go.sum ./apiclient/
+COPY logger/go.mod logger/go.sum ./logger/
+COPY ui/user/package.json ui/user/pnpm-lock.yaml ./ui/user/
+
+# Download main module dependencies (cached unless go.mod changes)
+RUN --mount=type=cache,target=/root/go/pkg/mod \
+  go mod download
+
+# Install UI dependencies (cached unless package files change)
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
+  cd ui/user && pnpm install --frozen-lockfile
+
+# Copy source code including auth provider modules (needed for replace directives)
 COPY . .
+
+# Build with cached dependencies (faster rebuilds)
 # hadolint ignore=DL3003
 RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
   --mount=type=cache,target=/root/.cache/go-build \

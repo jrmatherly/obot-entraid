@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
-	oauth2proxy "github.com/oauth2-proxy/oauth2-proxy/v7"
 )
 
 type GroupInfo struct {
-	ID      string  `json:"id"`
-	Name    string  `json:"name"`
-	IconURL *string `json:"iconURL,omitempty"`
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Description *string `json:"description,omitempty"`
+	IconURL     *string `json:"iconURL,omitempty"`
 }
 
 type GroupInfoList []GroupInfo
@@ -23,6 +22,28 @@ func (a GroupInfoList) IDs() []string {
 		ids[i] = group.ID
 	}
 	return ids
+}
+
+// FilterByAllowed filters the group list to only include groups that are in the allowedGroups list.
+// If allowedGroups is empty, all groups are returned.
+func (a GroupInfoList) FilterByAllowed(allowedGroups []string) GroupInfoList {
+	if len(allowedGroups) == 0 {
+		return a
+	}
+
+	allowedSet := make(map[string]bool, len(allowedGroups))
+	for _, id := range allowedGroups {
+		allowedSet[id] = true
+	}
+
+	filtered := make(GroupInfoList, 0, len(a))
+	for _, group := range a {
+		if allowedSet[group.ID] {
+			filtered = append(filtered, group)
+		}
+	}
+
+	return filtered
 }
 
 type SerializableRequest struct {
@@ -43,7 +64,7 @@ type SerializableState struct {
 	SetCookies        []string      `json:"setCookies"`
 }
 
-func ObotGetState(p *oauth2proxy.OAuthProxy) http.HandlerFunc {
+func ObotGetState(sm SessionManager) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var sr SerializableRequest
 		if err := json.NewDecoder(r.Body).Decode(&sr); err != nil {
@@ -59,7 +80,7 @@ func ObotGetState(p *oauth2proxy.OAuthProxy) http.HandlerFunc {
 
 		reqObj.Header = sr.Header
 
-		ss, err := GetSerializableState(p, reqObj)
+		ss, err := GetSerializableState(sm, reqObj)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("failed to get state: %v", err), http.StatusInternalServerError)
 			return
@@ -72,8 +93,8 @@ func ObotGetState(p *oauth2proxy.OAuthProxy) http.HandlerFunc {
 	}
 }
 
-func GetSerializableState(p *oauth2proxy.OAuthProxy, r *http.Request) (SerializableState, error) {
-	state, err := p.LoadCookiedSession(r)
+func GetSerializableState(sm SessionManager, r *http.Request) (SerializableState, error) {
+	state, err := sm.LoadCookiedSession(r)
 	if err != nil {
 		return SerializableState{}, fmt.Errorf("failed to load cookied session: %v", err)
 	}
@@ -83,8 +104,9 @@ func GetSerializableState(p *oauth2proxy.OAuthProxy, r *http.Request) (Serializa
 	}
 
 	var setCookies []string
-	if state.IsExpired() || (p.CookieOptions.Refresh != 0 && state.Age() > p.CookieOptions.Refresh) {
-		setCookies, err = refreshToken(p, r)
+	cookieOpts := sm.GetCookieOptions()
+	if state.IsExpired() || (cookieOpts.Refresh != 0 && state.Age() > cookieOpts.Refresh) {
+		setCookies, err = refreshToken(sm, r)
 		if err != nil {
 			return SerializableState{}, fmt.Errorf("failed to refresh token: %v", err)
 		}
@@ -103,7 +125,7 @@ func GetSerializableState(p *oauth2proxy.OAuthProxy, r *http.Request) (Serializa
 	}, nil
 }
 
-func refreshToken(p *oauth2proxy.OAuthProxy, r *http.Request) ([]string, error) {
+func refreshToken(sm SessionManager, r *http.Request) ([]string, error) {
 	w := &response{
 		headers: make(http.Header),
 	}
@@ -114,7 +136,7 @@ func refreshToken(p *oauth2proxy.OAuthProxy, r *http.Request) ([]string, error) 
 	}
 
 	req.Header = r.Header
-	p.ServeHTTP(w, req)
+	sm.ServeHTTP(w, req)
 
 	switch w.status {
 	case http.StatusOK, http.StatusAccepted:

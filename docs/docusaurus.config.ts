@@ -1,6 +1,6 @@
-import { themes as prismThemes } from "prism-react-renderer";
-import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
+import type { Config } from "@docusaurus/types";
+import { themes as prismThemes } from "prism-react-renderer";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -10,15 +10,35 @@ const config: Config = {
   favicon: "img/favicon.ico",
   url: "https://docs.obot.ai",
   baseUrl: "/",
+  trailingSlash: true,
   organizationName: "obot-platform",
   projectName: "obot",
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
 
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
   },
+
+  plugins: [
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [
+          {
+            from: "/concepts/admin/mcp-server-catalogs",
+            to: "/configuration/mcp-server-gitops",
+          },
+        ],
+      },
+    ],
+  ],
 
   presets: [
     [
