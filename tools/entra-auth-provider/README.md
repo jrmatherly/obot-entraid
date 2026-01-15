@@ -103,7 +103,7 @@ OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN="<auto-provided if using PostgreSQL>"
 ### Required Environment Variables
 
 | Variable | Description | Example |
-|----------|-------------|---------|
+| ---------- | ------------- | --------- |
 | `OBOT_ENTRA_AUTH_PROVIDER_CLIENT_ID` | Application (client) ID from Azure Portal | `12345678-1234-1234-1234-123456789abc` |
 | `OBOT_ENTRA_AUTH_PROVIDER_CLIENT_SECRET` | Client secret value from Azure Portal | `abc123...` |
 | `OBOT_ENTRA_AUTH_PROVIDER_TENANT_ID` | Tenant ID or special value (`common`, `organizations`, `consumers`) | `common` |
@@ -112,7 +112,7 @@ OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN="<auto-provided if using PostgreSQL>"
 ### Optional Environment Variables
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| ---------- | --------- | ------------- |
 | `OBOT_AUTH_PROVIDER_TOKEN_REFRESH_DURATION` | `1h` | How often to refresh tokens (format: `1h30m`, `2h`, etc.) |
 | `OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_GROUPS` | (empty) | Comma-separated list of Azure AD group IDs allowed to authenticate |
 | `OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS` | (empty) | Comma-separated list of tenant IDs allowed (required for multi-tenant) |
@@ -128,7 +128,7 @@ OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN="<auto-provided if using PostgreSQL>"
 These variables are automatically provided by Obot and should not be manually configured:
 
 | Variable | Description |
-|----------|-------------|
+| ---------- | ------------- |
 | `OBOT_SERVER_URL` or `OBOT_SERVER_PUBLIC_URL` | Base URL of your Obot server |
 | `OBOT_AUTH_PROVIDER_COOKIE_SECRET` | Base64-encoded secret for cookie encryption (auto-generated) |
 | `OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN` | PostgreSQL connection string (if using database sessions) |
@@ -249,7 +249,7 @@ User → Obot → /oauth2/start → Microsoft Login → /oauth2/callback → Ses
 This auth provider implements the following HTTP endpoints:
 
 | Endpoint | Method | Description |
-|----------|--------|-------------|
+| ---------- | -------- | ------------- |
 | `/` | GET | Returns server address |
 | `/oauth2/start` | GET | Initiates OAuth flow (accepts `rd` query param for redirect) |
 | `/oauth2/callback` | GET | Handles OAuth callback from Microsoft |

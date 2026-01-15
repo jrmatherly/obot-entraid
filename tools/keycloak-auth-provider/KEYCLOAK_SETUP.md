@@ -20,7 +20,7 @@ This guide provides detailed instructions for configuring Keycloak to work with 
 ### 1.2 General Settings
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Client type | OpenID Connect |
 | Client ID | `obot` (or your preferred name) |
 | Name | `Obot Authentication` (optional, for display) |
@@ -31,7 +31,7 @@ Click **Next**
 ### 1.3 Capability Config
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Client authentication | **ON** (this makes it a confidential client) |
 | Authorization | OFF |
 | Authentication flow | Check **Standard flow** |
@@ -41,7 +41,7 @@ Click **Next**
 ### 1.4 Login Settings
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Root URL | `https://your-obot-url` |
 | Home URL | `https://your-obot-url` |
 | Valid redirect URIs | `https://your-obot-url/*` |
@@ -80,7 +80,7 @@ If you want to use Keycloak groups for access control in Obot:
 3. Configure:
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Name | `groups` |
 | Description | `User group memberships` |
 | Type | Default |
@@ -97,7 +97,7 @@ Click **Save**
 4. Configure:
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Name | `groups` |
 | Token Claim Name | `groups` |
 | Full group path | OFF (recommended, gives cleaner group names) |
@@ -178,7 +178,7 @@ The audience mapper ensures the token's `aud` claim includes your client ID, whi
 7. Configure:
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Name | `obot-audience` |
 | Included Client Audience | Select your client (`obot`) |
 | Included Custom Audience | (leave empty) |
@@ -306,7 +306,7 @@ If groups aren't being passed to Obot:
 ## Reference: Token Claims Used by Obot
 
 | Claim | Purpose | Required |
-|-------|---------|----------|
+| ------- | --------- | ---------- |
 | `sub` | Unique user identifier | Yes |
 | `email` | User's email address | Yes |
 | `preferred_username` | Display name / username | No (falls back to email) |

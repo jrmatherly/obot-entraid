@@ -225,15 +225,27 @@ func copyKeys(envs []string) []string {
 
 // buildLocalK8sConfig creates a Kubernetes config for local cluster access
 func buildLocalK8sConfig() (*rest.Config, error) {
-	cfg, err := rest.InClusterConfig()
-	if err == nil {
-		return cfg, nil
+	var cfg *rest.Config
+	var err error
+
+	cfg, err = rest.InClusterConfig()
+	if err != nil {
+		kubeconfig := filepath.Join(homedir.HomeDir(), ".kube", "config")
+		if k := os.Getenv("KUBECONFIG"); k != "" {
+			kubeconfig = k
+		}
+		cfg, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+		if err != nil {
+			return nil, err
+		}
 	}
-	kubeconfig := filepath.Join(homedir.HomeDir(), ".kube", "config")
-	if k := os.Getenv("KUBECONFIG"); k != "" {
-		kubeconfig = k
-	}
-	return clientcmd.BuildConfigFromFlags("", kubeconfig)
+
+	// Explicitly set ContentType to JSON for all REST clients to prevent protobuf usage.
+	// This ensures compatibility with kinm which doesn't support protobuf serialization.
+	// Kubernetes v0.35.0+ clients may default to protobuf if ContentType is unset.
+	cfg.ContentType = "application/json"
+
+	return cfg, nil
 }
 
 // unmarshalJSONStrict unmarshals JSON with strict validation that rejects unknown fields
