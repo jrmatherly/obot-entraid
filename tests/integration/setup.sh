@@ -4,7 +4,7 @@ export OBOT_SERVER_TOOL_REGISTRIES="github.com/obot-platform/tools,test-tools"
 export GPTSCRIPT_TOOL_REMAP="test-tools=./tests/integration/tools/"
 export GPTSCRIPT_INTERNAL_OPENAI_STREAMING=false
 echo "Starting obot server..."
-./bin/obot server --dev-mode > ./obot.log 2>&1 &
+./bin/obot server --dev-mode --gateway-debug > ./obot.log 2>&1 &
 
 URL="http://localhost:8080/api/healthz"
 TIMEOUT=300
@@ -32,6 +32,7 @@ for ((i=1; i<=MAX_RETRIES; i++)); do
 done
 
 echo "❌ Timeout reached! Service at $URL did not return OK within $TIMEOUT seconds"
-tail -n 100 ./obot.log
+echo "=== Last 200 lines of obot.log ==="
+tail -n 200 ./obot.log
 exit 1
 

@@ -3,6 +3,8 @@ module github.com/obot-platform/obot
 go 1.25.5
 
 replace (
+	github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.1
+	github.com/obot-platform/nah => github.com/jrmatherly/nah v0.1.1
 	github.com/obot-platform/obot/apiclient => ./apiclient
 	github.com/obot-platform/obot/logger => ./logger
 )
@@ -358,7 +360,3 @@ require (
 	sigs.k8s.io/kustomize/api v0.13.5-0.20230601165947-6ce0bf390ce3 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.14.3-0.20230601165947-6ce0bf390ce3 // indirect
 )
-
-replace github.com/obot-platform/nah => github.com/jrmatherly/nah v0.1.0
-
-replace github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.1
