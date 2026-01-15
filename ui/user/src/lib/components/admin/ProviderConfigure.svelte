@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { BaseProvider } from '$lib/services/admin/types';
+	import { MultiValueInput } from '$lib/components/ui';
+	import type { BaseProvider, ProviderParameter } from '$lib/services/admin/types';
 	import { darkMode, profile } from '$lib/stores';
 	import ResponsiveDialog from '../ResponsiveDialog.svelte';
 	import SensitiveInput from '../SensitiveInput.svelte';

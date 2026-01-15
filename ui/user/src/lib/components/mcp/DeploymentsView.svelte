@@ -27,6 +27,7 @@
 	import { formatTimeAgo } from '$lib/time';
 	import { setSearchParamsToLocalStorage } from '$lib/url';
 	import { getUserDisplayName, openUrl } from '$lib/utils';
+	import CapacityBanner from './CapacityBanner.svelte';
 	import ConnectToServer from './ConnectToServer.svelte';
 	import EditExistingDeployment from './EditExistingDeployment.svelte';
 	import { delay } from 'es-toolkit';
@@ -47,7 +48,6 @@
 	} from 'lucide-svelte';
 	import { onMount, type Snippet } from 'svelte';
 	import { twMerge } from 'tailwind-merge';
-	import CapacityBanner from './CapacityBanner.svelte';
 
 	interface Props {
 		usersMap?: Map<string, OrgUser>;
