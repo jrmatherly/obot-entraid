@@ -47,11 +47,7 @@
 	} from 'lucide-svelte';
 	import { onMount, type Snippet } from 'svelte';
 	import { twMerge } from 'tailwind-merge';
-<<<<<<< HEAD
-=======
-	import EditExistingDeployment from './EditExistingDeployment.svelte';
 	import CapacityBanner from './CapacityBanner.svelte';
->>>>>>> upstream/main
 
 	interface Props {
 		usersMap?: Map<string, OrgUser>;
