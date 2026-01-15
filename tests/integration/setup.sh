@@ -3,7 +3,21 @@
 export OBOT_SERVER_TOOL_REGISTRIES="github.com/obot-platform/tools,test-tools"
 export GPTSCRIPT_TOOL_REMAP="test-tools=./tests/integration/tools/"
 export GPTSCRIPT_INTERNAL_OPENAI_STREAMING=false
+
 echo "Starting obot server..."
+
+# Debug: Verify OBOT_SERVER_DSN is set
+if [[ -z "$OBOT_SERVER_DSN" ]]; then
+  echo "⚠️  WARNING: OBOT_SERVER_DSN not set, using default PostgreSQL connection"
+  export OBOT_SERVER_DSN="postgres://testuser:testpass@localhost:5432/testdb?sslmode=disable"
+else
+  echo "✅ Using OBOT_SERVER_DSN from environment"
+fi
+
+# Sanitize for display (remove password)
+DISPLAY_DSN=$(echo "$OBOT_SERVER_DSN" | sed 's/:\/\/[^:]*:[^@]*@/:\/\/***:***@/')
+echo "Database connection: $DISPLAY_DSN"
+
 ./bin/obot server --dev-mode --gateway-debug > ./obot.log 2>&1 &
 
 URL="http://localhost:8080/api/healthz"
