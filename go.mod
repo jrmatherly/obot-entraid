@@ -361,4 +361,4 @@ require (
 
 replace github.com/obot-platform/nah => github.com/jrmatherly/nah v0.1.0
 
-replace github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.0
+replace github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.1
