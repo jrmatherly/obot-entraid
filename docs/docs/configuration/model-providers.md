@@ -2,7 +2,7 @@
 
 The Model Providers page allows administrators to configure and manage various AI model providers. This guide will walk you through the setup process and explain the available options.
 
-### Configuring Model Providers
+## Configuring Model Providers
 
 Obot supports a variety of model providers, including:
 
@@ -22,7 +22,7 @@ The UI will indicate whether each provider has been configured. If a provider is
 Our Enterprise release adds support for additional Enterprise-grade model providers. [See here](/enterprise/overview/) for more details.
 :::
 
-#### Configuring and enabling a provider
+### Configuring and enabling a provider
 
 To configure a provider:
 
@@ -37,7 +37,7 @@ Upon saving the configuration, the platform will validate your configuration to 
 Once a provider is configured, you can view and manage the models it offers. You can set the usage type for each model, which determines how the models are utilized within the application:
 
 | Usage Type | Description | Application |
-|------------|-------------|-------------|
+| ------------ | ------------- | ------------- |
 | **Language Model** | Used to drive text generation and tool calls | Used in agents and tasks; can be set as an agent's primary model |
 | **Text Embedding** | Converts text into numerical vectors | Used in the knowledge tool for RAG functionality |
 | **Image Generation** | Creates images from textual descriptions | Used by image generation tools |

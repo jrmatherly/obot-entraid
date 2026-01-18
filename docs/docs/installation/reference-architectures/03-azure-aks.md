@@ -2,15 +2,15 @@
 
 Deploying Obot to Azure Kubernetes Service follows the standard Helm workflow. As a prerequisite, you'll need the following resources set up in your Azure environment:
 
-* Azure subscription
-* Virtual Network with subnets
-* Azure Database for PostgreSQL running PostgreSQL 17+ with the pgvector extension enabled
-* Network Security Groups configured to allow connectivity between your AKS cluster and PostgreSQL instance
-* Private Azure Storage Account with Blob Storage container for workspace data
-* (Optional) Azure Key Vault key for encrypting sensitive information
-* (Optional) Managed Identity with necessary permissions if you're using Azure Key Vault for encryption
-* kubectl and Helm installed and configured to connect to your AKS cluster
-* AKS cluster with at least 2 CPU cores and 4GB of RAM per node. Production workloads may require more. The cluster should have Microsoft Entra Workload ID configured if you're using Azure services like Key Vault for encryption.
+- Azure subscription
+- Virtual Network with subnets
+- Azure Database for PostgreSQL running PostgreSQL 17+ with the pgvector extension enabled
+- Network Security Groups configured to allow connectivity between your AKS cluster and PostgreSQL instance
+- Private Azure Storage Account with Blob Storage container for workspace data
+- (Optional) Azure Key Vault key for encrypting sensitive information
+- (Optional) Managed Identity with necessary permissions if you're using Azure Key Vault for encryption
+- kubectl and Helm installed and configured to connect to your AKS cluster
+- AKS cluster with at least 2 CPU cores and 4GB of RAM per node. Production workloads may require more. The cluster should have Microsoft Entra Workload ID configured if you're using Azure services like Key Vault for encryption.
 
 If you plan on using Azure Key Vault, here is some example terraform that creates the key vault, key, and the necessary access policies:
 

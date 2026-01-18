@@ -9,13 +9,13 @@ steps:
   - if:
       condition: The number is less than 100
       steps:
-      - step: Subtract 2
-      - while:
-          maxLoops: 4
-          condition: Number is less than 100
-          steps:
-          - step: Multiply times two
-      - step: now invoke the workflow called subflow
+        - step: Subtract 2
+        - while:
+            maxLoops: 4
+            condition: Number is less than 100
+            steps:
+              - step: Multiply times two
+        - step: now invoke the workflow called subflow
 
 ---
 name: subflow

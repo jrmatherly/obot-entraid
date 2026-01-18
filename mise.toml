@@ -1,0 +1,140 @@
+#:schema https://mise.jdx.dev/schema/mise.json
+# obot-entraid - MCP Platform (Go + SvelteKit)
+# Inherits: go, golangci-lint from root
+# Adds: node, pnpm for frontend
+#
+# Usage:
+#   mise :dev            - Run full dev environment
+#   mise :build          - Build Go binary
+#   mise :ui-dev         - Start UI dev server
+#   mise :validate-ci    - Full CI validation
+
+[tools]
+# Frontend tools (extends root)
+node = "24"
+pnpm = "9"  # Native mise backend (not npm:pnpm which times out)
+
+[env]
+PROJECT_NAME = "obot-entraid"
+
+# =============================================================================
+# GO TASKS
+# =============================================================================
+
+[tasks.build]
+description = "Build Go binary"
+run = "go build -o bin/obot"
+sources = ["**/*.go", "go.mod", "go.sum", "!ui/**"]
+outputs = ["bin/obot"]
+
+[tasks.test]
+description = "Run Go tests (excludes integration)"
+run = "go test ./..."
+sources = ["**/*.go", "!ui/**"]
+
+[tasks.test-integration]
+description = "Run integration tests"
+run = "go test -tags=integration ./tests/integration/..."
+
+[tasks.lint]
+alias = "validate"
+description = "Run Go linters"
+run = "golangci-lint run"
+
+[tasks.tidy]
+description = "Tidy Go modules"
+run = "go mod tidy"
+
+[tasks.generate]
+description = "Generate Go code"
+run = "go generate ./..."
+
+[tasks.validate-go-code]
+description = "Full Go validation"
+run = """
+go mod tidy
+go generate ./...
+golangci-lint run
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+    echo "Uncommitted changes detected!"
+    exit 1
+fi
+"""
+
+# =============================================================================
+# FRONTEND TASKS
+# =============================================================================
+
+[tasks.ui-install]
+description = "Install UI dependencies"
+dir = "ui/user"
+run = "pnpm install"
+sources = ["ui/user/package.json", "ui/user/pnpm-lock.yaml"]
+outputs = ["ui/user/node_modules/.pnpm"]
+
+[tasks.ui-dev]
+description = "Start UI dev server"
+dir = "ui/user"
+run = "pnpm run dev"
+depends = ["ui-install"]
+
+[tasks.ui-build]
+description = "Build production UI"
+dir = "ui/user"
+run = "pnpm run build"
+depends = ["ui-install"]
+sources = ["ui/user/src/**/*", "ui/user/static/**/*", "ui/user/svelte.config.js"]
+outputs = ["ui/user/.svelte-kit"]
+
+[tasks.ui-check]
+description = "TypeScript type checking"
+dir = "ui/user"
+run = "pnpm run check"
+depends = ["ui-install"]
+
+[tasks.ui-lint]
+description = "Lint UI code"
+dir = "ui/user"
+run = "pnpm run lint"
+depends = ["ui-install"]
+
+[tasks.ui-format]
+description = "Format UI code"
+dir = "ui/user"
+run = "pnpm run format"
+depends = ["ui-install"]
+
+[tasks.ui-ci]
+description = "Full UI CI pipeline"
+dir = "ui/user"
+run = "pnpm run ci"
+depends = ["ui-install"]
+
+[tasks.ui]
+alias = "build-ui"
+description = "Build complete UI"
+depends = ["ui-build"]
+
+# =============================================================================
+# COMBINED TASKS
+# =============================================================================
+
+[tasks.dev]
+description = "Run full dev environment (Go + SvelteKit)"
+run = "./tools/dev.sh"
+
+[tasks.dev-open]
+description = "Run dev environment and open browser"
+run = "./tools/dev.sh --open"
+
+[tasks.all]
+description = "Build UI + Go binary"
+depends = ["ui-build", "build"]
+
+[tasks.validate-ci]
+description = "Full CI validation"
+depends = ["validate-go-code", "ui-ci"]
+
+[tasks.ci]
+description = "Complete CI pipeline"
+depends = ["validate-ci", "test"]

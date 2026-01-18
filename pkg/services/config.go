@@ -85,7 +85,7 @@ type Config struct {
 	DevUIPort                  int      `usage:"The port on localhost running the dev instance of the UI" default:"5174"`
 	UserUIPort                 int      `usage:"The port on localhost running the user production instance of the UI" env:"OBOT_SERVER_USER_UI_PORT"`
 	AllowedOrigin              string   `usage:"Allowed origin for CORS"`
-	ToolRegistries             []string `usage:"The remote tool references to the set of gptscript tool registries to use" default:"github.com/obot-platform/tools"`
+	ToolRegistries             []string `usage:"The remote tool references to the set of gptscript tool registries to use" default:"github.com/jrmatherly/obot-tools"`
 	WorkspaceProviderType      string   `usage:"The type of workspace provider to use for non-knowledge workspaces" default:"directory" env:"OBOT_WORKSPACE_PROVIDER_TYPE"`
 	HelperModel                string   `usage:"The model used to generate names and descriptions" default:"gpt-4.1-mini"`
 	EmailServerName            string   `usage:"The name of the email server to display for email receivers"`
@@ -225,15 +225,27 @@ func copyKeys(envs []string) []string {
 
 // buildLocalK8sConfig creates a Kubernetes config for local cluster access
 func buildLocalK8sConfig() (*rest.Config, error) {
-	cfg, err := rest.InClusterConfig()
-	if err == nil {
-		return cfg, nil
+	var cfg *rest.Config
+	var err error
+
+	cfg, err = rest.InClusterConfig()
+	if err != nil {
+		kubeconfig := filepath.Join(homedir.HomeDir(), ".kube", "config")
+		if k := os.Getenv("KUBECONFIG"); k != "" {
+			kubeconfig = k
+		}
+		cfg, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+		if err != nil {
+			return nil, err
+		}
 	}
-	kubeconfig := filepath.Join(homedir.HomeDir(), ".kube", "config")
-	if k := os.Getenv("KUBECONFIG"); k != "" {
-		kubeconfig = k
-	}
-	return clientcmd.BuildConfigFromFlags("", kubeconfig)
+
+	// Explicitly set ContentType to JSON for all REST clients to prevent protobuf usage.
+	// This ensures compatibility with kinm which doesn't support protobuf serialization.
+	// Kubernetes v0.35.0+ clients may default to protobuf if ContentType is unset.
+	cfg.ContentType = "application/json"
+
+	return cfg, nil
 }
 
 // unmarshalJSONStrict unmarshals JSON with strict validation that rejects unknown fields
@@ -355,7 +367,7 @@ func New(ctx context.Context, config Config) (*Services, error) {
 	config.DSN = strings.Replace(config.DSN, "postgresql://", "postgres://", 1)
 
 	if len(config.ToolRegistries) < 1 {
-		config.ToolRegistries = []string{"github.com/obot-platform/tools"}
+		config.ToolRegistries = []string{"github.com/jrmatherly/obot-tools"}
 	}
 
 	// Sanitize DSN for logging (remove credentials)

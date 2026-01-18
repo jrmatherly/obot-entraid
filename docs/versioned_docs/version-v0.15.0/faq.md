@@ -12,13 +12,13 @@ User Management is only visible when authentication is enabled. Make sure you st
 
 ### How do I assign roles to users before they log in?
 
-Currently, users must log in at least once before roles can be assigned. To pre-assign admin roles, set the `OBOT_SERVER_AUTH_ADMIN_EMAILS` environment variable during deployment. 
+Currently, users must log in at least once before roles can be assigned. To pre-assign admin roles, set the `OBOT_SERVER_AUTH_ADMIN_EMAILS` environment variable during deployment.
 
 ### What are the differences between the open source and enterprise versions of Obot?
 
 Both use the same core codebase, but the enterprise version includes additional closed-source plugins for:
 
-- enterprise authentication (Entra, Okta) 
+- enterprise authentication (Entra, Okta)
 - model providers (Azure OpenAI, Amazon Bedrock)
 
 ## Integration & Troubleshooting

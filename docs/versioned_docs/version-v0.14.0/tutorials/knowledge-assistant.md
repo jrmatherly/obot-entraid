@@ -8,6 +8,7 @@ As you configure the project, changes will be saved and applied automatically.
 :::
 
 ## 1. Setting up the project
+
 Start by going to the Obot homepage. Click on your profile picture in the top right and chose **Chat** from the dropdown.
 If you do not have an existing project, one will automatically be created for you. If you do already have a project, you can click on the **+** in the left sidebar next to the name of the project you are currently in.
 Set the project name and description to whatever you would like in the fields on the left hand side.

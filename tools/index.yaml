@@ -1,8 +1,6 @@
 # Custom tool registry for obot-entraid
-# Contains auth providers not available in the open-source edition
+# NOTE: Auth providers (entra, keycloak) have been migrated to obot-tools
+# See: github.com/jrmatherly/obot-tools
+# This file is kept for potential future local-only tools
 
-authProviders:
-  entra-auth-provider:
-    reference: ./entra-auth-provider
-  keycloak-auth-provider:
-    reference: ./keycloak-auth-provider
+# No local tools registered - all auth providers now in obot-tools fork

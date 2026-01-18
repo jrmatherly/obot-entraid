@@ -16,21 +16,27 @@ A thread is a single conversation stream between a user and a project. This incl
 ## Key Characteristics
 
 ### Context Isolation
+
 Each thread maintains its own conversation history. This means:
+
 - Messages from one thread don't appear in another
 - Conversation context stays focused and relevant
 - Multiple users can have parallel conversations
 - Different topics can be explored without interference
 
 ### Shared Resources
+
 While conversation history is isolated, threads share project-level resources:
+
 - **Memories**: Important information remembered across all threads
 - **Knowledge Base**: Access to the same uploaded documents and data
 - **Project Files**: Shared workspace files accessible to all threads
 - **Tool Configuration**: Same set of available MCP tools and integrations
 
 ### Independent Credentials
+
 Each thread manages its own authentication context:
+
 - Tool authentication is thread-specific
 - Users must authenticate separately for each thread
 - Prevents credential sharing between users
@@ -39,15 +45,18 @@ Each thread manages its own authentication context:
 ## Thread Lifecycle
 
 ### Creating a Thread
+
 1. **Manual Creation**: Use the "+" button in the thread panel
 
 ### Using a Thread
+
 1. **Start Chatting**: Begin the conversation with your first message
 2. **Context Building**: Thread maintains conversation context automatically
 3. **Tool Authentication**: Authenticate with tools as needed
 4. **File Access**: Access and modify project or thread files within the thread
 
 ### Thread Management
+
 - **Switch Threads**: Move between different conversations easily
 - **Resume Conversations**: Return to previous threads anytime
 - **Delete Threads**: Remove threads when no longer needed
@@ -57,12 +66,14 @@ Each thread manages its own authentication context:
 Understanding what operates at the thread level vs. project level is crucial:
 
 ### Thread Level
+
 - Conversation history and context
 - Tool authentication and credentials
 - User-specific settings and preferences
 - Temporary files and scratch work
 
 ### Project Level
+
 - System prompt and agent configuration
 - Knowledge base and uploaded documents
 - Memories and persistent information

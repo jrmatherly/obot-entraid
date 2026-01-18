@@ -7,10 +7,10 @@ This guide covers the step-by-step process to enable and configure authenticatio
 By default, Obot runs without authentication in development mode. For production deployments, you'll need to:
 
 1. Set the authentication environment variable
-1. Login using the bootstrap token
-1. Configure your authentication provider
-1. Configure admins/owners
-1. Restart the system
+2. Login using the bootstrap token
+3. Configure your authentication provider
+4. Configure admins/owners
+5. Restart the system
 
 ## Step 1: Enable Authentication
 
@@ -33,7 +33,7 @@ config:
 
 ## Step 2: Login with Bootstrap Token
 
-When Obot starts with authentication enabled for the first time, it generates a bootstrap token that's printed to the console logs. 
+When Obot starts with authentication enabled for the first time, it generates a bootstrap token that's printed to the console logs.
 
 ### Finding the Bootstrap Token
 

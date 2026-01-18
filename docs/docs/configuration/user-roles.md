@@ -35,19 +35,19 @@ Add-on permission that grants read-only access to sensitive data across the plat
 ## Role Comparison
 
 | Capability | Basic | Power | Power+ | Admin | Owner |
-|------------|-------|-------|--------|-------|-------|
-| Connect to MCP servers | Yes | Yes | Yes | Yes | Yes   |
-| Use Obot Chat | Yes | Yes | Yes | Yes | Yes   |
+| ------------ | ------- | ------- | -------- | ------- | ------- |
+| Connect to MCP servers | Yes | Yes | Yes | Yes | Yes |
+| Use Obot Chat | Yes | Yes | Yes | Yes | Yes |
 | View Audit Logs | | Yes* | Yes* | Yes** | Yes** |
-| View Usage | | Yes* | Yes* | Yes | Yes   |
-| Publish personal MCP servers | | Yes | Yes | Yes | Yes   |
-| Share MCP servers through registries | | | Yes | Yes | Yes   |
-| Manage Filters | | | | Yes | Yes   |
-| Server Scheduling | | | | Yes | Yes   |
-| Chat Management | | | | Yes | Yes   |
-| User Management | | | | Yes | Yes   |
-| App Preferences | | | | Yes | Yes   |
-| Assign Owner/Auditor roles | | | | | Yes   |
+| View Usage | | Yes* | Yes* | Yes | Yes |
+| Publish personal MCP servers | | Yes | Yes | Yes | Yes |
+| Share MCP servers through registries | | | Yes | Yes | Yes |
+| Manage Filters | | | | Yes | Yes |
+| Server Scheduling | | | | Yes | Yes |
+| Chat Management | | | | Yes | Yes |
+| User Management | | | | Yes | Yes |
+| App Preferences | | | | Yes | Yes |
+| Assign Owner/Auditor roles | | | | | Yes |
 
 \* Only for servers they deployed
 

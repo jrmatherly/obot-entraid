@@ -19,17 +19,20 @@ This runbook provides step-by-step procedures for rotating cookie secrets in Obo
 ## Prerequisites
 
 ### Required Access
+
 - [ ] Kubernetes cluster access (`kubectl` configured)
 - [ ] Ability to modify provider ConfigMaps/Secrets
 - [ ] Access to Prometheus metrics (for validation)
 - [ ] Ability to restart provider pods
 
 ### Required Knowledge
+
 - Basic Kubernetes concepts
 - Understanding of cookie-based sessions
 - Familiarity with base64 encoding
 
 ### Tools Required
+
 - `kubectl` CLI
 - `openssl` (for secret generation)
 - `curl` or web browser (for testing)
@@ -54,26 +57,32 @@ Previous Secrets (PREVIOUS_COOKIE_SECRETS):
 ### Rotation States
 
 **State 1: Single Secret (Pre-Rotation)**
+
 ```
 COOKIE_SECRET: secret-A
 PREVIOUS_COOKIE_SECRETS: (empty)
 ```
+
 All cookies encrypted/decrypted with secret-A
 
 **State 2: Dual Secrets (During Grace Period)**
+
 ```
 COOKIE_SECRET: secret-B (NEW)
 PREVIOUS_COOKIE_SECRETS: secret-A (OLD)
 ```
+
 - New cookies encrypted with secret-B
 - Old cookies (secret-A) still work
 - Grace period: 7 days (recommended)
 
 **State 3: Single Secret (Post-Rotation)**
+
 ```
 COOKIE_SECRET: secret-B
 PREVIOUS_COOKIE_SECRETS: (empty)
 ```
+
 All cookies now use secret-B
 
 ---
@@ -83,6 +92,7 @@ All cookies now use secret-B
 ### Phase 1: Generate New Secret
 
 **Step 1.1: Generate new 32-byte secret**
+
 ```bash
 # Generate new secret
 NEW_SECRET=$(openssl rand -base64 32)
@@ -94,6 +104,7 @@ chmod 600 new-secret.txt
 ```
 
 **Step 1.2: Validate secret entropy**
+
 ```bash
 # Decode and check length (should be 32 bytes)
 echo "$NEW_SECRET" | base64 -d | wc -c
@@ -105,6 +116,7 @@ echo "$NEW_SECRET" | base64 -d | wc -c
 ### Phase 2: Deploy Dual-Secret Configuration
 
 **Step 2.1: Get current secret**
+
 ```bash
 # For Entra ID provider
 CURRENT_SECRET=$(kubectl get secret entra-auth-provider-secrets \
@@ -117,6 +129,7 @@ echo "Current secret: $CURRENT_SECRET"
 **Step 2.2: Update configuration with dual secrets**
 
 Create file `dual-secret-config.yaml`:
+
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -136,6 +149,7 @@ stringData:
 ```
 
 **Step 2.3: Apply configuration**
+
 ```bash
 # Apply the dual-secret configuration
 kubectl apply -f dual-secret-config.yaml
@@ -148,6 +162,7 @@ kubectl rollout status deployment/entra-auth-provider -n auth-providers
 ```
 
 **Step 2.4: Verify dual-secret mode**
+
 ```bash
 # Check provider logs
 kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50 | grep "secret rotation"
@@ -161,6 +176,7 @@ kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50 | grep "
 ### Phase 3: Validation and Monitoring
 
 **Step 3.1: Test new sessions (encrypted with new secret)**
+
 ```bash
 # Create new session by logging in
 # Navigate to: https://your-obot-instance.com/oauth2/start
@@ -170,6 +186,7 @@ kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50 | grep "
 ```
 
 **Step 3.2: Test old sessions (decrypted with old secret)**
+
 ```bash
 # Use existing session from before rotation
 # Should still work during grace period
@@ -177,6 +194,7 @@ kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50 | grep "
 ```
 
 **Step 3.3: Monitor Prometheus metrics**
+
 ```bash
 # Check secret version
 curl -s http://obot-server:8080/debug/metrics | grep obot_auth_cookie_secret_version
@@ -194,6 +212,7 @@ curl -s http://obot-server:8080/debug/metrics | grep obot_auth_cookie_decrypt_by
 ```
 
 **Step 3.4: Alert configuration (optional but recommended)**
+
 ```yaml
 # Prometheus alert for old secret usage
 groups:
@@ -215,17 +234,20 @@ groups:
 **Step 4.1: Wait for grace period (7 days recommended)**
 
 The grace period ensures all old sessions expire naturally. Recommended duration:
+
 - **Minimum:** Maximum session lifetime (e.g., 24 hours)
 - **Recommended:** 7 days (covers edge cases, holidays, etc.)
 - **Maximum:** Based on security policy requirements
 
 **During grace period:**
+
 - Both secrets remain active
 - New sessions use NEW_SECRET
 - Old sessions gradually expire
 - Monitor metrics to track progress
 
 **Step 4.2: Monitor old secret usage decline**
+
 ```bash
 # Daily check: How many sessions still use old secret?
 kubectl logs -n auth-providers deployment/entra-auth-provider | \
@@ -240,6 +262,7 @@ kubectl logs -n auth-providers deployment/entra-auth-provider | \
 **Step 4.3: Determine if safe to proceed**
 
 Safe to proceed to Phase 5 when:
+
 - [x] Grace period elapsed (7+ days)
 - [x] Old secret usage dropped to zero (check metrics)
 - [x] No active sessions older than grace period
@@ -252,6 +275,7 @@ Safe to proceed to Phase 5 when:
 **Step 5.1: Create single-secret configuration**
 
 Create file `single-secret-config.yaml`:
+
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -268,6 +292,7 @@ stringData:
 ```
 
 **Step 5.2: Apply configuration**
+
 ```bash
 # Apply single-secret configuration
 kubectl apply -f single-secret-config.yaml
@@ -280,6 +305,7 @@ kubectl rollout status deployment/entra-auth-provider -n auth-providers
 ```
 
 **Step 5.3: Verify single-secret mode**
+
 ```bash
 # Check provider logs
 kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50 | grep "secret rotation"
@@ -289,6 +315,7 @@ kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50 | grep "
 ```
 
 **Step 5.4: Final validation**
+
 ```bash
 # Test login flow
 # All new sessions should work normally
@@ -307,6 +334,7 @@ curl -s http://obot-server:8080/debug/metrics | grep 'version="previous-1"'
 ### Phase 6: Cleanup and Documentation
 
 **Step 6.1: Secure old secret disposal**
+
 ```bash
 # Securely delete old secret from local files
 shred -u old-secret.txt
@@ -318,6 +346,7 @@ shred -u old-secret.txt
 **Step 6.2: Update rotation log**
 
 Create/update `secret-rotation-log.md`:
+
 ```markdown
 ## Secret Rotation Log
 
@@ -334,6 +363,7 @@ Create/update `secret-rotation-log.md`:
 ```
 
 **Step 6.3: Schedule next rotation**
+
 ```bash
 # Add calendar reminder for next rotation
 # Recommended frequency: Every 90 days
@@ -354,14 +384,17 @@ See `scripts/rotate-cookie-secret.sh` for automated rotation implementation.
 ### Issue: Users getting "Session Invalid" errors after rotation
 
 **Symptoms:**
+
 - Users logged in before rotation cannot access Obot
 - Error: "Session cookie decryption failed"
 
 **Root Cause:**
+
 - Old secret removed too soon (before grace period)
 - Old secret not added to PREVIOUS_COOKIE_SECRETS
 
 **Resolution:**
+
 ```bash
 # Rollback: Re-add old secret to PREVIOUS_COOKIE_SECRETS
 # Follow Phase 2 again with correct dual-secret configuration
@@ -372,14 +405,17 @@ See `scripts/rotate-cookie-secret.sh` for automated rotation implementation.
 ### Issue: Metrics show high "previous-1" usage after grace period
 
 **Symptoms:**
+
 - After 7+ days, still significant old secret usage
 - Metrics: `obot_auth_cookie_decrypt_by_version_total{version="previous-1"}` > 0
 
 **Root Cause:**
+
 - Long-lived sessions (exceed expected lifetime)
 - Users with very infrequent access
 
 **Resolution:**
+
 ```bash
 # Option A: Extend grace period (recommended)
 # Wait additional 3-7 days for sessions to expire
@@ -397,14 +433,17 @@ kubectl exec -n auth-providers deployment/entra-auth-provider -- \
 ### Issue: Rotation metrics not updating
 
 **Symptoms:**
+
 - Prometheus metrics show version=1 after deploying dual secrets
 - `obot_auth_cookie_secret_version` not changing
 
 **Root Cause:**
+
 - Provider pods not restarted after configuration change
 - Configuration not properly loaded
 
 **Resolution:**
+
 ```bash
 # Force restart provider pods
 kubectl delete pods -n auth-providers -l app=entra-auth-provider
@@ -422,6 +461,7 @@ If issues arise during rotation, follow this rollback:
 ### Emergency Rollback (Any Phase)
 
 **Step 1: Restore old secret as current**
+
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -438,12 +478,14 @@ stringData:
 ```
 
 **Step 2: Restart provider**
+
 ```bash
 kubectl apply -f rollback-config.yaml
 kubectl rollout restart deployment/entra-auth-provider -n auth-providers
 ```
 
 **Step 3: Verify rollback**
+
 ```bash
 # All existing sessions should work immediately
 # Check logs for confirmation
@@ -455,6 +497,7 @@ kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50
 ## Best Practices
 
 ### Security
+
 - ✅ Store secrets in Kubernetes Secrets (not ConfigMaps)
 - ✅ Use secure secret generation (`openssl rand -base64 32`)
 - ✅ Never commit secrets to version control
@@ -462,6 +505,7 @@ kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50
 - ✅ Maintain audit log of all rotations
 
 ### Operational
+
 - ✅ Perform rotations during low-traffic windows
 - ✅ Monitor metrics throughout grace period
 - ✅ Test with non-production users first
@@ -469,6 +513,7 @@ kubectl logs -n auth-providers deployment/entra-auth-provider --tail=50
 - ✅ Document all rotation events
 
 ### Compliance
+
 - ✅ Follow organization's secret rotation policy
 - ✅ Maintain rotation audit trail
 - ✅ Alert on overdue rotations

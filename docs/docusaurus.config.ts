@@ -35,6 +35,18 @@ const config: Config = {
             from: "/concepts/admin/mcp-server-catalogs",
             to: "/configuration/mcp-server-gitops",
           },
+          {
+            from: "/concepts/mcp-gateway/overview",
+            to: "/concepts/mcp-gateway",
+          },
+          {
+            from: "/installation/general",
+            to: "/installation/overview",
+          },
+          {
+            from: "/tutorials/knowledge-assistant",
+            to: "/",
+          },
         ],
       },
     ],
@@ -50,10 +62,12 @@ const config: Config = {
           routeBasePath: "/", // Serve the docs at the site's root
 
           // Versioning configuration
-          lastVersion: "v0.15.0",
+          // Hide old versions but keep files - only show current as "Latest"
           versions: {
-            "v0.14.0": { label: "v0.14.0", banner: "none", path: "v0.14.0" },
-            "v0.13.0": { label: "v0.13.0", banner: "none", path: "v0.13.0" },
+            current: {
+              label: "Latest",
+              path: "/",
+            },
           },
         },
         theme: {

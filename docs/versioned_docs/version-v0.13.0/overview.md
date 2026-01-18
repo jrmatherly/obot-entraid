@@ -31,8 +31,6 @@ You can also set `ANTHROPIC_API_KEY` here as well, setting the value to your [An
 Setting both is also supported, but OpenAI models will be set as the defaults.
 :::
 
-
-
 ## The Three Parts of Obot
 
 The platform consists of three main components that work together to deliver a comprehensive AI solution.

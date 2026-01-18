@@ -17,6 +17,7 @@ It is possible to run the server and/or UIs in and IDE for debugging purposes. T
 ### Server
 
 To run the server in GoLand:
+
 1. Create a new "Go Build" configuration.
 2. In the "Program Arguments" section, enter `server --dev-mode`.
 
@@ -25,6 +26,7 @@ Then you're ready to run or debug this target.
 ### User UI
 
 To run the User UI in GoLand or WebStorm:
+
 1. Create a new "npm" build.
 2. In the "package.json" dropdown, select the `package.json` file in the `ui/user` directory.
 3. In the "Command" dropdown, select `run`.
@@ -35,11 +37,11 @@ Then you're ready to run or debug this target.
 
 ## Developing Obot Tools
 
-Obot has a set of packaged tools. These tools are in the repo `github.com/obot-platform/tools`. By default, Obot will pull the tools from this repo. However, when developing tools in this repo, you can follow these steps to use a local copy.
+Obot has a set of packaged tools. These tools are in the repo `github.com/jrmatherly/obot-tools`. By default, Obot will pull the tools from this repo. However, when developing tools in this repo, you can follow these steps to use a local copy.
 
-1. Clone `github.com/obot-platform/tools` to your local machine.
+1. Clone `github.com/jrmatherly/obot-tools` to your local machine.
 2. In the root directory of the tools repo on your local machine, run `make build`.
-3. Run the Obot server, either with `make dev` or in your IDE, with the `GPTSCRIPT_TOOL_REMAP` environment variable set to `github.com/obot-platform/tools=<local-tools-fork-root-directory>`; e.g. If you cloned the tools repo to the directory "above" the Obot repo, you'd use `GPTSCRIPT_TOOL_REMAP='github.com/obot-platform/tools=../tools' make dev`.
+3. Run the Obot server, either with `make dev` or in your IDE, with the `GPTSCRIPT_TOOL_REMAP` environment variable set to `github.com/jrmatherly/obot-tools=<local-tools-fork-root-directory>`; e.g. If you cloned the tools repo to the directory "above" the Obot repo, you'd use `GPTSCRIPT_TOOL_REMAP='github.com/jrmatherly/obot-tools=../tools' make dev`.
 
 Now, any time one of these tools is run, your local copy will be used.
 
@@ -64,6 +66,7 @@ The GPTScript credentials for Obot are, by default, stored in a SQLite database 
 There may be times when you want to completely wipe your setup and start fresh. The location of data and caches is dependent on your system. For Mac or Linux, you can run the respective command in the root of the obot repo on your local machine.
 
 On Mac:
+
 ```bash
 rm -rf ~/Library/Application\ Support/obot && \
 rm -rf ~/Library/Application\ Support/gptscript && \
@@ -73,6 +76,7 @@ rm obot.db obot-credentials.db
 ```
 
 On Linux:
+
 ```bash
 rm -rf ~/.local/share/obot && \
 rm -rf ~/.local/share/gptscript && \

@@ -21,6 +21,7 @@ Customize the color scheme for both light and dark modes. The theme system suppo
 ### Dark Scheme Colors
 
 The same color options are available for dark mode, prefixed with "dark" in the API:
+
 - `darkPrimaryColor`
 - `darkBackgroundColor`
 - `darkOnBackgroundColor`
@@ -46,11 +47,13 @@ Upload custom icons and logos to replace the default obot branding. The system s
 Configure different logos for light and dark modes:
 
 **Light Scheme:**
+
 - Full Logo
 - Full Enterprise Logo
 - Full Chat Logo
 
 **Dark Scheme:**
+
 - Full Logo (Dark)
 - Full Enterprise Logo (Dark)
 - Full Chat Logo (Dark)
@@ -58,6 +61,7 @@ Configure different logos for light and dark modes:
 ### Uploading Images
 
 Click on any icon or logo to open the upload dialog. You can either:
+
 - Upload an image file directly
 - Provide a URL to an externally hosted image
 
@@ -70,7 +74,7 @@ Customize the footer message that appears at the bottom of chat conversations. T
 ### Configuration Options
 
 | Field | Description | Default |
-|-------|-------------|---------|
+| ------- | ------------- | --------- |
 | **Product Name** | The name displayed in the footer message | `Obot` |
 | **Issue Report URL** | URL for the "Report issues here" link | GitHub issues page |
 | **Footer Message** | The disclaimer text shown to users | `{productName} isn't perfect. Double check its work.` |
@@ -93,16 +97,19 @@ Obot may make mistakes. Please verify important information.
 ### Example Use Cases
 
 **Enterprise Deployment:**
+
 - Product Name: `Acme AI Assistant`
 - Footer Message: `{productName} is provided for informational purposes only.`
 - Issue Report URL: `https://support.acme.com/ai-assistant`
 
 **Internal Tool:**
+
 - Product Name: `Internal Helper Bot`
 - Footer Message: `{productName} responses should be reviewed by qualified staff.`
 - Show Footer: `true`
 
 **Clean Interface:**
+
 - Show Footer: `false` (hides the footer completely)
 
 ## API Reference
@@ -144,7 +151,7 @@ Content-Type: application/json
 ### Branding Object Schema
 
 | Property | Type | Description |
-|----------|------|-------------|
+| ---------- | ------ | ------------- |
 | `productName` | string | Display name for the product |
 | `issueReportUrl` | string | URL for issue reporting link |
 | `footerMessage` | string | Footer text (supports `{productName}` placeholder) |

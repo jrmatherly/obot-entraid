@@ -19,6 +19,7 @@ This document provides templates for communicating upstream merges, security upd
 **Title:** `Upstream Changes Available: obot-platform/obot (vX.Y.Z)`
 
 **Body:**
+
 ```markdown
 ## Upstream Changes Detected
 
@@ -83,6 +84,7 @@ Next check: 2026-01-20 09:00 UTC
 **Title:** `Upstream Merge Conflicts: Manual Resolution Required (vX.Y.Z)`
 
 **Body:**
+
 ```markdown
 ## Merge Conflicts Detected
 
@@ -113,6 +115,7 @@ Follow the [upstream merge process](../upstream-merge-process.md):
    ```
 
 1. **Attempt merge:**
+
    ```bash
    git merge --no-commit --no-ff upstream/main
    ```
@@ -124,17 +127,20 @@ Follow the [upstream merge process](../upstream-merge-process.md):
    - `go.mod/go.sum`: Run `git checkout --theirs go.* && make tidy`
 
 3. **Verify custom files:**
+
    ```bash
    ./scripts/verify-custom-files.sh
    ```
 
 4. **Build and test:**
+
    ```bash
    make build && make test && make lint
    docker build -t obot-entraid:test .
    ```
 
 5. **Commit using template:**
+
    ```bash
    git config commit.template .gitmessage-merge
    git commit
@@ -285,6 +291,7 @@ Merged `obot-platform/obot` v0.16.0 includes breaking changes
 **Subject:** Scheduled Maintenance: Upstream Merge (obot-platform/obot v0.15.2)
 
 **Body:**
+
 ```
 Hello obot-entraid Users,
 
@@ -327,6 +334,7 @@ The obot-entraid Team
 **Subject:** 🚨 ACTION REQUIRED: Breaking Changes in v0.16.0
 
 **Body:**
+
 ```
 Hello obot-entraid Users,
 
@@ -393,6 +401,7 @@ The obot-entraid Team
 **Title:** Release v0.15.2-entraid.1
 
 **Body:**
+
 ```markdown
 # obot-entraid v0.15.2-entraid.1
 
@@ -508,6 +517,7 @@ No special upgrade steps required. This is a drop-in replacement for v0.15.1-ent
 **Title:** Release v0.16.0-entraid.1 (⚠️ Breaking Changes)
 
 **Body:**
+
 ```markdown
 # obot-entraid v0.16.0-entraid.1
 
@@ -523,6 +533,7 @@ OBOT_AUTH_SECRET=your-secret-here
 ```
 
 **After:**
+
 ```bash
 OBOT_AUTH_COOKIE_SECRET=your-secret-here
 ```
@@ -532,11 +543,13 @@ OBOT_AUTH_COOKIE_SECRET=your-secret-here
 ### 2. API Endpoint Changed
 
 **Before:**
+
 ```
 GET /v1/auth/profile
 ```
 
 **After:**
+
 ```
 GET /v2/auth/user/profile
 ```
@@ -546,12 +559,14 @@ GET /v2/auth/user/profile
 ### 3. Helm Chart Values Updated
 
 **Before:**
+
 ```yaml
 auth:
   secret: "your-secret"
 ```
 
 **After:**
+
 ```yaml
 auth:
   cookieSecret: "your-secret"
@@ -564,6 +579,7 @@ auth:
 ### For Docker Deployments
 
 **docker-compose.yml:**
+
 ```yaml
 # Before
 environment:
@@ -575,6 +591,7 @@ environment:
 ```
 
 **Restart:**
+
 ```bash
 docker-compose down
 docker-compose up -d
@@ -583,6 +600,7 @@ docker-compose up -d
 ### For Kubernetes/Helm
 
 **Update values.yaml:**
+
 ```yaml
 # Before
 auth:
@@ -594,6 +612,7 @@ auth:
 ```
 
 **Upgrade:**
+
 ```bash
 helm upgrade obot-entraid jrmatherly/obot-entraid \
   --version 0.16.0-entraid.1 \
@@ -617,11 +636,13 @@ fetch('/v2/auth/user/profile')
 This release merges [obot-platform/obot v0.16.0](https://github.com/obot-platform/obot/releases/tag/v0.16.0).
 
 ### New Features
+
 - ✨ Improved authentication token management (reason for breaking changes)
 - ✨ Enhanced security for cookie-based authentication
 - ✨ New user profile API with additional fields
 
 ### Bug Fixes
+
 - 🐛 Fixed session expiration edge cases
 - 🐛 Corrected profile picture caching behavior
 
@@ -676,6 +697,7 @@ curl -H "Authorization: Bearer $TOKEN" https://your-obot-instance.com/v2/auth/us
 **Title:** "What's New in obot-entraid v0.15.2: Upstream Improvements & Security Patches"
 
 **Body:**
+
 ```markdown
 # What's New in obot-entraid v0.15.2
 
@@ -763,6 +785,7 @@ We're actively monitoring upstream development and planning:
 - 🐛 [Report issues](https://github.com/jrmatherly/obot-entraid/issues)
 
 Happy automating! 🤖
+
 ```
 
 ### Documentation Update Announcement
@@ -927,30 +950,36 @@ Add to `.github/workflows/upstream-sync-check.yml`:
 ### Timing Considerations
 
 **Notify Early:**
+
 - Send notifications as soon as upstream changes are detected
 - Give team time to plan merge window (3-7 days advance notice)
 
 **Batch Updates:**
+
 - Group minor upstream updates (wait for several commits)
 - Immediate notification for security patches
 
 **Time Zone Awareness:**
+
 - Schedule merges during low-traffic periods
 - Consider global user base (prefer weekends for major changes)
 
 ### Audience Segmentation
 
 **Maintainers:**
+
 - Technical details
 - GitHub issues with full context
 - Slack/Discord for real-time coordination
 
 **Contributors:**
+
 - High-level summaries
 - Focus on how to help
 - GitHub Discussions for async coordination
 
 **Users:**
+
 - Impact-focused messaging
 - What changed and why they care
 - Clear action items (if any)
@@ -958,16 +987,19 @@ Add to `.github/workflows/upstream-sync-check.yml`:
 ### Tone Guidelines
 
 **Routine Updates:**
+
 - Positive, informative
 - Celebrate improvements
 - "We're excited to announce..."
 
 **Breaking Changes:**
+
 - Apologetic, supportive
 - Clear migration path
 - "We apologize for the inconvenience..."
 
 **Security Issues:**
+
 - Urgent but not alarmist
 - Emphasize action required
 - "We strongly recommend upgrading..."

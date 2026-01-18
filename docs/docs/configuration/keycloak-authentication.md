@@ -149,7 +149,7 @@ For comprehensive user metadata and group information:
 ### Step 6: Note Required Values
 
 | Obot Parameter | Keycloak Location |
-|----------------|-------------------|
+| --------------- | ------------------- |
 | `client_id` | Client > Settings > Client ID |
 | `client_secret` | Client > Credentials > Client secret |
 | `url` | Your Keycloak base URL (e.g., `https://keycloak.example.com`) |
@@ -162,7 +162,7 @@ For comprehensive user metadata and group information:
 ### Required Parameters
 
 | Parameter | Description |
-|-----------|-------------|
+| ----------- | ------------- |
 | `client_id` | The Client ID from Keycloak client configuration |
 | `client_secret` | The Client secret from Keycloak credentials |
 | `url` | The base URL of your Keycloak server (e.g., `https://keycloak.example.com`) |
@@ -173,14 +173,14 @@ For comprehensive user metadata and group information:
 ### Admin API Access (Optional but Recommended)
 
 | Parameter | Description |
-|-----------|-------------|
+| ----------- | ------------- |
 | `admin_client_id` | Service account client ID for Admin API (uses main client if not specified) |
 | `admin_client_secret` | Service account client secret (uses main client secret if not specified) |
 
 ### Optional Parameters
 
 | Parameter | Default | Description |
-|-----------|---------|-------------|
+| ----------- | --------- | ------------- |
 | `postgres_dsn` | - | PostgreSQL DSN for session storage |
 | `token_refresh_duration` | `1h` | How often to refresh the access token |
 | `allowed_groups` | - | Comma-separated Keycloak group names allowed to authenticate |
@@ -223,6 +223,7 @@ config:
 ```
 
 When configured, only users with at least one of the specified roles can authenticate. Roles can be:
+
 - **Realm roles**: Assigned directly in the realm
 - **Client roles**: Assigned specific to the Obot client
 
@@ -240,6 +241,7 @@ When configured, only users who are members of at least one of the specified gro
 ### Combining Roles and Groups
 
 You can configure both `allowed_roles` and `allowed_groups`. In this case:
+
 - User must satisfy **either** the role requirement **or** the group requirement
 - This provides flexible access control based on your organization's structure
 
@@ -261,6 +263,7 @@ The provider supports two patterns for Admin API access:
 #### 1. Single Client (Recommended for Simple Setups)
 
 Use the main OAuth client with service account enabled:
+
 - Enable **Service accounts roles** on the main client
 - Assign `view-users` and `view-realm` roles
 - Provider automatically uses the main client credentials
@@ -268,6 +271,7 @@ Use the main OAuth client with service account enabled:
 #### 2. Dedicated Admin Client (Recommended for Production)
 
 Use a separate service account client for Admin API:
+
 - Create dedicated client with service account enabled
 - Configure via `admin_client_id` and `admin_client_secret`
 - Provides separation of concerns and easier auditing
@@ -275,6 +279,7 @@ Use a separate service account client for Admin API:
 ### Token Caching
 
 Admin access tokens are cached with a 4-minute TTL (Keycloak tokens typically valid for 5 minutes):
+
 - Reduces API calls to Keycloak
 - Improves authentication performance
 - Automatic token refresh on expiry
@@ -284,7 +289,7 @@ Admin access tokens are cached with a 4-minute TTL (Keycloak tokens typically va
 ### Health Endpoints
 
 | Endpoint | Purpose | Kubernetes Probe |
-|----------|---------|------------------|
+| ---------- | --------- | ------------------ |
 | `/health` | Liveness check | `livenessProbe` |
 | `/ready` | Readiness check (verifies Keycloak connectivity) | `readinessProbe` |
 | `/metrics` | Prometheus metrics | N/A |
@@ -292,7 +297,7 @@ Admin access tokens are cached with a 4-minute TTL (Keycloak tokens typically va
 ### Prometheus Metrics
 
 | Metric | Type | Description |
-|--------|------|-------------|
+| -------- | ------ | ------------- |
 | `keycloak_auth_requests_total` | Counter | Total authentication requests |
 | `keycloak_auth_failures_total` | Counter | Failed authentications by reason |
 | `keycloak_admin_api_duration_seconds` | Histogram | Admin API latency |
@@ -323,6 +328,7 @@ The following security enhancements were implemented to improve authentication r
 ### Fail-Fast Authentication
 
 **ID token parsing is mandatory** for reliable user identification. Authentication will fail immediately if:
+
 - ID token is missing from the OAuth callback
 - ID token cannot be parsed successfully
 - Required claims are missing from the token
@@ -334,7 +340,7 @@ This prevents silent authentication failures and ensures consistent user identit
 Production-grade cookie security with explicit configuration:
 
 | Setting | Production | Development |
-|---------|------------|-------------|
+| --------- | ------------ | ------------- |
 | `Secure` flag | Required (HTTPS) | Optional with `OBOT_AUTH_INSECURE_COOKIES=true` |
 | `HTTPOnly` | Always enabled | Always enabled |
 | `SameSite` | `Lax` (default) | Configurable via `OBOT_AUTH_PROVIDER_COOKIE_SAMESITE` |
@@ -355,6 +361,7 @@ OBOT_AUTH_PROVIDER_COOKIE_SAMESITE: "Lax"  # Options: Strict, Lax, None
 ```
 
 **HTTPS Enforcement:**
+
 - Server URL must use `https://` scheme in production
 - Application exits on startup if HTTP is detected without `OBOT_AUTH_INSECURE_COOKIES=true`
 - Development environments can opt-out with explicit environment variable
@@ -364,6 +371,7 @@ OBOT_AUTH_PROVIDER_COOKIE_SAMESITE: "Lax"  # Options: Strict, Lax, None
 Automatic session error detection and graceful handling:
 
 **Detected Error Patterns:**
+
 - `record not found` - Session not in storage
 - `session ticket cookie failed validation` - Cookie decryption failure
 - `refreshing token returned` - Token refresh HTTP errors
@@ -373,6 +381,7 @@ Automatic session error detection and graceful handling:
 - `failed to refresh token` - Token refresh failure
 
 **Behavior:**
+
 - Users automatically redirected to login page on session errors
 - No confusing HTTP 500 error pages shown to users
 - Diagnostic logging for troubleshooting
@@ -382,7 +391,7 @@ Automatic session error detection and graceful handling:
 ### Security Requirements
 
 | Requirement | Implementation |
-|-------------|----------------|
+| ------------- | -------------- |
 | oauth2-proxy **v7.13.0** | Required for CVE fixes |
 | PKCE (S256) | SHA-256 code challenge required |
 | Header smuggling protection | v7.13.0 normalizes underscore headers |
@@ -392,7 +401,7 @@ Automatic session error detection and graceful handling:
 ### Cookie Security
 
 | Setting | Value | Purpose |
-|---------|-------|---------|
+| --------- | ------- | --------- |
 | `HttpOnly` | true | Prevent XSS access to cookies |
 | `Secure` | true | HTTPS only transmission |
 | `SameSite` | lax | CSRF protection |
@@ -400,6 +409,7 @@ Automatic session error detection and graceful handling:
 ### Client Secret Management
 
 **Best Practices:**
+
 - Store secrets in Kubernetes secrets or secure vault
 - Never commit secrets to source control
 - Rotate secrets regularly (recommended: every 90 days)
@@ -411,7 +421,7 @@ Automatic session error detection and graceful handling:
 ### Common Issues
 
 | Issue | Cause | Solution |
-|-------|-------|----------|
+| ------- | ------- | ---------- |
 | 401 on callback | Invalid client secret | Verify client secret in Keycloak |
 | No groups returned | Missing groups scope | Add groups client scope and mapper |
 | No roles returned | Roles not in token | Check token mappers in client configuration |
@@ -462,4 +472,4 @@ curl "https://keycloak.example.com/admin/realms/obot/users/<user-id>/groups" \
 - [Keycloak Admin REST API](https://www.keycloak.org/docs-api/latest/rest-api/index.html)
 - [OAuth2-Proxy Keycloak-OIDC Provider](https://oauth2-proxy.github.io/oauth2-proxy/configuration/providers/keycloak_oidc/)
 - [Service Accounts in Keycloak](https://www.keycloak.org/docs/latest/server_admin/#_service_accounts)
-- [Keycloak Provider Source Code](https://github.com/jrmatherly/obot-entraid/tree/main/tools/keycloak-auth-provider) - Package-level documentation
+- [Keycloak Provider Source Code](https://github.com/jrmatherly/obot-tools/tree/main/keycloak-auth-provider) - Package-level documentation

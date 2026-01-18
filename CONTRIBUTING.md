@@ -88,16 +88,19 @@ git push origin feature/your-feature-name
 ### High Priority
 
 🔐 **Authentication Providers**
+
 - LDAP/Active Directory integration
 - SAML 2.0 support
 - Okta, Auth0, generic OIDC providers
 
 📚 **Documentation**
+
 - Setup guides for different environments
 - Troubleshooting documentation
 - API documentation
 
 🧪 **Testing**
+
 - Integration tests for auth providers
 - E2E tests for authentication flows
 
@@ -137,6 +140,7 @@ func FetchUserProfile(ctx context.Context, token string) (map[string]interface{}
 ```
 
 **Quality checks:**
+
 ```bash
 gofmt -w .                    # Format code
 golangci-lint run             # Lint code
@@ -157,6 +161,7 @@ export interface UserProfile {
 ```
 
 **Quality checks:**
+
 ```bash
 cd ui/user
 pnpm run check               # TypeScript type checking
@@ -179,6 +184,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 **Types:** `feat`, `fix`, `docs`, `test`, `chore`, `refactor`, `perf`, `ci`
 
 **Examples:**
+
 ```bash
 feat(entra): add conditional access policy support
 fix(keycloak): resolve token expiration handling
@@ -192,10 +198,10 @@ test(auth): add integration tests for profile picture handling
 
 These files are fork-specific and must always be preserved during upstream merges:
 
-- `tools/entra-auth-provider/**` - Entra ID authentication provider
-- `tools/keycloak-auth-provider/**` - Keycloak authentication provider
 - `.github/workflows/docker-build-and-push.yml` - GHCR publishing workflow
-- `tools/index.yaml` - Custom tool registry (merge manually)
+- `archive/` - Historical archived files
+
+**Note:** Auth providers (Entra ID, Keycloak) have been migrated to `github.com/jrmatherly/obot-tools`. See `archive/tools-migration-2026-01-18/` for historical reference.
 
 ### Upstream-Shared Files (Careful Merging)
 
@@ -206,6 +212,7 @@ These files are modified by both upstream and our fork:
 - `pkg/**` - Core Go code (prefer upstream, test thoroughly)
 
 **Before modifying shared files:**
+
 1. Check if change can be implemented in custom code instead
 2. Document why modification is necessary
 3. Plan for future upstream merge conflicts
@@ -241,6 +248,7 @@ tools/
 ### Register Provider
 
 **1. Update `tools/index.yaml`:**
+
 ```yaml
 tools:
   - name: your-auth-provider
@@ -250,6 +258,7 @@ tools:
 ```
 
 **2. Create `tool.gpt`:**
+
 ```gpt
 Name: your-auth-provider
 Description: Authentication provider for YourService
@@ -262,7 +271,9 @@ Metadata: optionalEnvVars: OBOT_YOUR_AUTH_PROVIDER_TENANT_ID
 exec your-auth-provider
 ```
 
-**Reference:** Study `tools/entra-auth-provider/` (complex) or `tools/keycloak-auth-provider/` (simpler) for implementation patterns.
+**Reference:** Study the auth providers in `github.com/jrmatherly/obot-tools` for implementation patterns:
+- `entra-auth-provider/` - Complex example with profile pictures and group filtering
+- `keycloak-auth-provider/` - Simpler OIDC standard implementation
 
 ## Testing Your Changes
 
@@ -353,16 +364,19 @@ Our [PR template](.github/PULL_REQUEST_TEMPLATE.md) includes comprehensive check
 ### Resources
 
 📖 **Documentation:**
+
 - [Full Contributor Guide](docs/docs/contributing/contributor-guide.md)
 - [Auth Provider Guide](tools/README.md)
 - [Fork Workflow Analysis](docs/docs/contributing/fork-workflow-analysis-2026.md)
 
 💬 **Communication:**
+
 - [GitHub Discussions](https://github.com/jrmatherly/obot-entraid/discussions) - Ask questions
 - [GitHub Issues](https://github.com/jrmatherly/obot-entraid/issues) - Report bugs
 
 🔍 **Examples:**
-- Browse `tools/entra-auth-provider/` and `tools/keycloak-auth-provider/`
+
+- Browse auth providers in [obot-tools](https://github.com/jrmatherly/obot-tools) (entra, keycloak, github, google)
 - Check UI components in `ui/user/src/lib/components/`
 - Review tests in `*_test.go` files
 
@@ -375,6 +389,7 @@ A: No. By submitting a PR, you agree to license your contribution under Apache 2
 A: Comment on the issue first to coordinate. If no response after a few days, feel free to proceed.
 
 **Q: My PR has merge conflicts. What do I do?**
+
 ```bash
 git fetch upstream
 git rebase upstream/main
@@ -393,6 +408,7 @@ A: Yes! Mark it as draft or use `[WIP]` prefix. Great for early feedback.
 We follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
 
 **Summary:**
+
 - Be respectful and inclusive
 - Accept constructive feedback
 - Focus on what's best for the community
@@ -401,6 +417,7 @@ We follow the [Contributor Covenant Code of Conduct](https://www.contributor-cov
 ## Recognition
 
 Contributors who make significant contributions will be:
+
 - Listed in project CONTRIBUTORS file
 - Mentioned in release notes
 - Credited in documentation they help create

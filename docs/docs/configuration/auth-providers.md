@@ -69,13 +69,13 @@ Obot currently supports the following authentication providers (using OAuth2). B
 
 You will need to create an OAuth App in GitHub following these [instructions](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
 
-You can view the source code for GitHub provider in this [repo](https://github.com/obot-platform/tools).
+You can view the source code for GitHub provider in this [repo](https://github.com/jrmatherly/obot-tools).
 
 ### Google
 
 Follow the instructions [here](https://developers.google.com/identity/protocols/oauth2/web-server#creatingcred) to create the OAuth app for Obot.
 
-You can view the source code for Google provider in this [repo](https://github.com/obot-platform/tools).
+You can view the source code for Google provider in this [repo](https://github.com/jrmatherly/obot-tools).
 
 ### Entra (Enterprise Only)
 
@@ -152,7 +152,7 @@ To configure Keycloak authentication:
 You can configure role-based and group-based access control:
 
 | Obot Field | Description |
-|------------|-------------|
+| ------------ | ------------- |
 | Client ID | The Client ID from Keycloak |
 | Client Secret | The Client secret from the Credentials tab |
 | Keycloak URL | Base URL of your Keycloak server (e.g., `https://keycloak.example.com`) |

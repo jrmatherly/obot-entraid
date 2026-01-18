@@ -8,7 +8,6 @@ Model Access Policies control which users and groups can use which language mode
 
 This feature replaces the previous **Allowed Models** and **Default Model** settings that were part of Chat Configuration. If you previously used those settings, see [Upgrades and Migration](#upgrades-and-migration) for how your configuration was preserved.
 
-
 ## How Policies Work
 
 Each policy defines two things:

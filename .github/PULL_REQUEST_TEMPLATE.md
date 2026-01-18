@@ -135,6 +135,7 @@ Relates to #
 - [ ] Changes touch shared code (may conflict with future upstream merges)
 
 **If shared code changed:**
+
 - Conflict resolution strategy: <!-- describe how to handle future upstream conflicts -->
 - Documented in: <!-- link to relevant documentation -->
 

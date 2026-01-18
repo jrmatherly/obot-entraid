@@ -2,7 +2,7 @@
 
 This guide explains how to set up AWS KMS encryption for Obot.
 
-### Prerequisites
+## Prerequisites
 
 - AWS CLI installed and logged in with valid credentials.
 

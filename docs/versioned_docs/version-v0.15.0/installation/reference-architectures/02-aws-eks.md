@@ -2,15 +2,15 @@
 
 Deploying Obot to Amazon Elastic Kubernetes Service follows the standard Helm workflow. As a prerequisite, you'll need the following resources set up in your AWS environment:
 
-* AWS account
-* VPC with subnets
-* Amazon RDS instance running PostgreSQL 17+ with the pgvector extension enabled
-* VPC Security Groups configured to allow connectivity between your EKS cluster and RDS instance
-* Private Amazon S3 bucket for workspace data
-* (Optional) AWS KMS key for encrypting sensitive information
-* (Optional) IAM role and policy for service account (IRSA) if you're using AWS services like KMS for encryption
-* kubectl and Helm installed and configured to connect to your EKS cluster
-* EKS cluster with at least 2 CPU cores and 4GB of RAM per node. Production workloads may require more. The cluster should have IAM roles for service accounts (IRSA) configured if you're using AWS services like KMS for encryption.
+- AWS account
+- VPC with subnets
+- Amazon RDS instance running PostgreSQL 17+ with the pgvector extension enabled
+- VPC Security Groups configured to allow connectivity between your EKS cluster and RDS instance
+- Private Amazon S3 bucket for workspace data
+- (Optional) AWS KMS key for encrypting sensitive information
+- (Optional) IAM role and policy for service account (IRSA) if you're using AWS services like KMS for encryption
+- kubectl and Helm installed and configured to connect to your EKS cluster
+- EKS cluster with at least 2 CPU cores and 4GB of RAM per node. Production workloads may require more. The cluster should have IAM roles for service accounts (IRSA) configured if you're using AWS services like KMS for encryption.
 
 If you plan on using AWS KMS, here is some example terraform that creates the key and the necessary IAM policies:
 

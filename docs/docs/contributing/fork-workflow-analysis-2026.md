@@ -10,6 +10,7 @@
 This document presents a comprehensive analysis of our current upstream merge process for the `obot-entraid` fork against industry best practices, specifically the SuperClaude Framework's OSS Fork Workflow 2025 documentation and authoritative Git workflow sources. Our analysis reveals that while our current process is functional and addresses the critical concerns of preserving custom authentication providers, there are strategic improvements we can adopt to enhance maintainability, reduce merge conflicts, and align with modern Git workflow standards.
 
 **Key Findings:**
+
 - ✅ Our conflict resolution strategy is sound and well-documented
 - ✅ Critical custom files are properly identified and protected
 - ⚠️ Our branch strategy differs from SuperClaude's recommended 2-tier model
@@ -18,6 +19,7 @@ This document presents a comprehensive analysis of our current upstream merge pr
 - ⚠️ Limited guidance on feature branch workflow for contributors
 
 **Priority Recommendations:**
+
 1. **Maintain current merge-based upstream sync** (safest for our use case)
 2. **Implement enhanced merge commit messages** (quick win, immediate value)
 3. **Implement automated upstream monitoring** via GitHub Actions
@@ -30,25 +32,29 @@ This document presents a comprehensive analysis of our current upstream merge pr
 → Skip to [Recommended Workflow Summary](#recommended-workflow-summary) (line 919)
 
 **If you're setting up automation (recommended first step):**
+
 1. Start with [Recommendation 1](#recommendation-1-maintain-merge-based-upstream-synchronization) (Enhanced merge messages) - 1 hour effort
 2. Create the verification script referenced in the recommendation
 3. Use enhanced commit messages on your next upstream merge
 
 **If you want to implement automated monitoring:**
+
 - Go to [Recommendation 2](#recommendation-2-implement-automated-upstream-monitoring)
 - Copy the workflow file from Phase 1
 - Test with workflow_dispatch before enabling schedule
 
 **If you're implementing feature branches:**
+
 - Start with [Recommendation 3](#recommendation-3-adopt-feature-branch-workflow-for-new-development)
 - Read the "Transition Strategy" for gradual adoption
 
 **If you're a contributor looking to submit a PR:**
+
 - Skip to [Recommendation 5: Contributor Guide](#recommendation-5-document-contributor-workflow)
 
 ---
 
-## Executive Summary
+## Analysis Details
 
 ### Sources Analyzed
 
@@ -328,6 +334,7 @@ flowchart TD
 ### Our Current Workflow
 
 **Branch Model:**
+
 ```
 main (our production branch)
   ├── Includes upstream changes via merge
@@ -336,6 +343,7 @@ main (our production branch)
 ```
 
 **Upstream Sync Process:**
+
 1. Fetch upstream changes: `git fetch upstream`
 2. Test merge with `--no-commit --no-ff`
 3. Resolve conflicts (keep ours for custom files)
@@ -344,6 +352,7 @@ main (our production branch)
 6. Commit merge or abort
 
 **Strengths:**
+
 - ✅ **Well-documented conflict resolution**: Clear guidance on which files to prefer (ours vs theirs)
 - ✅ **Comprehensive verification checklist**: Tools, workflows, Dockerfile logic
 - ✅ **Build validation**: Docker build tests ensure registry merge works
@@ -351,6 +360,7 @@ main (our production branch)
 - ✅ **Clear custom file inventory**: Auth providers, workflows, Helm chart customizations
 
 **Characteristics:**
+
 - Uses merge commits to integrate upstream changes
 - Main branch serves dual purpose (development + upstream sync)
 - No separate feature branch workflow documented
@@ -359,12 +369,14 @@ main (our production branch)
 ### SuperClaude Framework Recommendations
 
 **Branch Model:**
+
 ```
 master (upstream mirror only - no direct commits)
   └── feature/* (all development branches)
 ```
 
 **Workflow Philosophy:**
+
 - **Golden Rule**: Never commit directly to master/main
 - Master exists solely for upstream synchronization
 - All development occurs in feature branches derived from master
@@ -372,6 +384,7 @@ master (upstream mirror only - no direct commits)
 - Merge commits only for integrating approved PRs
 
 **Key Principles:**
+
 1. **Separation of Concerns**: Development vs. upstream tracking
 2. **Rebase-First**: Clean history through interactive rebase
 3. **Fast-Forward Sync**: Use `git merge upstream/master --ff-only`
@@ -384,16 +397,19 @@ master (upstream mirror only - no direct commits)
 ### 1. Branch Strategy Divergence
 
 **SuperClaude Model:**
+
 - Master = upstream mirror only (read-only except for syncs)
 - Feature branches for all development
 - Clear separation between sync and development
 
 **Our Current Model:**
+
 - Main = upstream + custom changes + active development
 - No documented feature branch workflow
 - Single branch serves multiple purposes
 
 **Impact:**
+
 - **Medium**: Not blocking us, but could reduce merge complexity
 - Our approach works because we're the primary maintainers
 - Feature branch model would help external contributors
@@ -403,17 +419,20 @@ master (upstream mirror only - no direct commits)
 ### 2. Merge vs. Rebase Philosophy
 
 **SuperClaude Approach:**
+
 - Prefer rebase for feature development
 - Interactive rebase for commit cleanup
 - Fast-forward merges for upstream sync
 - Only use merge commits for PR integration
 
 **Our Current Approach:**
+
 - Use merge commits for upstream integration
 - No documented rebase workflow
 - No commit squashing guidance
 
 **Impact:**
+
 - **Low**: Merge strategy is safer for our complex customizations
 - Rebase could help with feature development but risky for upstream sync
 - The Atlassian "Golden Rule" warns: never rebase public branches
@@ -423,17 +442,20 @@ master (upstream mirror only - no direct commits)
 ### 3. Automation Gaps
 
 **What SuperClaude/GitHub Workflows Recommend:**
+
 - Automated upstream change detection
 - CI-based dry-run merge testing
 - Automated conflict reporting
 - Notification systems for new upstream releases
 
 **What We Have:**
+
 - Manual fetch and merge process
 - Manual verification steps
 - No automated upstream monitoring
 
 **Impact:**
+
 - **High**: We might miss important upstream security updates
 - Manual process is error-prone for frequent syncs
 - No early warning system for difficult merges
@@ -443,18 +465,21 @@ master (upstream mirror only - no direct commits)
 ### 4. Contributor Workflow Documentation
 
 **SuperClaude/GitHub Standards:**
+
 - Clear guidance for forking and feature branches
 - PR submission workflow
 - Code review and iteration process
 - Commit message conventions
 
 **Our Current State:**
+
 - Excellent maintainer documentation (upstream merge)
 - Limited external contributor guidance
 - No feature branch workflow documented
 - No PR submission standards
 
 **Impact:**
+
 - **Medium**: Currently not accepting many external contributions
 - Will become critical if community grows
 - Good documentation attracts quality contributions
@@ -464,17 +489,20 @@ master (upstream mirror only - no direct commits)
 ### 5. Commit History Cleanliness
 
 **SuperClaude Emphasis:**
+
 - Interactive rebase for commit cleanup
 - Squashing related commits
 - Atomic, meaningful commits
 - Clean linear history
 
 **Our Current State:**
+
 - No guidance on commit organization
 - Merge commits from upstream create non-linear history
 - No commit squashing workflow
 
 **Impact:**
+
 - **Low**: History is functional but could be cleaner
 - Doesn't affect functionality
 - Matters more for code archaeology and bisecting
@@ -491,6 +519,7 @@ master (upstream mirror only - no direct commits)
 
 **Rationale:**
 Based on Atlassian's "Golden Rule of Rebasing" and our complex fork requirements, using merge commits for upstream integration is the safest strategy. Our fork includes:
+
 - Custom authentication providers (significant new functionality)
 - Modified Dockerfile with registry merging logic
 - Custom CI/CD workflows
@@ -501,6 +530,7 @@ Rebasing these changes onto upstream would be error-prone and risky. The GitHub 
 **Refinements to Current Process:**
 
 1. **Add Fast-Forward Detection**
+
    ```bash
    # Before attempting merge, check if fast-forward is possible
    git fetch upstream
@@ -514,6 +544,7 @@ Rebasing these changes onto upstream would be error-prone and risky. The GitHub 
    ```
 
 2. **Structured Conflict Resolution Log**
+
    ```bash
    # Document conflict resolution decisions
    git status | grep "both modified" > /tmp/conflicts.txt
@@ -521,6 +552,7 @@ Rebasing these changes onto upstream would be error-prone and risky. The GitHub 
    ```
 
 3. **Enhanced Merge Commit Messages**
+
    ```bash
    git commit -F- <<EOF
    chore: merge upstream obot-platform/obot main (v${UPSTREAM_VERSION})
@@ -697,6 +729,7 @@ For fast-forward merges (no conflicts), optionally auto-merge and create PR:
 
 **Rationale:**
 The SuperClaude Framework and GitHub Standard Workflow both emphasize separating development from upstream synchronization. While our single-branch approach works for maintainer changes, a feature branch workflow would:
+
 - Reduce main branch churn
 - Simplify upstream merges (cleaner main branch)
 - Enable parallel development
@@ -951,6 +984,7 @@ jobs:
 ```
 
 **Usage:**
+
 ```bash
 # Run test merge via GitHub CLI
 gh workflow run test-upstream-merge.yml
@@ -990,7 +1024,9 @@ Thank you for considering contributing to obot-entraid! This guide will help you
    git clone https://github.com/YOUR_USERNAME/obot-entraid.git
    cd obot-entraid
    ```
+
 1. Add upstream remote:
+
    ```bash
    git remote add upstream https://github.com/jrmatherly/obot-entraid.git
    git fetch upstream
@@ -999,6 +1035,7 @@ Thank you for considering contributing to obot-entraid! This guide will help you
 ### Development Workflow
 
 1. **Create a feature branch** from latest main:
+
    ```bash
    git checkout main
    git pull upstream main
@@ -1011,6 +1048,7 @@ Thank you for considering contributing to obot-entraid! This guide will help you
    - Commit messages: Use [Conventional Commits](https://www.conventionalcommits.org/)
 
 3. **Test your changes**:
+
    ```bash
    make lint     # Go linting
    make test     # Go tests
@@ -1018,6 +1056,7 @@ Thank you for considering contributing to obot-entraid! This guide will help you
    ```
 
 4. **Commit with clear messages**:
+
    ```bash
    git add .
    git commit -m "feat(auth): add OAuth refresh token support
@@ -1030,6 +1069,7 @@ Thank you for considering contributing to obot-entraid! This guide will help you
    ```
 
 5. **Keep your branch updated**:
+
    ```bash
    git fetch upstream
    git rebase upstream/main
@@ -1056,6 +1096,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -1066,6 +1107,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Maintenance tasks
 
 **Examples:**
+
 ```
 feat(entra): add conditional access policy support
 
@@ -1166,6 +1208,7 @@ Thank you for contributing to obot-entraid! 🚀
 **Frequency:** Monthly or when significant upstream releases occur
 
 **Process:**
+
 ```bash
 # 1. Automated detection (via GitHub Actions)
 # Workflow runs weekly, creates issue if conflicts detected
@@ -1199,6 +1242,7 @@ gh run watch  # Watch CI/CD
 ### For Feature Development (All Contributors)
 
 **Process:**
+
 ```bash
 # 1. Create feature branch
 git checkout -b feature/amazing-feature main
@@ -1234,12 +1278,14 @@ git branch -d feature/amazing-feature
 ### Phase 1: Foundation (Weeks 1-2)
 
 **High Priority:**
+
 - [ ] Implement automated upstream monitoring workflow
 - [ ] Create test upstream merge workflow
 - [ ] Add enhanced merge commit message template
 - [ ] Create custom files verification script
 
 **Deliverables:**
+
 - `.github/workflows/upstream-sync-check.yml`
 - `.github/workflows/test-upstream-merge.yml`
 - `scripts/verify-custom-files.sh`
@@ -1248,12 +1294,14 @@ git branch -d feature/amazing-feature
 ### Phase 2: Workflow Enhancement (Weeks 3-4)
 
 **Medium Priority:**
+
 - [ ] Document feature branch workflow
 - [ ] Create contributor guide
 - [ ] Update PR template with checklist
 - [ ] Add commit message guidelines
 
 **Deliverables:**
+
 - `docs/docs/contributing/contributor-guide.md`
 - `.github/pull_request_template.md`
 - Updated `CONTRIBUTING.md`
@@ -1261,12 +1309,14 @@ git branch -d feature/amazing-feature
 ### Phase 3: Adoption & Refinement (Weeks 5-8)
 
 **Adoption:**
+
 - [ ] Maintainers adopt feature branch workflow internally
 - [ ] Test contributor workflow with sample external PR
 - [ ] Gather feedback and refine documentation
 - [ ] Consider branch protection rules
 
 **Monitoring:**
+
 - [ ] Track upstream sync frequency
 - [ ] Measure merge conflict frequency
 - [ ] Monitor CI/CD success rate for merges
@@ -1280,12 +1330,14 @@ git branch -d feature/amazing-feature
 **Problem: Workflow doesn't run on schedule**
 
 Check:
+
 1. Repository settings → Actions → General → Allow all actions
 2. Workflow file is in `.github/workflows/` directory
 3. YAML syntax is valid: `gh workflow view upstream-sync-check`
 4. Workflow is enabled: Check Actions tab → All workflows → upstream-sync-check
 
 Fix:
+
 ```bash
 # Manually trigger to test
 gh workflow run upstream-sync-check.yml
@@ -1294,10 +1346,12 @@ gh workflow run upstream-sync-check.yml
 **Problem: False positive conflict detection**
 
 Symptoms:
+
 - Workflow reports conflicts but manual merge succeeds
 - Test merge step fails but no actual conflicts exist
 
 Fix:
+
 ```bash
 # Run local test
 git fetch upstream
@@ -1307,6 +1361,7 @@ git merge --abort
 ```
 
 Likely causes:
+
 - Uncommitted local changes
 - Stale remote refs
 - Submodule issues
@@ -1314,12 +1369,14 @@ Likely causes:
 **Problem: No notifications received**
 
 Check:
+
 1. GitHub notification settings for Actions
 2. Email notifications enabled in GitHub profile
 3. Issue creation permissions for `github.rest.issues.create`
 4. Slack webhook secret configured (if using Slack notifications)
 
 Fix:
+
 ```bash
 # Test issue creation manually
 gh api repos/jrmatherly/obot-entraid/issues -f title="Test" -f body="Test issue"
@@ -1328,10 +1385,12 @@ gh api repos/jrmatherly/obot-entraid/issues -f title="Test" -f body="Test issue"
 **Problem: Workflow exceeds rate limits**
 
 Symptoms:
+
 - API rate limit errors in logs
 - `github.rest.issues.create` fails with 403
 
 Fix:
+
 - Reduce schedule frequency (weekly → bi-weekly)
 - Use `GITHUB_TOKEN` with proper permissions
 - Consider using GitHub App token for higher limits
@@ -1343,6 +1402,7 @@ Fix:
 If you encounter a conflict in a file not listed in Appendix B (Conflict Resolution Matrix):
 
 1. **Analyze the conflict:**
+
    ```bash
    git diff --name-only --diff-filter=U  # List conflicted files
    git diff <conflicted-file>            # See actual conflicts
@@ -1359,6 +1419,7 @@ If you encounter a conflict in a file not listed in Appendix B (Conflict Resolut
 **Problem: go.mod/go.sum conflicts that won't resolve**
 
 Fix:
+
 ```bash
 # Accept both versions and regenerate
 git checkout --theirs go.mod go.sum
@@ -1369,10 +1430,12 @@ git add go.mod go.sum
 **Problem: Merge breaks custom auth providers**
 
 Symptoms:
+
 - Build succeeds but auth providers don't work
 - Missing dependencies or runtime errors
 
 Debug:
+
 ```bash
 # Verify tool registry is intact
 cat tools/index.yaml | grep entra-auth-provider
@@ -1385,6 +1448,7 @@ docker run --rm test-merge cat /obot-tools/tools/index.yaml
 ```
 
 Fix:
+
 - Ensure Dockerfile merge logic is preserved (lines 230-250)
 - Verify `OBOT_SERVER_TOOL_REGISTRIES` environment variable points to correct path
 - Check that upstream didn't remove tool registry support
@@ -1396,12 +1460,14 @@ Fix:
 If `git rebase origin/main` creates too many conflicts on feature branch:
 
 Alternative strategy:
+
 ```bash
 # Use merge instead of rebase for long-lived branches
 git merge origin/main
 ```
 
 Or create a new feature branch from current main:
+
 ```bash
 git checkout main
 git pull origin main
@@ -1412,17 +1478,20 @@ git cherry-pick <commit-hashes>  # Selectively apply changes
 **Problem: Force-push accidentally overwrites main**
 
 Prevention:
+
 1. Enable branch protection on main branch:
    - Settings → Branches → Add rule for `main`
    - Check "Require pull request reviews"
    - Check "Do not allow bypassing the above settings"
 
 2. Always use `--force-with-lease` instead of `--force`:
+
    ```bash
    git push origin feature/branch --force-with-lease
    ```
 
 3. Never force-push to main:
+
    ```bash
    # This should be blocked by branch protection
    git push origin main --force  # ❌ NEVER DO THIS
@@ -1433,24 +1502,30 @@ Prevention:
 **Problem: GitHub Actions minutes consumption too high**
 
 Check usage:
+
 ```bash
 gh api /repos/jrmatherly/obot-entraid/actions/runs \
   --jq '.workflow_runs[] | select(.name=="Upstream Sync Check") | {created_at, conclusion, run_time: .run_duration_ms}'
 ```
 
 Optimize:
+
 - Reduce schedule frequency (daily → weekly)
 - Add conditions to skip runs if no changes:
+
   ```yaml
   if: steps.check.outputs.commits_behind != '0'
   ```
+
 - Use smaller runner if possible
 - Cache Go modules and dependencies
 
 **Problem: Notification fatigue from too many alerts**
 
 Solutions:
+
 1. Increase threshold for critical alerts:
+
    ```yaml
    if: steps.check.outputs.commits_behind > '20'  # Was 10
    ```
@@ -1486,6 +1561,7 @@ git push origin main
 **Problem: Need to disable automation temporarily**
 
 Disable workflow:
+
 ```bash
 # Via GitHub CLI
 gh workflow disable upstream-sync-check
@@ -1494,6 +1570,7 @@ gh workflow disable upstream-sync-check
 ```
 
 Re-enable when ready:
+
 ```bash
 gh workflow enable upstream-sync-check
 ```
@@ -1600,6 +1677,7 @@ gh workflow enable upstream-sync-check
 ### Current State
 
 Our fork uses independent versioning:
+
 - **Upstream**: `v0.15.1` (obot-platform/obot)
 - **Fork**: `v0.2.33` (jrmatherly/obot-entraid)
 - **Pattern**: `v0.2.x` for minor updates, `v0.3.x` for major changes
@@ -1617,9 +1695,11 @@ Our fork uses independent versioning:
 ### Recommended Versioning Approach
 
 **For Upstream Merges:**
+
 1. **Always increment fork version** after upstream merge (at minimum, patch version)
 2. **Major upstream changes** (v0.x → v1.x): Consider bumping fork minor version (v0.2.x → v0.3.x)
 3. **Document upstream version** in merge commit message:
+
    ```
    chore: merge upstream obot-platform/obot v0.16.0
 
@@ -1629,6 +1709,7 @@ Our fork uses independent versioning:
    ```
 
 **For Fork-Specific Changes:**
+
 - New auth provider: Minor version bump (v0.2.x → v0.3.0)
 - Auth provider bug fix: Patch version bump (v0.2.33 → v0.2.34)
 - Workflow changes: Patch version bump
@@ -1639,16 +1720,19 @@ Our fork uses independent versioning:
 Our fork should follow [Semantic Versioning 2.0.0](https://semver.org/):
 
 **MAJOR version** (v0.x → v1.x):
+
 - Breaking changes to our custom auth provider APIs
 - Incompatible Helm chart changes
 - Upstream breaking changes that affect our customizations
 
 **MINOR version** (v0.2.x → v0.3.x):
+
 - New authentication provider added
 - Major upstream features adopted
 - Significant feature additions to existing providers
 
 **PATCH version** (v0.2.33 → v0.2.34):
+
 - Bug fixes in auth providers
 - Security patches
 - Upstream minor updates
@@ -1657,6 +1741,7 @@ Our fork should follow [Semantic Versioning 2.0.0](https://semver.org/):
 ### Fork Divergence Tracking
 
 **Track divergence in releases:**
+
 ```yaml
 # Example GitHub release notes format
 Release v0.2.34
@@ -1684,6 +1769,7 @@ Full Changelog: v0.2.33...v0.2.34
 **When Fork Divergence Becomes Problematic:**
 
 Signs that divergence is too high:
+
 - Upstream merges take &gt;4 hours to complete
 - Every upstream merge breaks our customizations
 - Conflicts in &gt;20% of files
@@ -1711,17 +1797,20 @@ Signs that divergence is too high:
 If maintaining fork becomes unsustainable:
 
 **Option 1: Full Convergence**
+
 - Work with upstream to integrate our auth providers
 - Transition users to upstream with our providers as plugins
 - Archive fork once upstream has feature parity
 
 **Option 2: Permanent Fork**
+
 - Accept full ownership of codebase
 - Stop merging upstream changes
 - Maintain independent release cycle
 - Backport security fixes manually
 
 **Option 3: Hybrid Approach**
+
 - Extract custom auth to microservice/sidecar pattern
 - Use upstream obot as-is with external auth service
 - Maintain only thin integration layer
@@ -1759,12 +1848,14 @@ Our current upstream merge process is **fundamentally sound** for our specific u
 ### Adoption Strategy: Pragmatic Hybrid Approach
 
 **Keep From Our Current Process:**
+
 - ✅ Merge-based upstream synchronization (safest for our customizations)
 - ✅ Manual conflict resolution with clear precedence rules (ours vs. theirs)
 - ✅ Comprehensive verification of custom files
 - ✅ Dry-run testing before committing merges
 
 **Adopt From SuperClaude/GitHub Standards:**
+
 - ✅ Automated upstream monitoring and notification
 - ✅ Feature branch workflow for new development
 - ✅ Interactive rebase for commit cleanup (feature branches only)
@@ -1772,6 +1863,7 @@ Our current upstream merge process is **fundamentally sound** for our specific u
 - ✅ CI/CD for automated merge testing
 
 **Explicitly Reject:**
+
 - ❌ Read-only main branch (too restrictive for our complex merges)
 - ❌ Rebasing upstream changes (high risk of code loss)
 - ❌ Mandatory squashing of all commits (loses useful upstream history)
@@ -1779,18 +1871,21 @@ Our current upstream merge process is **fundamentally sound** for our specific u
 ### Success Metrics
 
 **Short-Term (3 months):**
+
 - Automated upstream monitoring running weekly
 - Zero missed upstream security releases
 - Test merge workflow preventing merge errors
 - 2-3 successful feature branch PRs from maintainers
 
 **Medium-Term (6 months):**
+
 - Contributor guide published and tested
 - 1-2 external contributor PRs successfully merged
 - 50% of new features developed via feature branches
 - Merge conflicts detected automatically before manual attempts
 
 **Long-Term (12 months):**
+
 - Feature branch workflow is standard practice
 - External contributors actively submitting PRs
 - Upstream sync process fully automated for clean merges
@@ -1980,6 +2075,7 @@ GitHub Actions workflows consume billable minutes on hosted runners. Understandi
 | **Total (estimated)** | — | — | — | **530-542** | **6,360-6,504** |
 
 **Cost Breakdown:**
+
 - Free tier: 2,000 minutes/month (sufficient for current usage)
 - Projected usage: ~540 minutes/month (27% of free tier)
 - **Cost: $0/month** (well within free tier)
@@ -1988,6 +2084,7 @@ GitHub Actions workflows consume billable minutes on hosted runners. Understandi
 #### Optimization Strategies
 
 **1. Go Module Caching (IMPLEMENTED)**
+
 ```yaml
 - name: Setup Go
   uses: actions/setup-go@v5
@@ -1996,19 +2093,23 @@ GitHub Actions workflows consume billable minutes on hosted runners. Understandi
     cache: true
     cache-dependency-path: go.sum
 ```
+
 **Impact:** Reduces build time by 30-50% (2-3 minutes per run)
 **Monthly savings:** ~30-60 minutes
 
 **2. Conditional Workflow Execution (IMPLEMENTED)**
+
 ```yaml
 - name: Test merge feasibility
   id: test_merge
   if: steps.check.outputs.commits_behind != '0'
 ```
+
 **Impact:** Skips merge testing when already up-to-date
 **Monthly savings:** ~8-12 minutes (75% of scheduled runs skip testing)
 
 **3. Skip Build Option (IMPLEMENTED)**
+
 ```yaml
 inputs:
   skip_build:
@@ -2016,11 +2117,13 @@ inputs:
     type: boolean
     default: false
 ```
+
 **Impact:** Quick divergence checks without full build
 **Use case:** Pre-check before scheduling maintenance window
 **Savings:** 5-7 minutes when enabled
 
 **4. Workflow Artifact Caching**
+
 ```yaml
 - name: Cache Docker layers
   uses: actions/cache@v4
@@ -2030,10 +2133,12 @@ inputs:
     restore-keys: |
       ${{ runner.os }}-buildx-
 ```
+
 **Potential impact:** 2-4 minutes per Docker build
 **Status:** Not yet implemented (consider for future if Docker builds added)
 
 **5. Parallelization Strategy**
+
 ```yaml
 jobs:
   quick-check:
@@ -2048,24 +2153,28 @@ jobs:
     steps:
       - Full merge test and build (8-12 minutes)
 ```
+
 **Potential impact:** Early exit for most runs
 **Status:** Consider for future optimization
 
 #### Cost-Benefit Analysis
 
 **Scenario 1: Stay on Free Tier (Current Strategy)**
+
 - **Cost:** $0/month
 - **Limits:** 2,000 minutes/month
 - **Current usage:** ~540 minutes/month (27% utilization)
 - **Recommendation:** ✅ **Optimal for current scale**
 
 **Scenario 2: Scale to Team Plan ($4/user/month)**
+
 - **Cost:** $4/user/month (includes 3,000 minutes/month)
 - **When needed:** &gt;1,500 minutes/month usage OR need private repository features
 - **Trigger:** Significant increase in PR activity or additional automation
 - **Recommendation:** Monitor usage; not needed currently
 
 **Scenario 3: Add Minutes à la Carte ($0.008/minute)**
+
 - **Cost:** $0.008/minute for overages
 - **Example:** 1,000 overage minutes = $8/month
 - **When needed:** Temporary spike in activity
@@ -2074,6 +2183,7 @@ jobs:
 #### Monitoring and Alerting
 
 **GitHub Usage Metrics:**
+
 ```bash
 # View current month's usage
 gh api /repos/jrmatherly/obot-entraid/actions/billing/usage
@@ -2083,11 +2193,13 @@ gh run list --workflow=upstream-sync-check.yml --json displayTitle,conclusion,cr
 ```
 
 **Recommended Thresholds:**
+
 - 🟢 Green: &lt;1,500 minutes/month (75% of free tier)
 - 🟡 Yellow: 1,500-1,900 minutes/month (75-95% of free tier)
 - 🔴 Red: &gt;1,900 minutes/month (&gt;95% of free tier - risk of overage)
 
 **Alert Strategy:**
+
 - Set up GitHub notification when approaching 80% of free tier
 - Review workflow duration trends monthly
 - Optimize or disable low-value workflows if approaching limits
@@ -2121,11 +2233,13 @@ gh run list --workflow=upstream-sync-check.yml --json displayTitle,conclusion,cr
 **Sustainability Strategy:**
 
 ✅ **Current approach is cost-effective and sustainable**
+
 - Free tier provides ample headroom
 - Optimizations already implemented
 - Monitoring in place via GitHub UI
 
 **Future optimization opportunities:**
+
 - Self-hosted runners (for very high volume)
 - Workflow consolidation (combine related checks)
 - Selective testing (test only changed components)
@@ -2160,25 +2274,30 @@ gh run list --workflow=upstream-sync-check.yml --json displayTitle,conclusion,cr
 ### Appendix F: Further Reading
 
 **SuperClaude Framework:**
+
 - [OSS Fork Workflow 2025 (Primary Source)](https://raw.githubusercontent.com/SuperClaude-Org/SuperClaude_Framework/3294a0ad941f299e8c997bbe88a718694e173a8f/docs/research/research_oss_fork_workflow_2025.md)
 
 **GitHub Official Documentation:**
+
 - [GitHub Standard Fork & Pull Request Workflow](https://gist.github.com/Chaser324/ce0505fbed06b947d962)
 - [Mastering GitHub Collaboration Guide](https://medium.com/@lalit192977/mastering-github-collaboration-a-complete-guide-to-fork-clone-and-pull-request-workflow-7c4e304c30d3)
 - [Understanding Git Fork and Pull Request Workflow](https://graphite.com/guides/understanding-git-fork-pull-request-workflow)
 
 **Atlassian Git Tutorials:**
+
 - [Merging vs. Rebasing](https://www.atlassian.com/git/tutorials/merging-vs-rebasing)
 - [Git Merge Strategy Options](https://www.atlassian.com/git/tutorials/using-branches/merge-strategy)
 - [Git Team Workflows: Merge or Rebase?](https://www.atlassian.com/blog/git/git-team-workflows-merge-or-rebase)
 
 **Interactive Rebase & Commit Cleanup:**
+
 - [Git Interactive Rebase Guide - Thoughtbot](https://thoughtbot.com/blog/git-interactive-rebase-squash-amend-rewriting-history)
 - [How to Squash Commits in Git - Git Tower](https://www.git-tower.com/learn/git/faq/git-squash)
 - [Git Squash Commits Guide - DataCamp](https://www.datacamp.com/tutorial/git-squash-commits)
 - [Smoother Rebases with Auto-Squashing](https://andrewlock.net/smoother-rebases-with-auto-squashing-git-commits/)
 
 **Git Official Documentation:**
+
 - [Git Rebase Documentation](https://git-scm.com/docs/git-rebase)
 - [Git Tools - Rewriting History](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History)
 
@@ -2193,11 +2312,13 @@ gh run list --workflow=upstream-sync-check.yml --json displayTitle,conclusion,cr
 **Next Review Date:** March 13, 2026 (or after first upstream merge using new recommendations)
 
 **Change Log:**
+
 - 2026-01-13: Initial document creation based on SuperClaude Framework research
 - 2026-01-13: Added comprehensive recommendations with implementation priorities
 - 2026-01-13: Included comparative analysis and risk assessment
 
 **Related Documentation:**
+
 - `.serena/memories/upstream_merge_procedure.md` - Serena memory for upstream merges
 - `docs/docs/contributing/upstream-merge-process.md` - Current upstream merge process
 - `docs/docs/contributing/contributor-guide.md` - Comprehensive external contributor guide
@@ -2213,4 +2334,4 @@ https://github.com/jrmatherly/obot-entraid/discussions
 
 ---
 
-_This document was generated as part of the obot-entraid project's commitment to adopting industry best practices while maintaining the pragmatic flexibility required for complex fork maintenance._
+*This document was generated as part of the obot-entraid project's commitment to adopting industry best practices while maintaining the pragmatic flexibility required for complex fork maintenance.*

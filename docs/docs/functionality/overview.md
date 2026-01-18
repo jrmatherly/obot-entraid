@@ -33,7 +33,7 @@ The only functional difference between Owners and Admins is that Owners can assi
 ## Navigation by Role
 
 | Section | Basic | Power | Power+ | Admin/Owner |
-|---------|:-----:|:-----:|:------:|:-----------:|
+| --------- | ---------- | ---------- | ---------- | ----------- |
 | **MCP Management** | | | | |
 | MCP Servers | ✓ | ✓ | ✓ | ✓ |
 | MCP Registries | | | ✓ | ✓ |

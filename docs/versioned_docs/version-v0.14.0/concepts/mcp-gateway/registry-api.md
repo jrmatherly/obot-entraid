@@ -9,6 +9,7 @@ The Registry API exposes MCP servers through a unified `/v0.1/servers` endpoint.
 **No-Auth Mode (Default)**: Returns servers from the default catalog, accessible without authentication. This is ideal for public Obot instances sharing a curated set of MCP servers. The only servers that will be visible are ones that are given access to All Obot Users with an Access Control Rule.
 
 **Auth Mode**: Returns all MCP servers that an authenticated user has access to, including:
+
 - **Personal Servers**: Single-user servers deployed specifically for you
 - **Catalog Servers**: Multi-user servers shared across your organization
 - **Workspace Servers**: Servers available within your Power User workspace
@@ -30,6 +31,7 @@ Obot uses a reverse DNS naming scheme for servers to ensure global uniqueness:
 ```
 
 **Examples:**
+
 - `com.example.obot/github-server` for `https://obot.example.com`
 - `local.localhost/my-server` for `http://localhost:8080`
 - `ai.obot.chat/slack-server` for `https://chat.obot.ai`

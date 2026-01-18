@@ -46,6 +46,7 @@ We follow coordinated disclosure practices:
 Security issues that impact the confidentiality, integrity, or availability of this project or its official packages/services are in scope.
 
 **Out of scope (non-exhaustive):**
+
 - Vulnerabilities requiring privileged/local access without a clear escalation path
 - Deprecated or end-of-life versions
 - Vulnerabilities in third-party dependencies not owned by this project (please report upstream)
@@ -55,6 +56,7 @@ Security issues that impact the confidentiality, integrity, or availability of t
 We will not pursue legal action against security researchers conducting good-faith research aligned with this policy.
 
 Please avoid:
+
 - Privacy violations
 - Service degradation or denial of service
 - Data destruction or corruption
@@ -85,11 +87,13 @@ This project follows security best practices including:
 The custom authentication providers (Entra ID, Keycloak) in this fork implement security best practices:
 
 ### OAuth 2.0/OIDC Standards
+
 - Standard authorization code flow (OAuth 2.0)
 - OpenID Connect (OIDC) for identity layer
 - PKCE (Proof Key for Code Exchange) where supported
 
 ### Token Security
+
 - Access tokens stored in encrypted HTTP-only cookies
 - Cookie encryption using `OBOT_AUTH_PROVIDER_COOKIE_SECRET`
 - Tokens never exposed to client-side JavaScript
@@ -97,11 +101,13 @@ The custom authentication providers (Entra ID, Keycloak) in this fork implement 
 - SameSite cookie protection
 
 ### Profile Data Handling
+
 - Profile pictures returned as base64 data URLs (not external API URLs requiring authentication)
 - Prevents browser 401 errors and token leakage
 - No third-party requests from user browsers to auth provider APIs
 
 ### Required Environment Variables
+
 ```bash
 OBOT_ENTRA_AUTH_PROVIDER_CLIENT_ID      # Azure App Registration Client ID
 OBOT_ENTRA_AUTH_PROVIDER_CLIENT_SECRET  # Azure App Registration Secret (encrypted)
@@ -110,6 +116,7 @@ OBOT_AUTH_PROVIDER_EMAIL_DOMAINS        # Allowed email domains (default: "*")
 ```
 
 ### Audit and Compliance
+
 - All authentication events logged
 - Session management with configurable timeouts
 - Support for admin-level access control

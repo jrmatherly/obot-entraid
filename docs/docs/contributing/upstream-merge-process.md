@@ -133,7 +133,7 @@ When merging upstream, ensure these customizations remain:
 ### Custom Auth Providers
 
 | Path | Description |
-|------|-------------|
+| ------ | ------------- |
 | `tools/entra-auth-provider/` | Microsoft Entra ID authentication |
 | `tools/keycloak-auth-provider/` | Keycloak OIDC authentication |
 | `tools/auth-providers-common/` | Shared auth provider utilities |
@@ -143,7 +143,7 @@ When merging upstream, ensure these customizations remain:
 ### Build Infrastructure
 
 | Path | Description |
-|------|-------------|
+| ------ | ------------- |
 | `Dockerfile` | Must merge upstream + custom tools into unified registry |
 | `.github/workflows/docker-build-and-push.yml` | GHCR container publishing |
 | `.github/workflows/helm.yml` | GHCR Helm chart publishing |
@@ -151,7 +151,7 @@ When merging upstream, ensure these customizations remain:
 ### Helm Chart Customizations
 
 | Path | Description |
-|------|-------------|
+| ------ | ------------- |
 | `chart/Chart.yaml` | Our version numbering |
 | `chart/values.yaml` | Custom defaults and MCP configuration |
 | `chart/templates/deployment.yaml` | Health probe customizations |
@@ -159,7 +159,7 @@ When merging upstream, ensure these customizations remain:
 ### Documentation
 
 | Path | Description |
-|------|-------------|
+| ------ | ------------- |
 | `docs/ENTRA_ID_IMPLEMENTATION_SPEC.md` | Entra ID implementation details |
 | `tools/README.md` | Auth provider documentation |
 | `tools/keycloak-auth-provider/KEYCLOAK_SETUP.md` | Keycloak setup guide |
@@ -167,7 +167,7 @@ When merging upstream, ensure these customizations remain:
 ### UI Customizations
 
 | Path | Description |
-|------|-------------|
+| ------ | ------------- |
 | `ui/user/src/lib/components/navbar/Profile.svelte` | Profile picture handling |
 | `ui/user/src/routes/admin/auth-providers/+page.svelte` | Auth provider UI |
 | `ui/user/src/routes/terms-of-service/+page.svelte` | Terms of Service with fork GitHub URL |
@@ -208,7 +208,7 @@ If conflicts occur:
 ### Common Conflict Areas
 
 | File | Our Changes | Upstream Changes | Resolution Strategy |
-|------|-------------|------------------|---------------------|
+| ------ | ------------- | ------------------ | --------------------- |
 | `chart/values.yaml` | MCP config, tool registry | Version bumps | Keep both, ensure our config preserved |
 | `go.mod` | Go version, deps | Upstream deps | Usually auto-merges; verify Go version |
 | `pkg/proxy/proxy.go` | Auth provider integration | Refactoring | Careful review required |

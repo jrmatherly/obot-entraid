@@ -15,6 +15,7 @@ The Admin Interface operates at the platform level, managing resources and confi
 ## Core Management Areas
 
 ### User & Access Management
+
 - **User Accounts**: Create, modify, and deactivate user accounts
 - **Role Assignment**: Grant admin, user, or custom roles
 - **Authentication**: Configure identity providers and authentication methods
@@ -22,6 +23,7 @@ The Admin Interface operates at the platform level, managing resources and confi
 - **Session Management**: Monitor active sessions and force logout
 
 ### Agent & Project Management
+
 - **Base Agents**: System-wide agent templates and configurations
 - **Obots**: Managed AI agents available to all users
 - **Project Oversight**: Monitor and manage user-created projects
@@ -29,6 +31,7 @@ The Admin Interface operates at the platform level, managing resources and confi
 - **Content Moderation**: Review and manage shared content
 
 ### Task & Workflow Automation
+
 - **Task Management**: Create and manage automated tasks
 - **Workflow Configuration**: Define multi-step automated processes
 - **Scheduling**: Set up recurring and event-driven automation
@@ -36,6 +39,7 @@ The Admin Interface operates at the platform level, managing resources and confi
 - **Error Handling**: Manage failed tasks and error recovery
 
 ### Integration Management
+
 - **MCP Servers**: Manage available tool catalogs and integrations
 - **Model Providers**: Configure LLM providers and models
 - **Authentication Providers**: Set up OAuth and identity providers
@@ -45,7 +49,9 @@ The Admin Interface operates at the platform level, managing resources and confi
 ## Key Features
 
 ### Dashboard & Monitoring
+
 The admin dashboard provides real-time visibility into:
+
 - **System Health**: Server status, performance metrics, resource usage
 - **User Activity**: Active users, session counts, usage patterns
 - **Task Execution**: Running tasks, completion rates, error rates
@@ -53,7 +59,9 @@ The admin dashboard provides real-time visibility into:
 - **Storage Usage**: Database size, file storage, backup status
 
 ### Configuration Management
+
 Centralized configuration for all platform aspects:
+
 - **System Settings**: Global platform configuration
 - **Feature Flags**: Enable/disable features across the platform
 - **Resource Limits**: Set quotas for users and projects
@@ -61,7 +69,9 @@ Centralized configuration for all platform aspects:
 - **Integration Settings**: Manage external service connections
 
 ### Bulk Operations
+
 Efficient management of resources at scale:
+
 - **Bulk User Operations**: Create, update, or deactivate multiple users
 - **Batch Configuration**: Apply settings across multiple resources
 - **Mass Migration**: Move data between systems or providers
@@ -69,7 +79,9 @@ Efficient management of resources at scale:
 - **Backup Management**: Schedule and manage system backups
 
 ### Audit & Compliance
+
 Comprehensive audit trails and compliance tools:
+
 - **Activity Logging**: Track all administrative actions
 - **Access Logs**: Monitor user access and authentication
 - **Change Tracking**: Record configuration and data changes
@@ -79,6 +91,7 @@ Comprehensive audit trails and compliance tools:
 ## Administrative Workflows
 
 ### Platform Setup
+
 1. **Initial Configuration**: Set up basic platform settings
 2. **Authentication**: Configure identity providers and user authentication
 3. **Model Providers**: Add and configure LLM providers
@@ -86,6 +99,7 @@ Comprehensive audit trails and compliance tools:
 5. **User Onboarding**: Create initial user accounts and roles
 
 ### User Management
+
 1. **Account Creation**: Add new users to the platform
 2. **Role Assignment**: Grant appropriate permissions and access
 3. **Resource Allocation**: Set quotas and limits per user
@@ -93,6 +107,7 @@ Comprehensive audit trails and compliance tools:
 5. **Monitoring**: Track user activity and usage patterns
 
 ### System Maintenance
+
 1. **Health Monitoring**: Regular checks of system status
 2. **Performance Tuning**: Optimize resource allocation and settings
 3. **Updates & Patches**: Apply software updates and security patches
@@ -100,6 +115,7 @@ Comprehensive audit trails and compliance tools:
 5. **Capacity Planning**: Monitor growth and plan for scaling
 
 ### Security Management
+
 1. **Access Review**: Regularly review user permissions and access
 2. **Security Audits**: Check for vulnerabilities and compliance issues
 3. **Incident Response**: Handle security incidents and breaches
@@ -109,7 +125,9 @@ Comprehensive audit trails and compliance tools:
 ## Interface Components
 
 ### Navigation Structure
+
 The admin interface is organized into logical sections:
+
 - **Dashboard**: Overview and key metrics
 - **Users**: User management and access control
 - **Agents**: Base agents and obots management
@@ -119,6 +137,7 @@ The admin interface is organized into logical sections:
 - **Settings**: System configuration and platform settings
 
 ### Data Management
+
 - **List Views**: Paginated tables with sorting and filtering
 - **Detail Views**: Comprehensive forms for resource configuration
 - **Bulk Operations**: Multi-select actions for efficient management
@@ -126,6 +145,7 @@ The admin interface is organized into logical sections:
 - **Export Functions**: Download data for analysis or backup
 
 ### Real-Time Updates
+
 - **Live Metrics**: Real-time system and usage statistics
 - **Status Indicators**: Current health and availability status
 - **Activity Feeds**: Recent actions and system events
@@ -135,6 +155,7 @@ The admin interface is organized into logical sections:
 ## Best Practices
 
 ### Security
+
 - **Principle of Least Privilege**: Grant minimal required permissions
 - **Regular Access Reviews**: Audit user access and roles periodically
 - **Strong Authentication**: Require MFA for administrative accounts
@@ -142,6 +163,7 @@ The admin interface is organized into logical sections:
 - **Secure Configuration**: Follow security best practices for settings
 
 ### Performance
+
 - **Resource Monitoring**: Track system performance and usage
 - **Capacity Planning**: Plan for growth and scaling needs
 - **Optimization**: Regularly review and optimize configurations
@@ -149,10 +171,11 @@ The admin interface is organized into logical sections:
 - **Maintenance Windows**: Schedule regular maintenance activities
 
 ### Operations
+
 - **Documentation**: Maintain clear operational procedures
 - **Change Management**: Follow controlled change processes
 - **Backup Strategy**: Implement comprehensive backup and recovery
 - **Monitoring**: Set up alerts for important system events
 - **Training**: Keep administrative skills current and documented
 
-The Admin Interface provides the tools and visibility needed to operate obot effectively at enterprise scale while maintaining security, performance, and compliance requirements. 
+The Admin Interface provides the tools and visibility needed to operate obot effectively at enterprise scale while maintaining security, performance, and compliance requirements.

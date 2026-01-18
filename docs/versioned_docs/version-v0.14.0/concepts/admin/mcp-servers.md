@@ -198,7 +198,6 @@ Additional configuration options are available for specialized scenarios:
 
 For most remote server configurations, you'll typically only need to specify the remote URL.
 
-
 Select **Save** to deploy the persist the server configuration.
 
 ### Composite servers
@@ -213,7 +212,6 @@ via the `Edit Config` dialog for their connected MCP server.
 
 If the composite server contains remote component servers that require OAuth, the user will be prompted to authenticate or skip authentication for each
 tool that requires OAuth. If OAuth is skipped for a component, the component MCP server is automatically disabled for the composite instance.
-
 
 ## Post-deployment management
 

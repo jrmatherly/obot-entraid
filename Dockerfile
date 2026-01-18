@@ -1,5 +1,5 @@
-ARG TOOLS_IMAGE=ghcr.io/obot-platform/tools:latest
-ARG PROVIDER_IMAGE=ghcr.io/obot-platform/tools/providers:latest
+ARG TOOLS_IMAGE=ghcr.io/jrmatherly/obot-tools:latest
+ARG PROVIDER_IMAGE=ghcr.io/jrmatherly/obot-tools/providers:latest
 ARG ENTERPRISE_IMAGE=cgr.dev/chainguard/wolfi-base:latest
 ARG BASE_IMAGE=cgr.dev/chainguard/wolfi-base
 
@@ -32,14 +32,12 @@ WORKDIR /app
 COPY . .
 
 # Build with cached dependencies (faster rebuilds)
-# hadolint ignore=DL3003
+# Auth providers now come from obot-tools image, no local builds needed
 RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
   --mount=type=cache,target=/root/.cache/go-build \
   --mount=type=cache,target=/root/.cache/uv \
   --mount=type=cache,target=/root/go/pkg/mod \
-  make all && \
-  cd tools/entra-auth-provider && make build && \
-  cd ../keycloak-auth-provider && make build
+  make all
 
 # Intermediate stage to fetch upstream tools images
 FROM cgr.dev/chainguard/wolfi-base:latest AS tools-fetch
@@ -50,63 +48,16 @@ FROM ${PROVIDER_IMAGE} AS provider
 FROM ${ENTERPRISE_IMAGE} AS enterprise-tools
 RUN mkdir -p /obot-tools
 
-# Create unified tools directory by patching upstream tools with custom auth providers
+# Create unified tools directory from upstream images
+# All auth providers (github, google, entra, keycloak) are now in obot-tools
 FROM cgr.dev/chainguard/wolfi-base:latest AS tools-patched
-RUN apk add --no-cache yq bash
 
-# Copy upstream tools as base
+# Copy upstream tools (includes all auth providers from obot-tools fork)
 COPY --from=tools /obot-tools /obot-tools
 
 # Copy provider tools (encryption providers, etc.)
 COPY --from=provider /obot-tools /obot-tools
 COPY --from=enterprise-tools /obot-tools /obot-tools
-
-# Create directories for custom auth providers
-RUN mkdir -p /obot-tools/tools/entra-auth-provider/bin && \
-  mkdir -p /obot-tools/tools/keycloak-auth-provider/bin && \
-  mkdir -p /obot-tools/tools/placeholder-credential && \
-  mkdir -p /obot-tools/tools/auth-providers-common/templates
-
-# Copy custom auth provider binaries
-COPY --from=bin /app/tools/entra-auth-provider/bin/gptscript-go-tool /obot-tools/tools/entra-auth-provider/bin/
-COPY --from=bin /app/tools/entra-auth-provider/tool.gpt /obot-tools/tools/entra-auth-provider/
-
-# Copy keycloak auth provider binaries
-COPY --from=bin /app/tools/keycloak-auth-provider/bin/gptscript-go-tool /obot-tools/tools/keycloak-auth-provider/bin/
-COPY --from=bin /app/tools/keycloak-auth-provider/tool.gpt /obot-tools/tools/keycloak-auth-provider/
-
-# Copy shared dependencies used by auth providers
-COPY --from=bin /app/tools/placeholder-credential/ /obot-tools/tools/placeholder-credential/
-COPY --from=bin /app/tools/auth-providers-common/templates/ /obot-tools/tools/auth-providers-common/templates/
-
-# Copy and merge custom tool index with upstream index
-COPY --from=bin /app/tools/index.yaml /tmp/custom-index.yaml
-
-# Merge custom authProviders into existing upstream index.yaml
-# This combines upstream tools (github, google auth) with custom (entra, keycloak)
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-# hadolint ignore=SC2016
-RUN if [ -f /obot-tools/tools/index.yaml ]; then \
-  # Extract upstream authProviders (if any exist)
-  upstream_auth=$(yq '.authProviders' /obot-tools/tools/index.yaml 2>/dev/null || echo "{}"); \
-  custom_auth=$(yq '.authProviders' /tmp/custom-index.yaml 2>/dev/null || echo "{}"); \
-  # Merge authProviders sections
-  if [ "$upstream_auth" = "null" ] || [ "$upstream_auth" = "{}" ]; then \
-  yq eval '.authProviders = '"$(echo "$custom_auth" | yq -I4 -)"'' /obot-tools/tools/index.yaml > /tmp/merged-index.yaml; \
-  else \
-  # Deep merge: preserve upstream, add custom providers
-  yq eval-all 'select(fileIndex == 0) as $upstream | select(fileIndex == 1) as $custom | $upstream * {"authProviders": ($upstream.authProviders + $custom.authProviders)}' \
-  /obot-tools/tools/index.yaml /tmp/custom-index.yaml > /tmp/merged-index.yaml; \
-  fi; \
-  mv /tmp/merged-index.yaml /obot-tools/tools/index.yaml; \
-  else \
-  # No upstream index, use custom index directly
-  cp /tmp/custom-index.yaml /obot-tools/tools/index.yaml; \
-  fi && \
-  rm /tmp/custom-index.yaml
-
-# Copy tool.gpt wrapper (outputfilter hack for loading index.yaml)
-COPY --from=bin /app/tools/tool.gpt /obot-tools/tools/
 
 FROM cgr.dev/chainguard/wolfi-base:latest AS final-base
 RUN addgroup -g 70 postgres && \
@@ -144,7 +95,7 @@ COPY --from=build-pgvector /usr/share/postgresql17/extension/vector* /usr/share/
 
 RUN apk add --no-cache git python-3.13 py3.13-pip npm nodejs bash tini procps libreoffice docker perl-utils sqlite sqlite-dev curl kubectl jq
 
-ENV OBOT_SERVER_DEFAULT_MCPCATALOG_PATH=https://github.com/obot-platform/mcp-catalog
+ENV OBOT_SERVER_DEFAULT_MCPCATALOG_PATH=https://github.com/jrmatherly/mcp-catalog
 
 COPY aws-encryption.yaml /
 COPY azure-encryption.yaml /

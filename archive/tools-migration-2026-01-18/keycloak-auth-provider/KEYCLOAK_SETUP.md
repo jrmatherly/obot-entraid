@@ -20,7 +20,7 @@ This guide provides detailed instructions for configuring Keycloak to work with 
 ### 1.2 General Settings
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Client type | OpenID Connect |
 | Client ID | `obot` (or your preferred name) |
 | Name | `Obot Authentication` (optional, for display) |
@@ -31,7 +31,7 @@ Click **Next**
 ### 1.3 Capability Config
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Client authentication | **ON** (this makes it a confidential client) |
 | Authorization | OFF |
 | Authentication flow | Check **Standard flow** |
@@ -41,7 +41,7 @@ Click **Next**
 ### 1.4 Login Settings
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Root URL | `https://your-obot-url` |
 | Home URL | `https://your-obot-url` |
 | Valid redirect URIs | `https://your-obot-url/*` |
@@ -80,7 +80,7 @@ If you want to use Keycloak groups for access control in Obot:
 3. Configure:
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Name | `groups` |
 | Description | `User group memberships` |
 | Type | Default |
@@ -97,7 +97,7 @@ Click **Save**
 4. Configure:
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Name | `groups` |
 | Token Claim Name | `groups` |
 | Full group path | OFF (recommended, gives cleaner group names) |
@@ -121,6 +121,7 @@ Click **Save**
 3. Create groups that match what you'll configure in `OBOT_KEYCLOAK_AUTH_PROVIDER_ALLOWED_GROUPS`
 
 Example groups:
+
 - `obot-admins`
 - `obot-users`
 - `obot-developers`
@@ -178,7 +179,7 @@ The audience mapper ensures the token's `aud` claim includes your client ID, whi
 7. Configure:
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Name | `obot-audience` |
 | Included Client Audience | Select your client (`obot`) |
 | Included Custom Audience | (leave empty) |
@@ -238,6 +239,7 @@ OBOT_KEYCLOAK_AUTH_PROVIDER_GROUP_CACHE_TTL=1h
 ### Token Validation Errors
 
 If you see issuer validation errors:
+
 - Verify your `OBOT_KEYCLOAK_AUTH_PROVIDER_URL` doesn't have a trailing slash
 - Ensure the realm name is correct and case-sensitive
 - The expected issuer format is: `https://keycloak.example.com/realms/your-realm`
@@ -245,6 +247,7 @@ If you see issuer validation errors:
 ### Groups Not Appearing
 
 If groups aren't being passed to Obot:
+
 1. Verify the `groups` client scope is attached to your client as a **Default** scope
 2. Check that the Group Membership mapper has "Add to ID token" enabled
 3. Ensure users are actually assigned to groups in Keycloak
@@ -267,6 +270,7 @@ If groups aren't being passed to Obot:
 1. **Use HTTPS**: Always use HTTPS for both Keycloak and Obot in production
 
 2. **Restrict Redirect URIs**: Use specific paths instead of wildcards where possible:
+
    ```
    https://obot.example.com/oauth2/callback
    ```
@@ -306,7 +310,7 @@ If groups aren't being passed to Obot:
 ## Reference: Token Claims Used by Obot
 
 | Claim | Purpose | Required |
-|-------|---------|----------|
+| ------- | --------- | ---------- |
 | `sub` | Unique user identifier | Yes |
 | `email` | User's email address | Yes |
 | `preferred_username` | Display name / username | No (falls back to email) |

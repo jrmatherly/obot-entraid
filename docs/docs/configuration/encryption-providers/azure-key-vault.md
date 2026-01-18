@@ -2,7 +2,7 @@
 
 This guide explains how to set up an Azure VM with a managed identity that can access an Azure Key Vault for encryption operations.
 
-### Prerequisites
+## Prerequisites
 
 - Azure CLI installed and logged in (`az login`)
 - A subscription with permissions to create resources

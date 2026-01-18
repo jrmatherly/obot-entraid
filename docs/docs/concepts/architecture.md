@@ -31,6 +31,7 @@ All clients first authenticate with Obot via the configured identity provider. T
 ![Authentication and Token Exchange Flow](/img/token-exchange-flow.webp)
 
 Key security properties:
+
 - **Gateway**: Handles user authentication only
 - **MCP Server Shim**: Handles authorization, audit logging, and token exchange
 - **Secret isolation**: Credentials for token exchange live in the MCP Server Shim, never exposed to the MCP server. MCP server configuration is never exposed to the MCP Server Shim.

@@ -55,6 +55,7 @@ After registration, configure the following:
 5. Click **Grant admin consent** (if you're an admin)
 
 **For Group Support** (optional):
+
 - Add `GroupMember.Read.All` permission to retrieve user's group memberships
 
 #### Client Secret
@@ -68,6 +69,7 @@ After registration, configure the following:
 #### Gather Configuration Values
 
 From the **Overview** page, copy:
+
 - **Application (client) ID**: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 - **Directory (tenant) ID**: `yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy`
 
@@ -103,7 +105,7 @@ OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN="<auto-provided if using PostgreSQL>"
 ### Required Environment Variables
 
 | Variable | Description | Example |
-|----------|-------------|---------|
+| ---------- | ------------- | --------- |
 | `OBOT_ENTRA_AUTH_PROVIDER_CLIENT_ID` | Application (client) ID from Azure Portal | `12345678-1234-1234-1234-123456789abc` |
 | `OBOT_ENTRA_AUTH_PROVIDER_CLIENT_SECRET` | Client secret value from Azure Portal | `abc123...` |
 | `OBOT_ENTRA_AUTH_PROVIDER_TENANT_ID` | Tenant ID or special value (`common`, `organizations`, `consumers`) | `common` |
@@ -112,7 +114,7 @@ OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN="<auto-provided if using PostgreSQL>"
 ### Optional Environment Variables
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| ---------- | --------- | ------------- |
 | `OBOT_AUTH_PROVIDER_TOKEN_REFRESH_DURATION` | `1h` | How often to refresh tokens (format: `1h30m`, `2h`, etc.) |
 | `OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_GROUPS` | (empty) | Comma-separated list of Azure AD group IDs allowed to authenticate |
 | `OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS` | (empty) | Comma-separated list of tenant IDs allowed (required for multi-tenant) |
@@ -128,7 +130,7 @@ OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN="<auto-provided if using PostgreSQL>"
 These variables are automatically provided by Obot and should not be manually configured:
 
 | Variable | Description |
-|----------|-------------|
+| ---------- | ------------- |
 | `OBOT_SERVER_URL` or `OBOT_SERVER_PUBLIC_URL` | Base URL of your Obot server |
 | `OBOT_AUTH_PROVIDER_COOKIE_SECRET` | Base64-encoded secret for cookie encryption (auto-generated) |
 | `OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN` | PostgreSQL connection string (if using database sessions) |
@@ -143,6 +145,7 @@ The `OBOT_ENTRA_AUTH_PROVIDER_TENANT_ID` variable controls which Microsoft accou
 ```bash
 OBOT_ENTRA_AUTH_PROVIDER_TENANT_ID="yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
 ```
+
 - Allows: **Only your specific organization**
 - Use case: Internal company applications, highest security
 
@@ -152,6 +155,7 @@ OBOT_ENTRA_AUTH_PROVIDER_TENANT_ID="yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
 OBOT_ENTRA_AUTH_PROVIDER_TENANT_ID="organizations"
 OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS="tenant-id-1,tenant-id-2"
 ```
+
 - Allows: **Only specified Azure AD organizations**
 - Use case: B2B applications with known partners
 - **Note**: `ALLOWED_TENANTS` is required when using `common` or `organizations`
@@ -162,6 +166,7 @@ OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS="tenant-id-1,tenant-id-2"
 OBOT_ENTRA_AUTH_PROVIDER_TENANT_ID="organizations"
 OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS="*"  # Or specific tenant IDs
 ```
+
 - Allows: **Any Azure AD organization** (no personal accounts)
 - Use case: B2B applications, enterprise software
 
@@ -171,6 +176,7 @@ OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS="*"  # Or specific tenant IDs
 OBOT_ENTRA_AUTH_PROVIDER_TENANT_ID="common"
 OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS="tenant-id-1,tenant-id-2"
 ```
+
 - Allows: **Specified Azure AD organizations** + **Personal Microsoft accounts** (if tenant allows)
 - Use case: Public SaaS applications with tenant restrictions
 
@@ -190,6 +196,7 @@ OBOT_AUTH_PROVIDER_EMAIL_DOMAINS="example.com,example.org,example.net"
 ```
 
 **Note**: This works in combination with tenant restrictions. For example:
+
 - Tenant: `<tenant-id>` + Domains: `*` → Only your org, all email addresses in that org
 - Tenant: `organizations` + Domains: `example.com` → Any Azure AD org, but only `@example.com` emails
 
@@ -202,6 +209,7 @@ OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_GROUPS="group-id-1,group-id-2,group-id-3"
 ```
 
 **Requirements**:
+
 - Add `GroupMember.Read.All` permission to your Azure App Registration
 - Grant admin consent for the permission
 - Users must be direct or transitive members of at least one specified group
@@ -211,6 +219,7 @@ OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_GROUPS="group-id-1,group-id-2,group-id-3"
 ## Architecture
 
 This auth provider uses:
+
 - **OAuth2 Proxy**: Industry-standard OAuth 2.0/OIDC implementation (Obot fork)
 - **Azure AD v2.0 Endpoints**: Modern OIDC discovery for automatic endpoint configuration
 - **JWT Parsing**: Extracts user information from ID tokens
@@ -249,7 +258,7 @@ User → Obot → /oauth2/start → Microsoft Login → /oauth2/callback → Ses
 This auth provider implements the following HTTP endpoints:
 
 | Endpoint | Method | Description |
-|----------|--------|-------------|
+| ---------- | -------- | ------------- |
 | `/` | GET | Returns server address |
 | `/oauth2/start` | GET | Initiates OAuth flow (accepts `rd` query param for redirect) |
 | `/oauth2/callback` | GET | Handles OAuth callback from Microsoft |
@@ -275,6 +284,7 @@ make build
 ### Local Testing
 
 1. **Set up environment variables**:
+
    ```bash
    export OBOT_ENTRA_AUTH_PROVIDER_CLIENT_ID="your-client-id"
    export OBOT_ENTRA_AUTH_PROVIDER_CLIENT_SECRET="your-client-secret"
@@ -287,6 +297,7 @@ make build
    ```
 
 2. **Run the auth provider**:
+
    ```bash
    go run main.go
    ```
@@ -302,7 +313,7 @@ When developing Obot locally with this auth provider:
 
 ```bash
 # In obot-entraid repository
-export OBOT_SERVER_TOOL_REGISTRIES="github.com/obot-platform/tools,./tools"
+export OBOT_SERVER_TOOL_REGISTRIES="github.com/jrmatherly/obot-tools,./tools"
 make dev
 ```
 
@@ -313,9 +324,11 @@ This ensures Obot uses your local auth provider code alongside the upstream tool
 ### Error: "AADSTS50011: The redirect URI specified in the request does not match"
 
 **Solution**: Verify redirect URI in Azure Portal matches exactly:
+
 ```
 https://your-obot-server.com/oauth2/callback
 ```
+
 **Note**: No trailing slash, HTTPS if in production
 
 ### Error: "AADSTS7000218: The request body must contain the following parameter: client_assertion or client_secret"
@@ -325,6 +338,7 @@ https://your-obot-server.com/oauth2/callback
 ### Error: "AADSTS50105: The signed in user is not assigned to a role for the application"
 
 **Solution**: Either:
+
 1. Assign users to the app in Azure Portal → Enterprise Applications
 2. Or disable "User assignment required" in app settings
 
@@ -335,6 +349,7 @@ https://your-obot-server.com/oauth2/callback
 ### Error: "OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS is required"
 
 **Solution**: When using `common` or `organizations` as tenant ID, you must specify allowed tenant IDs:
+
 ```bash
 OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS="your-tenant-id-1,your-tenant-id-2"
 ```
@@ -342,22 +357,26 @@ OBOT_ENTRA_AUTH_PROVIDER_ALLOWED_TENANTS="your-tenant-id-1,your-tenant-id-2"
 ### Session not persisting
 
 **Causes**:
+
 - Cookie security flags require HTTPS in production
 - Cookie secret mismatch between restarts
 - Session expired
 
 **Solution**:
+
 - Ensure `OBOT_SERVER_URL` starts with `https://` in production
 - Use PostgreSQL session storage for persistence across restarts
 
 ### Groups not appearing
 
 **Causes**:
+
 - Missing `GroupMember.Read.All` permission
 - Admin consent not granted
 - Graph API permissions not configured
 
 **Solution**:
+
 1. Add `GroupMember.Read.All` delegated permission in Azure Portal
 2. Grant admin consent
 3. Re-authenticate to get a new token with the permission
@@ -387,6 +406,7 @@ OBOT_AUTH_PROVIDER_TOKEN_REFRESH_DURATION="2h"
 ### MFA and Conditional Access
 
 Entra ID Conditional Access policies (including MFA) are **automatically enforced**:
+
 - User sees MFA prompts during Microsoft login
 - Auth provider doesn't need special configuration
 - Works transparently with any Entra ID security policies
@@ -395,4 +415,4 @@ Entra ID Conditional Access policies (including MFA) are **automatically enforce
 
 - [Obot Platform](https://github.com/obot-platform/obot) - Open-source MCP Gateway and AI Platform
 - [OAuth2 Proxy](https://github.com/obot-platform/oauth2-proxy) - OAuth 2.0 proxy (Obot fork)
-- [Obot Tools](https://github.com/obot-platform/tools) - Official auth providers (GitHub, Google)
+- [Obot Tools](https://github.com/jrmatherly/obot-tools) - Official auth providers (GitHub, Google)

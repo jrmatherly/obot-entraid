@@ -14,6 +14,10 @@ on:
     paths:
       - chart/**
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false # Never cancel helm publish operations
+
 permissions:
   contents: read
   packages: write

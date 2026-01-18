@@ -47,7 +47,7 @@ config:
 </Tabs>
 
 | Variable | Required | Description |
-|----------|----------|-------------|
+| ---------- | ---------- | ------------- |
 | `OBOT_SERVER_ENABLE_AUTHENTICATION` | Yes | Enables authentication |
 | `OBOT_BOOTSTRAP_TOKEN` | No | Token used for initial admin login before an auth provider is configured. If not set, a token will be generated and printed to the logs. |
 | `OBOT_SERVER_AUTH_OWNER_EMAILS` | No | Email address that will have owner access after logging in via the auth provider. If not set, the bootstrap user will be prompted to log in via the auth provider and set themselves as the owner. |
