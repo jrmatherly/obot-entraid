@@ -1,18 +1,18 @@
 ---
 sidebar_position: 3
 title: Local Development
-description: Running Obot locally with custom authentication providers and tool registries
+description: Running Obot locally with authentication providers and tool registries
 ---
 
 # Local Development
 
-This guide explains how to run Obot locally for development, including working with custom authentication providers and the local tool registry.
+This guide explains how to run Obot locally for development, including working with authentication providers from the obot-tools fork.
 
 ## Prerequisites
 
 Before starting local development, ensure you have:
 
-1. **Go 1.25.3 or later** - Required for building auth providers
+1. **Go 1.25.3 or later** - Required for building the server
 2. **Node.js and pnpm** - Required for UI development
 3. **Docker** - Required for container builds and dependencies
 4. **Git** - For version control
@@ -22,7 +22,7 @@ Before starting local development, ensure you have:
 The fastest way to start Obot in development mode:
 
 ```bash
-# Run in development mode (uses ./tools as local registry)
+# Run in development mode
 make dev
 
 # Or with browser tabs auto-opening
@@ -30,63 +30,78 @@ make dev-open
 ```
 
 This command:
+
 - Starts the Obot server with hot reload
 - Serves the UI in development mode
-- Configures local tool registry (from `./tools` directory)
+- Configures the tool registry from obot-tools fork
 - Opens browser tabs for UI and admin interface (with `dev-open`)
 
 ---
 
 ## Tool Registry Configuration
 
-Obot uses tool registries to discover authentication providers and MCP servers. In development mode, the local tool registry is enabled via `.envrc.dev`:
+Obot uses tool registries to discover authentication providers and MCP servers. In development mode, the tool registry is configured via `.envrc.dev`:
 
 ```bash
-export OBOT_SERVER_TOOL_REGISTRIES=github.com/obot-platform/tools,./tools
+export OBOT_SERVER_TOOL_REGISTRIES=github.com/jrmatherly/obot-tools
 ```
 
-This configuration means:
-- **Upstream tools**: Fetched from `github.com/obot-platform/tools`
-- **Custom tools**: Loaded from `./tools` (local directory)
+This configuration pulls all tools (including authentication providers) from the obot-tools fork:
 
-The `./tools` directory contains:
-- `entra-auth-provider/` - Microsoft Entra ID authentication
-- `keycloak-auth-provider/` - Keycloak authentication
-- `auth-providers-common/` - Shared auth provider utilities
-- `placeholder-credential/` - Test credential provider
-- `index.yaml` - Local tool registry definition
+- **Authentication Providers**: Entra ID, Keycloak, GitHub, Google
+- **Core Tools**: Knowledge, memory, tasks, workspace files, etc.
+- **Model Providers**: OpenAI, Anthropic, Azure, and more
 
 ---
 
-## Building Authentication Providers
+## Authentication Providers
 
-### Individual Provider Builds
+All authentication providers are in the [obot-tools fork](https://github.com/jrmatherly/obot-tools):
 
-Build auth providers independently during development:
+| Provider | Location | Documentation |
+|----------|----------|---------------|
+| Microsoft Entra ID | `obot-tools/entra-auth-provider/` | [Setup Guide](../configuration/entra-id-authentication.md) |
+| Keycloak | `obot-tools/keycloak-auth-provider/` | [Setup Guide](../configuration/keycloak-authentication.md) |
+| GitHub | `obot-tools/github-auth-provider/` | Built-in |
+| Google | `obot-tools/google-auth-provider/` | Built-in |
 
-```bash
-# Build Entra ID provider
-cd tools/entra-auth-provider
-make build
+### Developing Auth Providers
 
-# Build Keycloak provider
-cd tools/keycloak-auth-provider
-make build
-```
+To modify or develop authentication providers:
 
-### Full Docker Build
+1. Clone the obot-tools fork:
 
-Build the complete Obot image with custom auth providers:
+   ```bash
+   git clone https://github.com/jrmatherly/obot-tools.git
+   cd obot-tools
+   ```
+
+2. Make changes to the provider:
+
+   ```bash
+   cd entra-auth-provider
+   # Edit code...
+   make build
+   make test
+   ```
+
+3. Use local obot-tools with Obot:
+
+   ```bash
+   # In obot-entraid directory
+   export GPTSCRIPT_TOOL_REMAP="github.com/jrmatherly/obot-tools=../obot-tools"
+   make dev
+   ```
+
+### Building Auth Provider Docker Images
+
+Build the complete Obot image with auth providers:
 
 ```bash
 docker build -t obot-local .
 ```
 
-The Docker build uses a **patched tools** approach:
-1. Pulls upstream tools from `ghcr.io/obot-platform/tools:latest`
-2. Builds custom auth providers (Entra ID, Keycloak)
-3. Merges `index.yaml` to combine upstream and custom providers
-4. Creates a unified registry at `/obot-tools/tools`
+The Docker build pulls all tools (including auth providers) from the obot-tools image.
 
 ### Verifying the Container Build
 
@@ -94,7 +109,7 @@ The Docker build uses a **patched tools** approach:
 # Build the image
 docker build -t obot-local .
 
-# Verify auth providers are merged
+# Verify auth providers are available
 docker run --rm --entrypoint sh obot-local -c \
   'grep -A 10 "authProviders:" /obot-tools/tools/index.yaml'
 
@@ -167,85 +182,27 @@ See [Keycloak Authentication Setup](../configuration/keycloak-authentication.md)
 
 ---
 
-## Modifying Auth Providers
-
-### Working with auth-providers-common
-
-If you need to modify shared auth provider code:
-
-1. Edit files in `tools/auth-providers-common/`
-2. Add replace directive to auth provider's `go.mod`:
-
-```go
-// In entra-auth-provider/go.mod or keycloak-auth-provider/go.mod
-replace github.com/obot-platform/tools/auth-providers-common => ../auth-providers-common
-```
-
-1. Rebuild the provider:
-
-```bash
-cd tools/entra-auth-provider
-go mod tidy
-make build
-```
-
-### Adding a New Auth Provider
-
-To create a new authentication provider:
-
-1. **Create Provider Directory**
-   ```bash
-   mkdir -p tools/my-auth-provider
-   cd tools/my-auth-provider
-   ```
-
-2. **Create Required Files**
-   - `tool.gpt` - GPTScript tool definition with metadata
-   - `main.go` - OAuth2 proxy implementation
-   - `Makefile` - Build targets
-   - `go.mod` / `go.sum` - Go module dependencies
-
-3. **Update Tool Registry**
-
-   Add your provider to `tools/index.yaml`:
-   ```yaml
-   authProviders:
-     my-auth-provider:
-       reference: ./my-auth-provider
-       description: My Custom Authentication Provider
-   ```
-
-4. **Update Dockerfile**
-
-   Add build steps in the Dockerfile to compile and copy your provider.
-
-5. **Test Locally**
-   ```bash
-   make dev
-   # Your provider should appear in the authentication providers list
-   ```
-
----
-
 ## Development Workflow
 
 ### Standard Development Loop
 
-1. **Make code changes** to auth providers or server code
+1. **Make code changes** to server code or UI
 2. **Rebuild** affected components:
-   ```bash
-   # For auth provider changes
-   cd tools/entra-auth-provider && make build
 
+   ```bash
    # For server changes
    make build
    ```
+
 3. **Restart development server**:
+
    ```bash
    make dev
    ```
+
 4. **Test changes** in browser at http://localhost:8080
 5. **Run tests**:
+
    ```bash
    make test
    ```
@@ -262,82 +219,52 @@ For server changes, you'll need to restart with `make dev`.
 
 ### Auth Provider Not Appearing in UI
 
-**Problem**: Custom auth provider doesn't show up in authentication providers list
+**Problem**: Authentication provider doesn't show up in the providers list
 
 **Solution**:
+
 1. Verify tool registry configuration:
+
    ```bash
    cat .envrc.dev | grep TOOL_REGISTRIES
-   # Should include: ./tools
+   # Should show: github.com/jrmatherly/obot-tools
    ```
 
-2. Check `index.yaml` includes your provider:
-   ```bash
-   cat tools/index.yaml | grep -A 2 "my-auth-provider"
-   ```
+2. Check that obot-tools has the provider registered in `index.yaml`
 
-3. Ensure provider binary exists:
-   ```bash
-   ls -la tools/my-auth-provider/bin/
-   ```
-
-4. Check Obot server logs for tool registry errors
+3. Check Obot server logs for tool registry errors
 
 ### OAuth Errors During Local Testing
 
 **Problem**: OAuth flow fails with redirect URI mismatch
 
 **Solution**:
-1. Verify environment variable is set correctly:
-   ```bash
-   echo $OBOT_SERVER_PUBLIC_URL
-   # Should match: http://localhost:8080
-   ```
 
-2. Ensure Azure/Keycloak redirect URI matches:
+1. Verify redirect URI in Azure/Keycloak matches exactly:
+
    ```
    http://localhost:8080/oauth2/callback
    ```
 
-3. For local HTTP testing, ensure insecure cookies are enabled:
-   ```bash
-   export OBOT_AUTH_INSECURE_COOKIES="true"
-   ```
+2. Ensure `OBOT_AUTH_INSECURE_COOKIES=true` for HTTP
 
-### Build Failures
+3. Check that `OBOT_SERVER_PUBLIC_URL` matches the redirect URI domain
 
-**Problem**: `make build` or `go build` fails
+### Cannot Find Provider Binary
 
-**Solution**:
-1. Verify Go version:
-   ```bash
-   go version
-   # Should be 1.25.3 or later
-   ```
+**Problem**: Auth provider binary not found in container
 
-2. Clean and rebuild:
-   ```bash
-   go clean -cache
-   go mod tidy
-   make build
-   ```
+**Solution**: The auth providers are now in obot-tools. Ensure you're using the correct `TOOLS_IMAGE`:
 
-3. Check for missing dependencies:
-   ```bash
-   go mod verify
-   ```
+```bash
+docker build --build-arg TOOLS_IMAGE=ghcr.io/jrmatherly/obot-tools:latest -t obot-local .
+```
 
 ---
 
-## See Also
+## Related Documentation
 
-- [Entra ID Authentication](../configuration/entra-id-authentication.md) - Azure setup guide
-- [Keycloak Authentication](../configuration/keycloak-authentication.md) - Keycloak setup guide
-- [Authentication Provider Testing](../operations/auth-provider-testing.md) - Testing procedures
-- [Contributor Guide](./contributor-guide.md) - General contribution guidelines
-- [Upstream Merge Process](./upstream-merge-process.md) - Syncing with upstream
-
----
-
-*Last Updated: 2026-01-13*
-*For detailed auth provider implementation, see: `tools/README.md` in the repository*
+- [Entra ID Authentication](../configuration/entra-id-authentication.md)
+- [Keycloak Authentication](../configuration/keycloak-authentication.md)
+- [Server Configuration](../configuration/server-configuration.md)
+- [obot-tools Repository](https://github.com/jrmatherly/obot-tools)

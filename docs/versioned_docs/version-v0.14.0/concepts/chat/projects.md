@@ -18,6 +18,7 @@ Think of a project as a specialized AI assistant designed for specific tasks or 
 ### Memories
 
 As you chat with your project, you can ask it to remember important information. These memories are:
+
 - **Persistent**: Stored across all threads in the project
 - **Contextual**: Added to the system prompt for all conversations
 - **Manageable**: View, edit, and remove memories through the UI
@@ -32,6 +33,7 @@ These fields help users identify and understand the project's purpose. Make them
 ### Instructions
 
 The Instructions guide your project's behavior. Use this to specify:
+
 - **Objectives**: What the project is meant to accomplish
 - **Personality**: How the agent should communicate
 - **Domain Knowledge**: Special context about users or use cases
@@ -59,6 +61,7 @@ The knowledge capability lets you provide project-specific information through R
 ### Project Files
 
 Project files are shared across all threads in a project. They're useful for:
+
 - **Templates**: Standard documents the agent can reference or modify
 - **State Management**: Persistent data that survives across conversations
 - **Collaboration**: Files that multiple threads can read and update
@@ -66,6 +69,7 @@ Project files are shared across all threads in a project. They're useful for:
 ### Model Providers
 
 Configure which LLM providers and models are available:
+
 - **Default Model**: The primary model for conversations
 - **Model Options**: Allow users to choose from multiple models
 - **Provider Settings**: API keys, endpoints, and configuration
@@ -73,6 +77,7 @@ Configure which LLM providers and models are available:
 ### Members and Access Control
 
 Manage who can access your project:
+
 - **Invitations**: Send invites to specific users
 - **Thread Privacy**: Users can access all threads but cannot modify project configuration
 
@@ -83,18 +88,21 @@ All users with project access can access thread history. Be careful not to share
 ## Best Practices
 
 ### Effective Instructions
+
 1. **Be Specific**: Clearly define the agent's role and responsibilities
 2. **Provide Context**: Include relevant background information
 3. **Set Boundaries**: Specify what the agent should and shouldn't do
 4. **Include Examples**: Show the desired communication style
 
 ### Knowledge Management
+
 1. **Organize Files**: Use clear, descriptive filenames
 2. **Update Regularly**: Keep knowledge current and relevant
 3. **Describe Purpose**: Write helpful knowledge descriptions
 4. **Test Retrieval**: Verify the agent can find relevant information
 
 ### Tool Selection
+
 1. **Start Simple**: Begin with essential tools only
 2. **Add Gradually**: Introduce new tools as needs become clear
 3. **Test Integration**: Verify tools work correctly with your use case

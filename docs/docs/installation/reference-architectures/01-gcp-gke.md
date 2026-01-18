@@ -2,15 +2,15 @@
 
 Deploying Obot to Google Kubernetes Engine follows the standard Helm workflow. As a prerequisite, you'll need the following resources set up in your Google Cloud environment:
 
-* GCP project
-* VPC Network
-* Google Cloud SQL instance running PostgreSQL 17+ with the pgvector extension enabled
-* VPC Network Peering between your VPC Network and the Cloud SQL instance
-* Private Google Cloud Storage bucket for workspace data
-* (Optional) Google Cloud KMS key for encrypting sensitive information
-* (Optional) IAM role with necessary permissions if you're using Google Cloud KMS for encryption
-* kubectl and Helm installed and configured to connect to your GKE cluster
-* GKE cluster with at least 2 CPU cores and 4GB of RAM per node. Production workloads may require more. The cluster should have workload identity configured if you're using Google Cloud services like Cloud KMS for encryption.
+- GCP project
+- VPC Network
+- Google Cloud SQL instance running PostgreSQL 17+ with the pgvector extension enabled
+- VPC Network Peering between your VPC Network and the Cloud SQL instance
+- Private Google Cloud Storage bucket for workspace data
+- (Optional) Google Cloud KMS key for encrypting sensitive information
+- (Optional) IAM role with necessary permissions if you're using Google Cloud KMS for encryption
+- kubectl and Helm installed and configured to connect to your GKE cluster
+- GKE cluster with at least 2 CPU cores and 4GB of RAM per node. Production workloads may require more. The cluster should have workload identity configured if you're using Google Cloud services like Cloud KMS for encryption.
 
 To use the load balancer that Google will create when you deploy the chart, you will need to create your own BackendConfig. Here is an example of a terraform resource that can create the proper BackendConfig:
 
@@ -65,7 +65,6 @@ resource "google_kms_crypto_key_iam_binding" "this" {
 ```
 
 More information on the Google Cloud KMS setup can be found [here](/configuration/encryption-providers/google-cloud-kms/).
-
 
 Once you have these resources set up, install the Obot helm chart with:
 

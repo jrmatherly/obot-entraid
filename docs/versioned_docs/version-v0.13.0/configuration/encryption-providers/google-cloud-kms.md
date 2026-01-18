@@ -33,7 +33,6 @@ gcloud kms keys add-iam-policy-binding obot-key \
   --role roles/cloudkms.cryptoKeyEncrypterDecrypter
 ```
 
-
 ### Obot environment variables
 
 Make sure the following environment variables are set on Obot when you run it:
@@ -54,6 +53,7 @@ If using a JSON file (one of the first two options), the file must be in one of 
 
 1. The `credentials.json` format (see [here](https://developers.google.com/workspace/guides/create-credentials#create_credentials_for_a_service_account))
 2. A file containing some of the following fields:
+
    ```
    // Service Account fields
    "client_email"`

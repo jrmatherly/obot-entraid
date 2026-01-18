@@ -39,7 +39,9 @@ When you enable an encryption provider, the following resource types are automat
 ## Complete List of Encrypted Fields
 
 ### User Data (`users.obot.obot.ai`)
+
 All personal user information is encrypted:
+
 - `username` - User's username
 - `email` - User's email address
 - `displayName` - User's display name
@@ -48,14 +50,18 @@ All personal user information is encrypted:
 - `originalUsername` - Original username for a deleted user from identity provider
 
 ### Identity Data (`identities.obot.obot.ai`)
+
 Identity provider information is encrypted:
+
 - `providerUsername` - Username from identity provider
 - `email` - Email from identity provider
 - `providerUserID` - User ID from identity provider
 - `iconURL` - Icon URL from identity provider
 
 ### MCP OAuth Tokens (`mcpoauthtokens.obot.obot.ai`)
+
 All OAuth-related secrets are encrypted:
+
 - `accessToken` - OAuth access token
 - `refreshToken` - OAuth refresh token
 - `clientID` - OAuth client ID
@@ -64,26 +70,34 @@ All OAuth-related secrets are encrypted:
 - `verifier` - PKCE verifier
 
 ### Session Cookies (`sessioncookies.obot.obot.ai`)
+
 Session authentication data is encrypted:
+
 - `cookie` - Session cookie value
 
 ### MCP Audit Logs (`mcpauditlogs.obot.obot.ai`)
+
 Complete request/response data in audit logs is encrypted:
+
 - `requestBody` - HTTP request body (JSON)
 - `responseBody` - HTTP response body (JSON)
 - `requestHeaders` - HTTP request headers (JSON)
 - `responseHeaders` - HTTP response headers (JSON)
 
 ### Run State Data (`runstates.obot.obot.ai`)
+
 Agent execution state data is encrypted:
+
 - `output` - Execution output (binary)
 - `callFrame` - Call frame data (binary)
 - `chatState` - Chat state data (binary)
 
 ### Credentials (`credentials`)
+
 All credential data stored via the credential store system (SQLite or PostgreSQL backend) is encrypted.
 
 The credential store is configured with the encryption provider and automatically encrypts all stored credentials, including:
+
 - API keys
 - Access tokens
 - Passwords

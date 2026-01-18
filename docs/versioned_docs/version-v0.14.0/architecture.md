@@ -105,7 +105,7 @@ Obot chat uses an S3 Bucket to store workspace data, like PDFs, text files, etc.
 
 ### Encryption
 
-Obot Gateway uses cloud KMS systems to encrypt data at rest. 
+Obot Gateway uses cloud KMS systems to encrypt data at rest.
 
 ### LLMs
 

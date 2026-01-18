@@ -5,6 +5,7 @@ This guide explains how to set up custom encryption for Obot using a local encry
 ## Overview
 
 The custom encryption provider uses AES-GCM encryption with a secret key that you provide. This is useful when:
+
 - You want encryption at rest but don't have access to cloud KMS services
 - You're running Obot in air-gapped or on-premises environments
 - You want a simpler encryption setup without external dependencies
@@ -26,6 +27,7 @@ openssl rand -base64 32
 ```
 
 This will output a string like:
+
 ```
 Kj8fH2lP9mQ4nR6tV8xZ0bC3dE5gF7hI9jK1lM3nO5p=
 ```

@@ -16,31 +16,37 @@ The Model Context Protocol (MCP) is an open standard that enables secure, standa
 The obot MCP Gateway provides several key components:
 
 ### MCP Server Management
+
 - **Server Registry**: Catalog of available MCP servers and their capabilities
 - **Session Management**: Handle user sessions and authentication contexts
 - **Health Monitoring**: Track server availability and performance
 
 ### Authentication & Security
+
 - **OAuth 2.1 Flows**: Secure authentication with external services
 - **Token Management**: Store and refresh access tokens automatically
 - **Credential Isolation**: Separate credentials per user and thread
 
 ### Credential Management
+
 - **Secure Storage**: Encrypted credential storage
 - **Scope Limitation**: Minimal required permissions
 - **Regular Rotation**: Automatic token refresh and rotation
 - **Audit Logging**: Track all credential usage
 
 ### Network Security
+
 - **HTTPS Only to the Gateway**: All external MCP communication over encrypted channels
 - **Rate Limiting**: Prevent abuse and DoS attacks
 
 ### Access Control
+
 - **User Isolation**: Separate credentials per user
 - **Role-Based Access**: Control which tools users can access
 - **Audit Compliance**: Meet security or regulatory requirements
 
 ### Monitoring & Observability
+
 - **Request Tracking**: Monitor all MCP interactions
 - **Performance Metrics**: Track response times and success rates
 - **Error Logging**: Detailed error reporting and debugging

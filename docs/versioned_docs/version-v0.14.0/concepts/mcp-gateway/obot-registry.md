@@ -1,5 +1,6 @@
 # Obot's Open Source Registry
-Each Obot instance connects to our open source registry by default. You can follow this guide to add your MCP server to [Obot's registry](https://github.com/obot-platform/mcp-catalog). You'll either submit **just a catalog entry**, or **a catalog entry + a repackaged image** (for containerized servers).
+
+Each Obot instance connects to our open source registry by default. You can follow this guide to add your MCP server to [Obot's registry](https://github.com/jrmatherly/mcp-catalog). You'll either submit **just a catalog entry**, or **a catalog entry + a repackaged image** (for containerized servers).
 
 ---
 
@@ -8,19 +9,19 @@ Each Obot instance connects to our open source registry by default. You can foll
 **Question:** What type of MCP server are you shipping?
 
 - **Remote HTTP (Hosted Service)**
-    
+
     You expose a hosted HTTP MCP endpoint at a fixed URL or domain.
-    
-    → You only need [**mcp-catalog**](https://github.com/obot-platform/mcp-catalog).
-    
+
+    → You only need [**mcp-catalog**](https://github.com/jrmatherly/mcp-catalog).
+
 - **Docker-based HTTP or Stdio npx/uvx**
-    
+
     You have a Docker image that serves **HTTP MCP** **or** you have a **stdio** npx/uvx MCP server.
-    
-    → You'll touch **both** repos: first [**mcp-images**](https://github.com/obot-platform/mcp-images) (to repackage it), then [**mcp-catalog**](https://github.com/obot-platform/mcp-catalog).
-    
+
+    → You'll touch **both** repos: first [**mcp-images**](https://github.com/obot-platform/mcp-images) (to repackage it), then [**mcp-catalog**](https://github.com/jrmatherly/mcp-catalog).
 
 **⚠️ Not Currently Supported:**
+
 - Docker images that use stdio transport (only HTTP-based Docker images are supported)
 - npx/uvx packages that serve streamable HTTP (only stdio-based npx/uvx packages are supported)
 
@@ -74,6 +75,7 @@ ghcr.io/obot-platform/mcp-images/<your-server-name>:<version>
 ```
 
 **Then** proceed to Step 2 and:
+
 - For Docker-based HTTP servers: use **Option B** with your published GHCR image
 - For stdio servers: use **Option C** with your published GHCR image
 
@@ -81,7 +83,7 @@ ghcr.io/obot-platform/mcp-images/<your-server-name>:<version>
 
 ## Step 2 — Create your catalog entry
 
-Fork from: `https://github.com/obot-platform/mcp-catalog`
+Fork from: `https://github.com/jrmatherly/mcp-catalog`
 
 Add a file: `your-server-name.yaml`
 
@@ -226,7 +228,6 @@ containerizedConfig:
 ---
 </details>
 
-
 <details>
   <summary>Option C: Stdio MCP Server (npx, uvx)</summary>
 
@@ -299,4 +300,4 @@ If you have Obot running locally, you can test your catalog entry before submitt
 
 ## Examples:
 
-Please refer to entries in https://github.com/obot-platform/mcp-catalog
+Please refer to entries in https://github.com/jrmatherly/mcp-catalog

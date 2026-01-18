@@ -27,6 +27,7 @@ Audit logs capture all MCP interactions that flow through the gateway.
 Navigate to **MCP Management > Audit Logs** in the MCP Platform.
 
 The audit log view shows:
+
 - Timestamp
 - User
 - MCP Server
@@ -36,6 +37,7 @@ The audit log view shows:
 ### Detailed View
 
 Click on any log entry to see additional details:
+
 - Request and response metadata
 - Error details (if applicable)
 - Full request/response payloads and headers (Auditor role required)
@@ -43,6 +45,7 @@ Click on any log entry to see additional details:
 ### Filtering
 
 Filter logs by:
+
 - Date range
 - User
 - MCP Server
@@ -79,15 +82,18 @@ Navigate to **MCP Management > Usage** in the MCP Platform.
 ## Access by Role
 
 **Power User / Power User+**
+
 - View audit logs and usage for their own activity
 - Metadata only (no request/response content)
 
 **Admin / Owner**
+
 - View audit logs and usage for all users
 - Export audit logs
 - Metadata only (no request/response content)
 
 **Auditor (add-on)**
+
 - View full request/response payloads and headers
 - Export audit logs with full content
 - Read-only access to admin views

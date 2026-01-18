@@ -13,18 +13,21 @@ This guide describes the integration testing strategy and procedures for validat
 Before testing authentication providers, ensure you have:
 
 **For Entra ID Testing:**
+
 - Azure AD tenant with app registration
 - Client ID, Client Secret, Tenant ID
 - Test users with various roles
 - See: [Entra ID Authentication Setup](../configuration/entra-id-authentication.md)
 
 **For Keycloak Testing:**
+
 - Keycloak instance (local or hosted)
 - Realm configured with OIDC client
 - Test users with various roles
 - See: [Keycloak Authentication Setup](../configuration/keycloak-authentication.md)
 
 **For PostgreSQL Session Testing:**
+
 - PostgreSQL 12+ instance
 - Database with appropriate permissions
 - Connection string (DSN)
@@ -35,14 +38,16 @@ Before testing authentication providers, ensure you have:
 
 ### ✅ Unit Tests (Implemented)
 
-**Cookie Secret Validation** (`tools/auth-providers-common/pkg/secrets/validation_test.go`):
+**Cookie Secret Validation** (`obot-tools/auth-providers-common/pkg/secrets/validation_test.go`):
+
 - Empty secret detection
 - Invalid base64 format handling
 - Entropy validation (32-byte minimum)
 - Secret generation correctness
 - Secret uniqueness verification
 
-**PostgreSQL Connection Validation** (`tools/auth-providers-common/pkg/database/postgres_test.go`):
+**PostgreSQL Connection Validation** (`obot-tools/auth-providers-common/pkg/database/postgres_test.go`):
+
 - Empty DSN handling
 - Invalid DSN format detection
 - Unreachable host error handling
@@ -62,6 +67,7 @@ These tests require running Obot with actual Entra ID or Keycloak providers conf
 Validates that authentication providers enforce minimum 32-byte (256-bit) entropy for cookie encryption secrets.
 
 **Setup:**
+
 1. Deploy Entra ID or Keycloak auth provider
 2. Configure cookie secret environment variable
 
@@ -85,6 +91,7 @@ export OBOT_ENTRA_AUTH_PROVIDER_COOKIE_SECRET=$(openssl rand -base64 16)
 ```
 
 **Expected Error:**
+
 ```
 ERROR: cookie secret must be at least 32 bytes (256 bits), got 16 bytes
 Generate a valid secret with: openssl rand -base64 32
@@ -98,6 +105,7 @@ export OBOT_ENTRA_AUTH_PROVIDER_COOKIE_SECRET="not-valid-base64!@#$"
 ```
 
 **Expected Error:**
+
 ```
 ERROR: cookie secret must be valid base64
 ```
@@ -113,6 +121,7 @@ export OBOT_ENTRA_AUTH_PROVIDER_COOKIE_SECRET=$(openssl rand -base64 32)
 **Expected Result:** Provider-specific secret takes precedence over shared secret
 
 **Validation:**
+
 - ✅ Valid secrets: Provider starts successfully
 - ✅ Invalid secrets: Provider exits immediately with clear error message
 - ✅ Error includes generation command: `openssl rand -base64 32`
@@ -124,6 +133,7 @@ export OBOT_ENTRA_AUTH_PROVIDER_COOKIE_SECRET=$(openssl rand -base64 32)
 Validates fail-fast behavior when PostgreSQL session storage is misconfigured.
 
 **Setup:**
+
 1. Deploy provider with PostgreSQL session storage enabled
 2. Configure `OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN`
 
@@ -137,6 +147,7 @@ export OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN="postgres://user:pass@localhos
 ```
 
 **Expected Logs:**
+
 ```
 INFO: entra-auth-provider: validating PostgreSQL connection...
 INFO: entra-auth-provider: PostgreSQL connection validated successfully
@@ -151,6 +162,7 @@ export OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN="postgres://user:wrongpass@loc
 ```
 
 **Expected Error:**
+
 ```
 ERROR: entra-auth-provider: PostgreSQL connection failed: ...
 ERROR: Set session storage to PostgreSQL but cannot connect
@@ -174,12 +186,14 @@ unset OBOT_AUTH_PROVIDER_POSTGRES_CONNECTION_DSN
 ```
 
 **Expected Logs:**
+
 ```
 INFO: entra-auth-provider: using cookie-only session storage
 WARNING: Cookie-only sessions do not persist across pod restarts
 ```
 
 **Validation:**
+
 - ✅ Valid connection: Provider starts, validates connection before accepting traffic
 - ✅ Invalid connection: Provider exits immediately, prevents runtime failures
 - ✅ No PostgreSQL: Provider uses cookies, warns about limitations
@@ -191,6 +205,7 @@ WARNING: Cookie-only sessions do not persist across pod restarts
 Validates that different auth providers can use separate cookie secrets for defense-in-depth.
 
 **Setup:**
+
 1. Deploy both Entra ID and Keycloak providers
 2. Configure provider-specific secrets
 
@@ -222,6 +237,7 @@ unset OBOT_KEYCLOAK_AUTH_PROVIDER_COOKIE_SECRET
 **Validation:** Sessions are interoperable (for backward compatibility)
 
 **Validation:**
+
 - ✅ Provider-specific secrets: Cookie isolation between providers
 - ✅ Shared secret: Backward compatibility maintained
 - ✅ Clear logging shows which secret is being used
@@ -230,17 +246,30 @@ unset OBOT_KEYCLOAK_AUTH_PROVIDER_COOKIE_SECRET
 
 ## Running Unit Tests
 
-Execute the existing unit test suites to verify authentication provider functionality:
+Execute the existing unit test suites to verify authentication provider functionality.
+
+Auth provider tests are in the [obot-tools repository](https://github.com/jrmatherly/obot-tools):
 
 ```bash
+# Clone obot-tools if not already present
+git clone https://github.com/jrmatherly/obot-tools.git
+
 # Cookie secret validation tests
-cd tools/auth-providers-common
+cd obot-tools/auth-providers-common
 go test -v ./pkg/secrets/
 
 # PostgreSQL validation tests
 go test -v ./pkg/database/
 
 # All auth-providers-common tests
+go test -v ./...
+
+# Entra ID provider tests
+cd ../entra-auth-provider
+go test -v ./...
+
+# Keycloak provider tests
+cd ../keycloak-auth-provider
 go test -v ./...
 ```
 
@@ -272,13 +301,15 @@ export OBOT_AUTH_PROVIDER_EMAIL_DOMAINS="*"
 ### Starting the Provider
 
 ```bash
-cd tools/entra-auth-provider
+# From obot-tools repository
+cd obot-tools/entra-auth-provider
 go run main.go
 ```
 
 ### Expected Log Output
 
 **Successful Startup with PostgreSQL:**
+
 ```
 INFO: entra-auth-provider: validating PostgreSQL connection...
 INFO: entra-auth-provider: PostgreSQL connection validated successfully
@@ -288,6 +319,7 @@ INFO: entra-auth-provider: using PostgreSQL session storage (table prefix: entra
 ```
 
 **Successful Startup without PostgreSQL:**
+
 ```
 INFO: entra-auth-provider: using cookie-only session storage
 WARNING: Cookie-only sessions do not persist across pod restarts
@@ -296,6 +328,7 @@ WARNING: Cookie-only sessions do not persist across pod restarts
 ```
 
 **Failed Startup (Invalid Cookie Secret):**
+
 ```
 ERROR: entra-auth-provider: cookie secret must be at least 32 bytes (256 bits), got 16 bytes
 Generate a valid secret with: openssl rand -base64 32
@@ -303,6 +336,7 @@ exit status 1
 ```
 
 **Failed Startup (PostgreSQL Connection Failed):**
+
 ```
 INFO: entra-auth-provider: validating PostgreSQL connection...
 ERROR: entra-auth-provider: PostgreSQL connection failed: connection refused
@@ -322,6 +356,7 @@ Authentication providers expose metrics through the Obot server for monitoring a
 Metrics are available at `/debug/metrics` on the Obot server:
 
 **Authentication Metrics:**
+
 - `obot_auth_authentication_attempts_total{provider, result}` - Counter
   - Results: `success`, `failure`, `error`
 - `obot_auth_token_refresh_attempts_total{provider, result}` - Counter
@@ -347,6 +382,7 @@ curl http://localhost:8080/debug/metrics | grep obot_auth
 ```
 
 **Expected Output (sample):**
+
 ```
 obot_auth_authentication_attempts_total{provider="entra-auth-provider",result="success"} 5
 obot_auth_token_refresh_attempts_total{provider="entra-auth-provider",result="success"} 2
@@ -361,22 +397,26 @@ obot_auth_active_sessions{provider="entra-auth-provider"} 3
 Use this checklist to track manual testing progress:
 
 ### Core Functionality
+
 - [ ] **Test 1a**: Valid 32-byte secret - provider starts successfully
 - [ ] **Test 1b**: Too short secret - provider fails with error
 - [ ] **Test 1c**: Invalid base64 - provider fails with error
 - [ ] **Test 1d**: Provider-specific secret takes precedence
 
 ### PostgreSQL Session Storage
+
 - [ ] **Test 2a**: Valid PostgreSQL connection - provider starts
 - [ ] **Test 2b**: Invalid credentials - provider fails immediately
 - [ ] **Test 2c**: Unreachable host - provider times out appropriately
 - [ ] **Test 2d**: No PostgreSQL - provider uses cookie fallback
 
 ### Multi-Provider Deployment
+
 - [ ] **Test 3a**: Different secrets per provider - cookie isolation works
 - [ ] **Test 3b**: Shared secret fallback - backward compatibility maintained
 
 ### Metrics and Monitoring
+
 - [ ] Prometheus metrics endpoint accessible
 - [ ] Authentication success metrics incrementing
 - [ ] Token refresh metrics incrementing
@@ -389,6 +429,7 @@ Use this checklist to track manual testing progress:
 The following automated integration tests are planned for future implementation:
 
 ### Phase 1: Core Authentication Flow
+
 - OAuth2 Authorization Code Flow (complete flow from start to callback)
 - Token Refresh (automatic token refresh when expired)
 - Token Refresh Failure Handling (ErrInvalidSession, not HTTP 500)
@@ -396,12 +437,14 @@ The following automated integration tests are planned for future implementation:
 - Admin Role Persistence (regression test)
 
 ### Phase 2: Session Persistence
+
 - PostgreSQL Session Storage (sessions persist to database)
 - Cookie-Only Fallback (graceful degradation)
 - Table Prefix Isolation (separate `keycloak_` and `entra_` sessions)
 - Session Expiry (sessions expire after configured duration)
 
 ### Phase 3: Security and Regression
+
 - Cookie Security Flags (HttpOnly, Secure, SameSite validation)
 - ID Token Parsing Errors (fail authentication if token missing/invalid)
 - Clock Skew Tolerance (handle time differences)

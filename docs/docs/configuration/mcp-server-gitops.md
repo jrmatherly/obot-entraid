@@ -15,7 +15,7 @@ Obot supports managing MCP servers through Git repositories, enabling GitOps wor
 
 ## Getting Started
 
-1. **Create or Fork a Repository**: Start with the official [Obot MCP server repository](https://github.com/obot-platform/mcp-catalog) or create your own
+1. **Create or Fork a Repository**: Start with the official [Obot MCP server repository](https://github.com/jrmatherly/mcp-catalog) or create your own
 2. **Add Server Configurations**: Create YAML files for each MCP server following the format below
 3. **Configure Obot**: Point your Obot instance to the Git repository containing your server configurations
 4. **Establish Review Workflows**: Set up branch protection rules and PR-based review processes for configuration changes
@@ -31,7 +31,7 @@ MCP server configurations consist of individual YAML files, each defining a sing
 - **Environment Variables**: Required and optional configuration parameters
 - **Runtime Configuration**: Deployment and connection details
 
-For examples and reference implementations, see the official Obot MCP server repository at [github.com/obot-platform/mcp-catalog](https://github.com/obot-platform/mcp-catalog).
+For examples and reference implementations, see the official Obot MCP server repository at [github.com/jrmatherly/mcp-catalog](https://github.com/jrmatherly/mcp-catalog).
 
 ## YAML Configuration Structure
 

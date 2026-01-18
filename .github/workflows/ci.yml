@@ -80,13 +80,8 @@ jobs:
 
       - name: Build
         run: make build
-
-      - name: Build custom auth providers
-        run: |
-          echo "Building EntraID auth provider..."
-          cd tools/entra-auth-provider && make build && cd ../..
-          echo "Building Keycloak auth provider..."
-          cd tools/keycloak-auth-provider && make build && cd ../..
+        # Note: Auth providers (Entra ID, Keycloak) are now in obot-tools fork
+        # See: github.com/jrmatherly/obot-tools
 
       - name: Validate Go Code
         run: make validate-go-code
@@ -218,8 +213,8 @@ jobs:
       - name: Pre-fetch base images in parallel
         run: |
           # Pull base images concurrently to reduce sequential wait time (saves 3-4 min)
-          docker pull ghcr.io/obot-platform/tools:latest &
-          docker pull ghcr.io/obot-platform/tools/providers:latest &
+          docker pull ghcr.io/jrmatherly/obot-tools:latest &
+          docker pull ghcr.io/jrmatherly/obot-tools/providers:latest &
           docker pull cgr.dev/chainguard/wolfi-base:latest &
           wait
           echo "Base images pre-fetched successfully"
@@ -229,11 +224,11 @@ jobs:
         with:
           context: .
           push: false
-          load: true  # Load image to local Docker daemon
+          load: true # Load image to local Docker daemon
           platforms: linux/amd64
           cache-from: type=gha
-          cache-to: type=gha,mode=max  # Persist cache even without push (PR builds)
-          outputs: type=docker  # Output to Docker daemon for local use
+          cache-to: type=gha,mode=max # Persist cache even without push (PR builds)
+          outputs: type=docker # Output to Docker daemon for local use
 
   # Summary job to aggregate results for branch protection
   summary:

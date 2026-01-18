@@ -7,6 +7,7 @@ This document describes the caching strategy for obot-entraid CI/CD pipelines to
 ## Current Cache Usage
 
 **As of January 2026:**
+
 - **Total Size**: 5.95 GB (59.5% of 10GB free tier)
 - **Active Entries**: 125 cache entries
 - **Headroom**: 4.05 GB remaining (40%)
@@ -14,7 +15,7 @@ This document describes the caching strategy for obot-entraid CI/CD pipelines to
 ### Cache Breakdown
 
 | Cache Type | Estimated Size | Location | Workflow |
-|------------|---------------|----------|----------|
+| ------------ | -------------- | ---------- | ---------- |
 | Docker GHA layers | 3-5 GB | GitHub Actions cache | `docker-build-and-push.yml`, `ci.yml` |
 | Go modules | 300-500 MB | `~/go/pkg/mod` | All Go jobs |
 | Go build cache | 200-400 MB | `~/.cache/go-build` | All Go jobs |
@@ -39,6 +40,7 @@ restore-keys: |
 ```
 
 **Benefits**:
+
 - Isolated caches per branch (prevents pollution)
 - Fallback to main branch cache (warm cache for feature branches)
 - Better LRU behavior (reduces evictions)
@@ -61,6 +63,7 @@ with:
 ```
 
 **Benefits**:
+
 - PR builds write cache back to GitHub Actions
 - Subsequent PR commits benefit from previous build cache
 - No storage waste (same GHA backend)
@@ -74,13 +77,14 @@ with:
 **Strategy**: Concurrent docker pull for base images
 
 ```bash
-docker pull ghcr.io/obot-platform/tools:latest &
-docker pull ghcr.io/obot-platform/tools/providers:latest &
+docker pull ghcr.io/jrmatherly/obot-tools:latest &
+docker pull ghcr.io/jrmatherly/obot-tools/providers:latest &
 docker pull cgr.dev/chainguard/wolfi-base:latest &
 wait
 ```
 
 **Benefits**:
+
 - Parallel downloads instead of sequential
 - Reduces wait time from ~6 min to ~2 min
 
@@ -111,6 +115,7 @@ RUN make all
 ```
 
 **Key Detail**: Must include `apiclient/` and `logger/` directories because main `go.mod` has replace directives:
+
 ```go
 replace (
     github.com/obot-platform/obot/apiclient => ./apiclient
@@ -119,6 +124,7 @@ replace (
 ```
 
 **Benefits**:
+
 - Dependency layers cached separately from source
 - Source changes don't invalidate dependency cache
 - 60% faster rebuilds when only code changes
@@ -167,7 +173,7 @@ cache-to: type=gha,mode=max
 **Mode Comparison**:
 
 | Mode | Layers Cached | Size | Best For |
-|------|---------------|------|----------|
+| ------ | --------------- | ------ | ---------- |
 | `min` | Final image only | Smallest | Single-stage builds |
 | `max` | All layers + intermediates | Largest | Multi-stage builds (our case) |
 
@@ -176,11 +182,13 @@ cache-to: type=gha,mode=max
 ## Performance Impact
 
 ### Before Optimizations
+
 - Cold build: ~25-30 minutes
 - Incremental build (code change): ~15-20 minutes
 - PR build (no cache): ~25-30 minutes
 
 ### After Optimizations (Estimated)
+
 - Cold build: ~25-30 minutes (unchanged - no upstream cache)
 - Incremental build (code change): ~8-12 minutes (40-50% faster)
 - PR build (with cache): ~12-15 minutes (40% faster)
@@ -188,18 +196,21 @@ cache-to: type=gha,mode=max
 ### Real-World Scenarios
 
 **Scenario 1: Backend code change**
+
 - Only Go source changed
 - Deps cached: ✅ (go.mod unchanged)
 - UI cached: ✅ (package.json unchanged)
 - **Result**: ~10 min build (vs 18 min before)
 
 **Scenario 2: UI code change**
+
 - Only Svelte components changed
 - Deps cached: ✅ (pnpm-lock.yaml unchanged)
 - Go build cached: ✅ (*.go unchanged)
 - **Result**: ~12 min build (vs 20 min before)
 
 **Scenario 3: Dependency update**
+
 - go.mod or package.json changed
 - Deps must download: ❌
 - Source cached: ✅ (if unchanged)
@@ -221,6 +232,7 @@ cache-to: |
 ```
 
 **Benefits**:
+
 - No 10GB limit (uses container registry storage)
 - No 7-day eviction (permanent cache)
 - 90% faster cold builds
@@ -228,6 +240,7 @@ cache-to: |
 **Cost**: ~$0.50/GB/month beyond GitHub Container Registry free tier
 
 **Recommendation**: Consider if:
+
 - Consistently hitting 10GB limit
 - Need faster cold builds for demos
 - Budget allows for paid container storage
@@ -241,6 +254,7 @@ Consider splitting Docker build into parallel jobs:
 3. `docker-assemble` - Combine artifacts into final image
 
 **Benefits**:
+
 - Parallel builds (faster overall)
 - Better cache isolation
 - Easier debugging
@@ -254,11 +268,13 @@ Consider splitting Docker build into parallel jobs:
 **Symptom**: Frequent cache misses despite no changes
 
 **Possible Causes**:
+
 1. **Cache eviction** - Check if approaching 10GB limit
 2. **Key collision** - Multiple branches overwriting same cache
 3. **Restore key mismatch** - Verify restore-keys cascade
 
 **Solutions**:
+
 ```bash
 # Check cache age
 gh api repos/jrmatherly/obot-entraid/actions/caches | \
@@ -275,6 +291,7 @@ gh api repos/jrmatherly/obot-entraid/actions/caches | \
 **Symptom**: Build fails with cache-related errors
 
 **Solutions**:
+
 1. **Clear GHA cache**: Add `cache-from: []` temporarily
 2. **Rebuild without cache**: Remove `cache-to` temporarily
 3. **Check disk space**: Verify runner has enough space
@@ -284,11 +301,13 @@ gh api repos/jrmatherly/obot-entraid/actions/caches | \
 **Symptom**: Approaching 10GB limit
 
 **Immediate Actions**:
+
 1. Delete unused branch caches
 2. Reduce `mode=max` to `mode=min` temporarily
 3. Clear golangci-lint cache (regenerates quickly)
 
 **Long-term Solutions**:
+
 1. Implement cache cleanup workflow (delete >30 day old)
 2. Consider registry cache backend (paid)
 3. Split build into smaller jobs
@@ -329,6 +348,6 @@ fi
 ## Change Log
 
 | Date | Change | Impact |
-|------|--------|--------|
+| ------ | -------- | -------- |
 | 2026-01-14 | Implemented Phase 1 optimizations | 40-50% faster builds |
 | 2026-01-14 | Created caching strategy documentation | N/A |

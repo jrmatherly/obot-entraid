@@ -43,6 +43,7 @@ Authorization: Bearer ok1-123-456-abcdefghijklmnopqrstuvwxyz
 ```
 
 API keys only grant access to:
+
 - MCP server connections via the `/mcp-connect/` endpoints
 - The `/api/me` endpoint to verify authentication
 
@@ -55,7 +56,7 @@ They cannot be used to access other Obot API endpoints.
 Navigate to **Profile > API Keys** to see all your API keys. The table displays:
 
 | Column | Description |
-|--------|-------------|
+| -------- | ------------- |
 | Name | The key's descriptive name |
 | Description | Additional context about the key |
 | Servers | Number of MCP servers the key can access |

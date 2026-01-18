@@ -42,10 +42,12 @@ make gen-docs-release version=0.16.0 prev_version=0.15.0
 
 1. Review the generated files in `versioned_docs/version-X.Y.Z/`
 2. Commit all changes:
+
    ```bash
    git add docs/versioned_docs/ docs/versions.json docs/versioned_sidebars/
    git commit -m "docs: snapshot version X.Y.Z documentation"
    ```
+
 3. Create a pull request with the documentation snapshot
 
 ## Removing an Old Version
@@ -74,10 +76,12 @@ make remove-docs-version version=0.13.0
 ### Post-Removal Steps
 
 1. Commit the changes:
+
    ```bash
    git add docs/
    git commit -m "docs: remove unsupported version 0.13.0"
    ```
+
 2. Create a pull request
 
 ## Versioning Best Practices
@@ -127,6 +131,7 @@ make remove-docs-version version=X.Y.Z
 **Cause**: `versions.json` not updated correctly
 
 **Solution**: Manually add version to `docs/versions.json`:
+
 ```json
 [
   "0.16.0",
@@ -140,6 +145,7 @@ make remove-docs-version version=X.Y.Z
 **Cause**: Sidebar file not created in `versioned_sidebars/`
 
 **Solution**: Copy current sidebar:
+
 ```bash
 cp docs/sidebars.ts docs/versioned_sidebars/version-0.16.0-sidebars.json
 ```
@@ -149,6 +155,7 @@ cp docs/sidebars.ts docs/versioned_sidebars/version-0.16.0-sidebars.json
 **Cause**: Broken links in versioned docs
 
 **Solution**: Run build and fix reported broken links:
+
 ```bash
 cd docs && npm run build
 ```

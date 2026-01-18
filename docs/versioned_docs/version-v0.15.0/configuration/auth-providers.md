@@ -69,13 +69,13 @@ Obot currently supports the following authentication providers (using OAuth2). B
 
 You will need to create an OAuth App in GitHub following these [instructions](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
 
-You can view the source code for GitHub provider in this [repo](https://github.com/obot-platform/tools).
+You can view the source code for GitHub provider in this [repo](https://github.com/jrmatherly/obot-tools).
 
 ### Google
 
 Follow the instructions [here](https://developers.google.com/identity/protocols/oauth2/web-server#creatingcred) to create the OAuth app for Obot.
 
-You can view the source code for Google provider in this [repo](https://github.com/obot-platform/tools).
+You can view the source code for Google provider in this [repo](https://github.com/jrmatherly/obot-tools).
 
 ### Entra (Enterprise Only)
 
@@ -118,7 +118,6 @@ You can now return to Obot and finish configuring Entra. Use the table below to 
 | Client Secret | Secret `Value` column   | Certificates & secrets |
 | Tenant ID     | Directory (tenant) ID   | Overview               |
 
-
 ### Okta (Enterprise Only)
 
 :::note
@@ -140,4 +139,3 @@ or have Okta do it for you. Make sure you save the private key in PEM format, as
 in addition to the Client ID for this app. When you are done with that, the `Client Credentials` section should look similar to this:
 
 ![Okta API Services App Client Credentials configuration](/img/okta-client-credentials.png)
-

@@ -16,32 +16,41 @@ An MCP Server is a service that implements the Model Context Protocol specificat
 ### Server Types
 
 #### Hosted Services
+
 External services that implement MCP natively:
+
 - **Cloud APIs**: Services like GitHub, Slack, Google Drive
 - **SaaS Platforms**: CRM systems, project management tools
 - **AI Services**: Image generation, translation, analysis services
 - **Data Providers**: Weather APIs, news feeds, financial data
 
 #### Self-Hosted Servers
+
 MCP servers you run in your own infrastructure:
+
 - **Database Connectors**: PostgreSQL, MySQL, MongoDB interfaces
 - **File System Access**: Local or network file system tools
 - **Internal APIs**: Your organization's custom services
 - **Legacy System Bridges**: Connect to existing enterprise systems
 
 #### Containerized Servers
+
 MCP servers deployed as containers in Obot's infrastructure:
+
 - **Secure Isolation**: Runs in controlled environments
 - **Network Security**: Restricted network access policies
 
 ### Server Configuration
 
 #### Connection Settings
+
 - **Endpoint URLs**: Where to connect to the MCP server
 - **Authentication**: How to authenticate with the server
 
 #### Capability Declaration
+
 MCP servers declare their capabilities:
+
 - **Available Tools**: List of tools and their parameters
 - **Resource Types**: What kinds of data can be accessed
 - **Required Permissions**: What access the server needs
@@ -62,6 +71,7 @@ Tools are specific functions that MCP servers expose for AI agents to use. Each 
 ### Tool Execution
 
 #### Request Flow
+
 1. **Tool Discovery**: Agent discovers available tools from MCP server
 2. **Parameter Validation**: Agent validates required parameters
 3. **Authentication**: Verify permissions and credentials
@@ -69,6 +79,7 @@ Tools are specific functions that MCP servers expose for AI agents to use. Each 
 5. **Response Processing**: Handle results and potential errors
 
 #### Error Handling
+
 - **Parameter Errors**: Invalid or missing parameters
 - **Authentication Errors**: Insufficient permissions or invalid credentials
 - **Service Errors**: External service unavailable or failing

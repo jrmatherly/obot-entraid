@@ -81,7 +81,7 @@ The auth provider wraps oauth2-proxy v7.13.0 with Microsoft Entra ID configurati
 **Delegated permissions** (requested via OAuth scope):
 
 | Permission | Description |
-|------------|-------------|
+| ------------ | ------------- |
 | `openid` | Sign in and read user profile |
 | `email` | View user's email address |
 | `profile` | View user's basic profile |
@@ -90,7 +90,7 @@ The auth provider wraps oauth2-proxy v7.13.0 with Microsoft Entra ID configurati
 **Application permissions** (configured in Azure portal, require admin consent):
 
 | Permission | Description |
-|------------|-------------|
+| ------------ | ------------- |
 | `GroupMember.Read.All` | Read all group memberships |
 | `User.Read.All` | Read all users' profiles |
 
@@ -101,11 +101,13 @@ The auth provider wraps oauth2-proxy v7.13.0 with Microsoft Entra ID configurati
 For AKS or Kubernetes deployments, use Azure Workload Identity to eliminate secrets:
 
 **Prerequisites:**
+
 - Cluster has public OIDC provider URL enabled
 - Workload Identity admission webhook deployed
 - Federated credential configured in App Registration
 
 **Configuration:**
+
 ```yaml
 # Service account annotation
 azure.workload.identity/client-id: <client-id>
@@ -124,6 +126,7 @@ Set `use_workload_identity: true` in tool configuration - no `client_secret` req
 4. Configure paths via `client_cert_path` and `client_key_path`
 
 **Best Practices:**
+
 - Use certificates from a trusted CA (Azure Key Vault recommended)
 - Maximum lifetime: 180 days
 - Configure automatic rotation via Key Vault
@@ -140,7 +143,7 @@ Set `use_workload_identity: true` in tool configuration - no `client_secret` req
 ### Step 4: Note Required Values
 
 | Obot Parameter | Azure Portal Location |
-|----------------|----------------------|
+| ------------ | ---------------------- |
 | `client_id` | Overview > Application (client) ID |
 | `tenant_id` | Overview > Directory (tenant) ID |
 | `client_secret` | Certificates & secrets > Value |
@@ -151,7 +154,7 @@ Set `use_workload_identity: true` in tool configuration - no `client_secret` req
 ### Required Parameters
 
 | Parameter | Description |
-|-----------|-------------|
+| ------------ | ------------- |
 | `client_id` | The Application (client) ID from Azure App Registration |
 | `tenant_id` | The Directory (tenant) ID, or `common`/`organizations` for multi-tenant |
 | `cookie_secret` | Base64-encoded secret (must decode to 16, 24, or 32 bytes for AES) |
@@ -160,7 +163,7 @@ Set `use_workload_identity: true` in tool configuration - no `client_secret` req
 ### Authentication Method (Choose One)
 
 | Parameter | Description |
-|-----------|-------------|
+| ------------ | ------------- |
 | `client_secret` | The client secret value from Certificates & secrets |
 | `use_workload_identity` | Enable Azure Workload Identity authentication (set to `true`) |
 | `client_cert_path` | Path to client certificate PEM file |
@@ -169,7 +172,7 @@ Set `use_workload_identity: true` in tool configuration - no `client_secret` req
 ### Optional Parameters
 
 | Parameter | Default | Description |
-|-----------|---------|-------------|
+| ------------ | --------- | ------------- |
 | `postgres_dsn` | - | PostgreSQL DSN for session storage |
 | `token_refresh_duration` | `1h` | How often to refresh the access token |
 | `allowed_groups` | - | Comma-separated Azure AD group IDs allowed to authenticate |
@@ -239,7 +242,7 @@ config:
 ### Health Endpoints
 
 | Endpoint | Purpose | Kubernetes Probe |
-|----------|---------|------------------|
+| ------------ | --------- | ------------------ |
 | `/health` | Liveness check | `livenessProbe` |
 | `/ready` | Readiness check (verifies Entra ID connectivity) | `readinessProbe` |
 | `/metrics` | Prometheus metrics | N/A |
@@ -247,7 +250,7 @@ config:
 ### Prometheus Metrics
 
 | Metric | Type | Description |
-|--------|------|-------------|
+| ------------ | ------ | ------------- |
 | `entra_auth_requests_total` | Counter | Total authentication requests |
 | `entra_auth_failures_total` | Counter | Failed authentications by reason |
 | `entra_graph_api_duration_seconds` | Histogram | Graph API latency |
@@ -276,6 +279,7 @@ The following security enhancements were implemented to improve authentication r
 ### Fail-Fast Authentication
 
 **ID token parsing is mandatory** for reliable user identification. Authentication will fail immediately if:
+
 - ID token is missing from the OAuth callback
 - ID token cannot be parsed successfully
 - Tenant validation fails (for multi-tenant configurations)
@@ -287,7 +291,7 @@ This prevents silent authentication failures and ensures consistent user identit
 Production-grade cookie security with explicit configuration:
 
 | Setting | Production | Development |
-|---------|------------|-------------|
+| ------------ | ------------ | ------------- |
 | `Secure` flag | Required (HTTPS) | Optional with `OBOT_AUTH_INSECURE_COOKIES=true` |
 | `HTTPOnly` | Always enabled | Always enabled |
 | `SameSite` | `Lax` (default) | Configurable via `OBOT_AUTH_PROVIDER_COOKIE_SAMESITE` |
@@ -308,6 +312,7 @@ OBOT_AUTH_PROVIDER_COOKIE_SAMESITE: "Lax"  # Options: Strict, Lax, None
 ```
 
 **HTTPS Enforcement:**
+
 - Server URL must use `https://` scheme in production
 - Application exits on startup if HTTP is detected without `OBOT_AUTH_INSECURE_COOKIES=true`
 - Development environments can opt-out with explicit environment variable
@@ -317,6 +322,7 @@ OBOT_AUTH_PROVIDER_COOKIE_SAMESITE: "Lax"  # Options: Strict, Lax, None
 Automatic session error detection and graceful handling:
 
 **Detected Error Patterns:**
+
 - `record not found` - Session not in storage
 - `session ticket cookie failed validation` - Cookie decryption failure
 - `refreshing token returned` - Token refresh HTTP errors
@@ -326,6 +332,7 @@ Automatic session error detection and graceful handling:
 - `failed to refresh token` - Token refresh failure
 
 **Behavior:**
+
 - Users automatically redirected to login page on session errors
 - No confusing HTTP 500 error pages shown to users
 - Diagnostic logging for troubleshooting
@@ -335,7 +342,7 @@ Automatic session error detection and graceful handling:
 Security validation for Azure AD group information:
 
 | Validation | Limit | Purpose |
-|------------|-------|---------|
+| ------------ | ------- | --------- |
 | Group name | Required | Ensures valid group identification |
 | Description length | 1000 characters | Prevents storage abuse and display issues |
 
@@ -346,7 +353,7 @@ Invalid group metadata is rejected with clear error messages.
 ### Security Requirements
 
 | Requirement | Implementation |
-|-------------|----------------|
+| ------------- | ---------------- |
 | oauth2-proxy **v7.13.0** | Required for CVE fixes |
 | PKCE (S256) | SHA-256 code challenge required by Microsoft |
 | Header smuggling protection | v7.13.0 normalizes underscore headers |
@@ -357,7 +364,7 @@ Invalid group metadata is rejected with clear error messages.
 ### Cookie Security
 
 | Setting | Value | Purpose |
-|---------|-------|---------|
+| ------------- | ------- | --------- |
 | `HttpOnly` | true | Prevent XSS access to cookies |
 | `Secure` | true | HTTPS only transmission |
 | `SameSite` | lax | CSRF protection |
@@ -376,7 +383,7 @@ Microsoft recommends credentials in this order (most to least secure):
 ### Common Issues
 
 | Issue | Cause | Solution |
-|-------|-------|----------|
+| ------------- | ------- | ---------- |
 | 401 on callback | Invalid client secret | Regenerate and update secret |
 | No groups returned | Missing Graph API permissions | Add `GroupMember.Read.All` with admin consent |
 | Slow group fetching | 200+ groups | Normal - pagination takes time |
@@ -404,4 +411,4 @@ config:
 - [OAuth2-Proxy Microsoft Entra ID Provider](https://oauth2-proxy.github.io/oauth2-proxy/configuration/providers/ms_entra_id/)
 - [Microsoft Graph API - User](https://learn.microsoft.com/en-us/graph/api/user-get)
 - [Azure Workload Identity](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation)
-- [Entra ID Provider Source Code](https://github.com/jrmatherly/obot-entraid/tree/main/tools/entra-auth-provider) - Package-level documentation
+- [Entra ID Provider Source Code](https://github.com/jrmatherly/obot-tools/tree/main/entra-auth-provider) - Package-level documentation

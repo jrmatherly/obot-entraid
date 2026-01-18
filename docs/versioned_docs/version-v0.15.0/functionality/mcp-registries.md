@@ -66,12 +66,13 @@ Obot uses a reverse DNS naming scheme for global uniqueness:
 ```
 
 Examples:
+
 - `com.example.obot/github-server` for `https://obot.example.com`
 - `local.localhost/my-server` for `http://localhost:8080`
 
 ## Contributing to the Default Server Set
 
-To add your MCP server to Obot's default server set, submit a PR to the [mcp-catalog](https://github.com/obot-platform/mcp-catalog) repository.
+To add your MCP server to Obot's default server set, submit a PR to the [mcp-catalog](https://github.com/jrmatherly/mcp-catalog) repository.
 
 ### Submission Requirements
 
@@ -110,4 +111,4 @@ remoteConfig:
   fixedURL: https://api.example.com/v1/mcp
 ```
 
-See the [mcp-catalog repository](https://github.com/obot-platform/mcp-catalog) for complete examples and documentation.
+See the [mcp-catalog repository](https://github.com/jrmatherly/mcp-catalog) for complete examples and documentation.

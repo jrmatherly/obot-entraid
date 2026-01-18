@@ -45,8 +45,8 @@ jobs:
       - name: Pre-fetch base images in parallel
         run: |
           # Pull base images concurrently to reduce sequential wait time (saves 3-4 min)
-          docker pull ghcr.io/obot-platform/tools:latest &
-          docker pull ghcr.io/obot-platform/tools/providers:latest &
+          docker pull ghcr.io/jrmatherly/obot-tools:latest &
+          docker pull ghcr.io/jrmatherly/obot-tools/providers:latest &
           docker pull cgr.dev/chainguard/wolfi-base:latest &
           wait
           echo "Base images pre-fetched successfully"

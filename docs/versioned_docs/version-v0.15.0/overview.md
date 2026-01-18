@@ -22,7 +22,6 @@ Replace \<API KEY\> with your OpenAI API key. You can also set `ANTHROPIC_API_KE
 
 Open [http://localhost:8080](http://localhost:8080) in your browser to access the Obot UI.
 
-
 For additional installation options, see the [Installation Guide](installation/overview).
 
 ## Platform Concepts

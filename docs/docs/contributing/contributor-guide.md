@@ -20,18 +20,21 @@ Thank you for considering contributing to obot-entraid! This guide will help you
    - Click "Fork" button
 
 2. **Clone your fork:**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/obot-entraid.git
    cd obot-entraid
    ```
 
 3. **Add upstream remote:**
+
    ```bash
    git remote add upstream https://github.com/jrmatherly/obot-entraid.git
    git fetch upstream
    ```
 
 4. **Verify remotes:**
+
    ```bash
    git remote -v
    # origin    https://github.com/YOUR_USERNAME/obot-entraid.git (fetch)
@@ -69,6 +72,7 @@ git checkout -b feature/your-feature-name
 Follow our coding standards:
 
 **Go Code:**
+
 - Follow [Effective Go](https://golang.org/doc/effective_go.html)
 - Use `gofmt` for formatting
 - Run `golangci-lint` before committing
@@ -76,6 +80,7 @@ Follow our coding standards:
 - Document exported functions and types
 
 **Svelte/TypeScript:**
+
 - Follow project ESLint configuration
 - Use TypeScript for type safety
 - Follow component structure in `ui/user/src/lib/components/`
@@ -93,6 +98,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -137,6 +143,7 @@ git commit -m "docs: update Entra ID setup guide with MFA configuration"
 Run all relevant tests before submitting:
 
 **Go Backend:**
+
 ```bash
 # Lint
 make lint
@@ -152,6 +159,7 @@ make test-integration
 ```
 
 **Svelte UI:**
+
 ```bash
 cd ui/user
 
@@ -172,6 +180,7 @@ pnpm run ci
 ```
 
 **Docker Build:**
+
 ```bash
 # Test Docker build (important for auth providers)
 docker build -t obot-entraid:test .
@@ -242,6 +251,7 @@ git push origin feature/your-feature-name --force-with-lease
 ### 7. Submit Pull Request
 
 **Via GitHub CLI:**
+
 ```bash
 gh pr create --base main --head feature/your-feature-name \
   --title "feat(entra): Add MFA support for Entra ID authentication" \
@@ -262,6 +272,7 @@ gh pr create --base main --head feature/your-feature-name \
 ```
 
 **Via GitHub Web UI:**
+
 1. Go to your fork on GitHub
 2. Click "Compare & pull request" button
 3. Fill out the PR template
@@ -318,6 +329,7 @@ gh pr create --base main --head feature/your-feature-name \
 ### High Priority
 
 🔐 **Additional Authentication Providers**
+
 - LDAP/Active Directory
 - SAML 2.0
 - Okta
@@ -325,12 +337,14 @@ gh pr create --base main --head feature/your-feature-name \
 - Generic OIDC
 
 📚 **Documentation Improvements**
+
 - Setup guides for different environments
 - Troubleshooting guides
 - Architecture documentation
 - API documentation
 
 🧪 **Test Coverage Expansion**
+
 - Integration tests for auth providers
 - E2E tests for complete flows
 - Load testing for auth endpoints
@@ -338,16 +352,19 @@ gh pr create --base main --head feature/your-feature-name \
 ### Medium Priority
 
 🐛 **Bug Fixes**
+
 - Check [Issues](https://github.com/jrmatherly/obot-entraid/issues) for bugs
 - Improve error messages
 - Edge case handling
 
 🌐 **Internationalization (i18n)**
+
 - UI translations
 - Error message translations
 - Documentation translations
 
 ⚡ **Performance Improvements**
+
 - Auth provider response time optimization
 - Caching strategies
 - Database query optimization
@@ -355,6 +372,7 @@ gh pr create --base main --head feature/your-feature-name \
 ### Ongoing
 
 ✨ **Feature Enhancements**
+
 - Multi-factor authentication improvements
 - Session management enhancements
 - Audit logging improvements
@@ -368,6 +386,7 @@ gh pr create --base main --head feature/your-feature-name \
 If you're adding a new authentication provider, follow this structure:
 
 **1. Directory Structure:**
+
 ```
 tools/
 └── your-auth-provider/
@@ -434,6 +453,7 @@ COPY tools/ /obot-tools-custom/
 **6. Reference Implementation:**
 
 Study existing providers:
+
 - **Entra ID**: `tools/entra-auth-provider/` (complex, with profile pictures)
 - **Keycloak**: `tools/keycloak-auth-provider/` (OIDC standard)
 
@@ -457,6 +477,7 @@ kill $PID
 **8. Documentation:**
 
 Create comprehensive documentation:
+
 - Setup guide (provider configuration)
 - Environment variables reference
 - Common issues and troubleshooting
@@ -469,16 +490,19 @@ Create comprehensive documentation:
 ### Resources
 
 📖 **Documentation:**
+
 - [Main Documentation](https://github.com/jrmatherly/obot-entraid/tree/main/docs)
 - [Upstream Merge Process](upstream-merge-process.md)
 - [Fork Workflow Analysis](fork-workflow-analysis-2026.md)
 - [Local Development Guide](local-development.md)
 
 💬 **Communication:**
+
 - [GitHub Discussions](https://github.com/jrmatherly/obot-entraid/discussions) - Ask questions
 - [GitHub Issues](https://github.com/jrmatherly/obot-entraid/issues) - Report bugs
 
 🔍 **Code Examples:**
+
 - Browse existing auth providers in `tools/`
 - Check UI components in `ui/user/src/lib/components/`
 - Review tests in `*_test.go` files
@@ -493,6 +517,7 @@ A: It's best to comment on the issue first to coordinate. If no response after a
 
 **Q: My PR has merge conflicts. What do I do?**
 A: Rebase your branch on the latest main:
+
 ```bash
 git fetch upstream
 git rebase upstream/main
@@ -502,6 +527,7 @@ git push origin feature/your-feature --force-with-lease
 
 **Q: How do I update my fork's main branch?**
 A: Sync with upstream:
+
 ```bash
 git checkout main
 git fetch upstream
@@ -555,6 +581,7 @@ squash jkl3456 add tests
 ### Testing Strategies
 
 **Unit Tests:**
+
 ```go
 // tools/your-auth-provider/pkg/profile/profile_test.go
 func TestFetchUserProfile(t *testing.T) {
@@ -576,6 +603,7 @@ func TestFetchUserProfile(t *testing.T) {
 ```
 
 **Integration Tests:**
+
 ```bash
 # Run integration tests
 make test-integration
@@ -587,6 +615,7 @@ go test -tags=integration ./tests/integration/...
 ### Debugging Tips
 
 **Go Backend:**
+
 ```bash
 # Enable verbose logging
 export OBOT_LOG_LEVEL=debug
@@ -596,6 +625,7 @@ dlv debug ./main.go -- server
 ```
 
 **Docker Build:**
+
 ```bash
 # Build with specific target
 docker build --target builder -t obot-entraid:builder .
@@ -614,6 +644,7 @@ docker run -it --entrypoint /bin/sh obot-entraid:test
 We follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating, you agree to uphold this code.
 
 **Summary:**
+
 - Be respectful and inclusive
 - Accept constructive feedback
 - Focus on what's best for the community
@@ -624,6 +655,7 @@ We follow the [Contributor Covenant Code of Conduct](https://www.contributor-cov
 ## Recognition
 
 Contributors who make significant contributions will be:
+
 - Listed in project CONTRIBUTORS file
 - Mentioned in release notes
 - Credited in documentation they help create

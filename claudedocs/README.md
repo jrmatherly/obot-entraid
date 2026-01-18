@@ -1,126 +1,66 @@
 # Claude Documentation Directory
 
-This directory contains comprehensive technical documentation and implementation plans generated during Claude Code sessions.
+This directory contains technical documentation generated during Claude Code sessions.
 
-## Documents
+## Archived Projects
 
-### [nah-fork-k8s-upgrade-implementation-plan.md](./nah-fork-k8s-upgrade-implementation-plan.md)
+### Kubernetes v0.35.0 Upgrade (January 2026)
 
-**Status**: ✅ Ready for Review
-**Date**: 2026-01-14
-**Purpose**: Complete implementation plan for resolving the Kubernetes v0.35.0 upgrade blocker
+**Status**: ✅ COMPLETED
+**Location**: [archive/k8s-v035-upgrade-2026-01/](./archive/k8s-v035-upgrade-2026-01/)
 
-#### Quick Summary
+The K8s v0.35.0 upgrade project successfully resolved dependency blockers:
 
-**Problem**: obot-entraid is blocked from updating 17+ dependencies due to cascading K8s/otelgrpc incompatibility.
+- Forked nah and kinm frameworks with K8s v0.35.0 support
+- Implemented Apply() method for client.WithWatch interface
+- Fixed bookmark interval (60s → 5s) for client-go compatibility
+- Fixed ContentType for REST client protobuf negotiation
+- Upgraded Cloud Storage to v1.59.1, otelgrpc to v0.63.0+
+- Unblocked 17+ Renovate dependency updates
 
-**Solution**:
-1. Fork nah framework (✅ Done)
-2. Implement missing `Apply()` method for K8s v0.35.0+ compatibility
-3. Upgrade K8s and dependencies in obot-entraid
-4. Unblock all pending Renovate PRs
+**Archive Contents** (17 files):
 
-**Timeline**: 4-7 hours total across 3 phases
+| File | Description |
+|------|-------------|
+| nah-fork-k8s-upgrade-implementation-plan.md | Main implementation plan (1,587 lines) |
+| comprehensive-remediation-plan.md | Root cause analysis and remediation |
+| validated-implementation-checklist.md | Final implementation checklist |
+| ci-failure-root-cause-bookmark-interval-*.md | Bookmark timing issue analysis |
+| kubernetes-v035-upgrade-research-*.md | K8s v0.35.0 breaking changes research |
+| controller-runtime-v018-v022-research-*.md | Controller-runtime upgrade research |
+| ci-failure-analysis-*.md | CI debugging records (multiple) |
+| configuration-analysis-database-dsn-*.md | Database configuration analysis |
+| integration-test-failure-analysis-*.md | Integration test debugging |
+| validation-report.md | Plan validation report |
+| reflection-*.md | Task reflection documents |
 
-**Risk Level**: LOW - Well-understood problem, minimal code changes
-
-#### Document Sections
-
-- **Executive Summary** - High-level overview and timeline
-- **Problem Statement** - Detailed dependency conflict analysis
-- **Root Cause Analysis** - Technical investigation findings
-- **Solution Architecture** - Implementation approach and decision rationale
-- **Implementation Steps** - Phase-by-phase instructions with commands
-- **Technical Details** - Apply method implementation and dependency matrix
-- **Testing Strategy** - Pre-merge, post-merge, and regression testing
-- **Rollback Plan** - Emergency procedures if issues arise
-- **Success Metrics** - KPIs and validation checklist
-- **References** - External documentation and related issues
-- **Appendices** - Version details, troubleshooting, fork maintenance
-
-#### Key Decisions
-
-1. **Apply Method Implementation**: Simple pass-through without trigger registration
-   - Rationale: SSA is declarative/idempotent, trigger system is for imperative ops
-   - Low risk, high maintainability
-
-2. **Fork Approach**: Use github.com/jrmatherly/nah instead of waiting for upstream
-   - Rationale: Unblocks critical updates, minimal divergence, clear exit path
-   - Accept maintenance burden for velocity gain
-
-3. **Dependency Upgrades**: Coordinated upgrade of K8s, otelgrpc, and Cloud Storage
-   - Resolves cascading blocker
-   - Enables future updates
-
-#### Next Actions
-
-1. **Review the implementation plan** - Validate approach and commands
-2. **Proceed with Phase 1** - Fix nah framework (2-4 hours)
-3. **Proceed with Phase 2** - Update obot-entraid (1-2 hours)
-4. **Proceed with Phase 3** - Cleanup and validation (1 hour)
-
-#### Related Issues
-
-- [Issue #29](https://github.com/jrmatherly/obot-entraid/issues/29) - Renovate Dashboard (17+ blocked updates)
-- [PR #48](https://github.com/jrmatherly/obot-entraid/pull/48) - Cloud Storage upgrade attempt (blocked)
+**Key Patterns Extracted**: See `.claude/rules/kubernetes-upgrade.md`
 
 ---
 
-## Usage Guidelines
+## Directory Structure
 
-### For Implementation
+```
+claudedocs/
+├── README.md                    # This file
+└── archive/
+    └── k8s-v035-upgrade-2026-01/  # Completed K8s upgrade project
+```
 
-1. Read the full implementation plan document
-2. Follow phases sequentially (Phase 1 → Phase 2 → Phase 3)
-3. Use the provided commands and code snippets
-4. Check off items in validation checklists
-5. Refer to troubleshooting section if issues arise
+## Usage
 
-### For Review
+### Accessing Archives
 
-1. **Executive Summary** - Understand the problem and solution
-2. **Solution Architecture** - Validate the technical approach
-3. **Implementation Steps** - Review commands for safety
-4. **Testing Strategy** - Ensure adequate validation
-5. **Rollback Plan** - Confirm emergency procedures
+Archives contain comprehensive documentation of completed projects. Reference them for:
 
-### For Reference
+- Historical context on past decisions
+- Patterns for similar future work
+- Debugging approaches that worked
 
-1. **Technical Details** - Understand implementation specifics
-2. **Appendices** - Look up dependency versions, troubleshooting
-3. **References** - Dive deeper into K8s SSA documentation
+### Adding New Documentation
 
----
-
-## Document Status
-
-| Document | Version | Status | Last Updated |
-| --------- | --------- | -------- | -------------- |
-| nah-fork-k8s-upgrade-implementation-plan.md | 1.0 | ✅ Ready | 2026-01-14 |
+Claude Code generates documentation during implementation sessions. Add new documents to the root of this directory, then archive when complete.
 
 ---
 
-## Contributing
-
-These documents are generated by Claude Code during interactive sessions. To update:
-
-1. Ask Claude to update the specific document
-2. Provide context about what changed
-3. Claude will revise and maintain version history
-
----
-
-## Questions?
-
-If you have questions about these implementation plans:
-
-1. Review the document thoroughly first
-2. Check the Appendices for common issues
-3. Refer to linked external documentation
-4. Ask Claude for clarification with specific context
-
----
-
-**Generated by**: Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
-**Session Date**: 2026-01-14
 **Project**: obot-entraid (github.com/jrmatherly/obot-entraid)

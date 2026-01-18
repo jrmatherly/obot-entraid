@@ -15,12 +15,14 @@ Obot is an open-source platform for implementing Model Context Protocol (MCP) te
 ## Common Commands
 
 ### Development
+
 ```bash
 make dev              # Run full dev environment (Go server + SvelteKit UI) with hot reload
 make dev-open         # Same as above, but opens browser automatically
 ```
 
 ### Building
+
 ```bash
 make build            # Build Go binary to bin/obot
 make ui               # Build user UI (both browser and Node targets)
@@ -28,12 +30,14 @@ make all              # Build UI + Go binary
 ```
 
 ### Testing
+
 ```bash
 make test             # Run all Go tests (excludes integration tests)
 make test-integration # Run integration tests
 ```
 
 ### Linting & Formatting
+
 ```bash
 make lint             # Run Go linters (golangci-lint)
 make tidy             # Tidy Go modules
@@ -41,6 +45,7 @@ make validate-go-code # Run tidy, generate, lint, and check for uncommitted chan
 ```
 
 ### UI Development (in ui/user/)
+
 ```bash
 pnpm install          # Install dependencies
 pnpm run dev          # Start dev server
@@ -51,6 +56,7 @@ pnpm run ci           # Run format, lint, and check
 ```
 
 ### Documentation (in docs/)
+
 ```bash
 make serve-docs       # Start local docs server
 ```
@@ -88,12 +94,14 @@ make serve-docs       # Start local docs server
 ### MCP Server Types and Runtimes
 
 **Server Types:**
+
 - **Single-user**: No multitenancy - Obot deploys an instance per user. Stored as `MCPServerCatalogEntry` with runtime `npx`, `uvx`, or `containerized`
 - **Multi-user**: Supports multitenancy - one instance for all users. Stored as `MCPServer`
 - **Remote**: Runs outside Obot. Stored as `MCPServerCatalogEntry` with runtime `remote`
 - **Composite**: Points to tools from multiple other servers. Stored as `MCPServerCatalogEntry` with runtime `composite`
 
 **Runtimes:**
+
 - `npx`: NPM package (STDIO transport only)
 - `uvx`: PyPI package (STDIO transport only)
 - `containerized`: Docker container image (HTTP transport)
@@ -101,6 +109,7 @@ make serve-docs       # Start local docs server
 - `composite`: Pointer to tools from multiple servers
 
 **Key Concepts:**
+
 - `MCPServerCatalogEntry` - Server template/configuration that can be instantiated
 - `MCPServer` - Fully configured and running server
 - `MCPServerInstance` - Individual user's connection to a multi-user server (for auditing)
@@ -129,6 +138,24 @@ Uses golangci-lint v2.4.0 with these linters enabled: errcheck, govet, ineffassi
 ## Module Structure
 
 Main module with local sub-modules:
+
 - `github.com/obot-platform/obot` (main)
 - `github.com/obot-platform/obot/apiclient` → `./apiclient`
 - `github.com/obot-platform/obot/logger` → `./logger`
+
+## Workspace Integration
+
+This project is part of the AI workspace. Additional resources:
+
+- **Claude Code commands**: `AI/.claude/commands/` (expert-mode, etc.)
+- **Shared agents**: `AI/.claude/agents/` (explore, security-audit, etc.)
+- **SuperClaude skills**: `/sc:analyze`, `/sc:test`, `/sc:git`, etc.
+- **Serena memories**: `AI/.serena/memories/` (task_completion_checklist, etc.)
+- **GitHub Actions**: Workspace-level PR review and issue triage
+
+For session initialization with full context, run `/expert-mode` from the workspace root.
+
+**Project-specific agents**: This project also has custom agents in `.claude/agents/`:
+
+- `auth-provider-dev` - Auth provider development specialist
+- `upstream-merge` - Upstream merge specialist
