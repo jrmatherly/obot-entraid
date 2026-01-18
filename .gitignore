@@ -443,12 +443,15 @@ $RECYCLE.BIN/
 *.lnk
 
 ### Claude ###
-.claude/
+# Only exclude local settings, track project-specific .claude/ content
+.claude/settings.local.json
 local_docs/
 claudedocs/
+.archive/
 
 ### Serena ###
-.serena/
+# Cache is excluded by .serena/.gitignore, memories are tracked
+.serena/cache/
 
 ### MISC ###
 **/*.swp
@@ -528,11 +531,7 @@ thoughts/
 thoughts
 
 # Custom entries for obot-entraid fork
-.serena/
-.claude/
-local_docs/
-claudedocs/
-.archive/
+# (serena/claude patterns are in main section above)
 .cloned-obot-tools/
 *.tgz
 C4-Documentation/

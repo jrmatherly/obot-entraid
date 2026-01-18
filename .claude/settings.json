@@ -1,0 +1,65 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_TOOL_INPUT\" | grep -qE '(rm -rf /|git push.*--force.*main|git push.*--force.*master|DROP DATABASE|TRUNCATE)' && echo 'BLOCKED: Dangerous command detected' && exit 1 || exit 0"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_FILE_PATH\" == *.go ]] && command -v gofmt &>/dev/null; then gofmt -w \"$CLAUDE_FILE_PATH\" 2>/dev/null; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$(date '+%Y-%m-%d %H:%M:%S') | $CLAUDE_TOOL_NAME | $CLAUDE_FILE_PATH\" >> ~/.claude/file-changes.log"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_WORKING_DIRECTORY\" && if git rev-parse --git-dir > /dev/null 2>&1; then CHANGES=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' '); if [ \"$CHANGES\" -gt 0 ]; then echo \"\\n\\033[33m[obot-entraid]\\033[0m $CHANGES uncommitted change(s). Run 'make validate-go-code' or 'pnpm run ci' before committing.\"; fi; fi"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[obot-entraid] Session started: $(date '+%Y-%m-%d %H:%M:%S') in $CLAUDE_WORKING_DIRECTORY\" >> ~/.claude/sessions.log"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v osascript &>/dev/null && osascript -e 'display notification \"$CLAUDE_NOTIFICATION\" with title \"Claude Code - obot-entraid\"' || true"
+          }
+        ]
+      }
+    ]
+  }
+}
