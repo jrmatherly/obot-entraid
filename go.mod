@@ -3,7 +3,7 @@ module github.com/obot-platform/obot
 go 1.25.5
 
 replace (
-	github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.5
+	github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.6
 	github.com/obot-platform/mcp-oauth-proxy => github.com/jrmatherly/mcp-oauth-proxy v0.0.0-20260106135339-3745d9b14a30
 	github.com/obot-platform/nah => github.com/jrmatherly/nah v0.1.1
 	github.com/obot-platform/namegenerator => github.com/jrmatherly/namegenerator v0.0.0-20241217121223-fc58bdb7dca2
