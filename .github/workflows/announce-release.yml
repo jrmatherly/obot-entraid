@@ -17,10 +17,22 @@ jobs:
     timeout-minutes: 10
     if: github.event.release.prerelease == false
     steps:
+      - name: Check if Discord webhook is configured
+        id: check-webhook
+        run: |
+          if [ -n "${{ secrets.DISCORD_ANNOUNCE_WEBHOOK_URL }}" ]; then
+            echo "configured=true" >> $GITHUB_OUTPUT
+          else
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "::notice::Discord webhook not configured. Skipping release announcement."
+          fi
+
       - name: Checkout
+        if: steps.check-webhook.outputs.configured == 'true'
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Send Discord Notification
+        if: steps.check-webhook.outputs.configured == 'true'
         uses: SethCohen/github-releases-to-discord@b96a33520f8ad5e6dcdecee6f1212bdf88b16550 # v1
         with:
           webhook_url: ${{ secrets.DISCORD_ANNOUNCE_WEBHOOK_URL }}
