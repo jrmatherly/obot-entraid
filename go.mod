@@ -48,7 +48,7 @@ require (
 	github.com/obot-platform/namegenerator v0.0.0-20241217121223-fc58bdb7dca2
 	github.com/obot-platform/obot/apiclient v0.0.0-20260113205558-6d1a7813b244
 	github.com/obot-platform/obot/logger v0.0.0-20260113205558-6d1a7813b244
-	github.com/onsi/gomega v1.38.3
+	github.com/onsi/gomega v1.39.0
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/prometheus/client_golang v1.23.2
 	github.com/pterm/pterm v0.12.82
