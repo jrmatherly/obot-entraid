@@ -1,8 +1,8 @@
 <script lang="ts">
 	import ResponsiveDialog from '$lib/components/ResponsiveDialog.svelte';
+	import { stripMarkdownToText } from '$lib/markdown';
 	import type { APIKey } from '$lib/services/api-keys/types';
 	import type { MCPCatalogServer } from '$lib/services/chat/types';
-	import { stripMarkdownToText } from '$lib/markdown';
 	import { formatTimeAgo, formatTimeUntil } from '$lib/time';
 	import { Server, Trash2 } from 'lucide-svelte';
 

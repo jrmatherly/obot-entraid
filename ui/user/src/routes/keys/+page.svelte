@@ -2,14 +2,14 @@
 	import Confirm from '$lib/components/Confirm.svelte';
 	import DotDotDot from '$lib/components/DotDotDot.svelte';
 	import Layout from '$lib/components/Layout.svelte';
+	import ApiKeyDetailsDialog from '$lib/components/api-keys/ApiKeyDetailsDialog.svelte';
+	import ServerCountBadge from '$lib/components/api-keys/ServerCountBadge.svelte';
 	import Table from '$lib/components/table/Table.svelte';
 	import { ApiKeysService } from '$lib/services';
 	import type { APIKey } from '$lib/services/api-keys/types';
 	import { formatTimeAgo, formatTimeUntil } from '$lib/time';
 	import ApiKeyRevealDialog from './ApiKeyRevealDialog.svelte';
 	import CreateApiKeyDialog from './CreateApiKeyDialog.svelte';
-	import ApiKeyDetailsDialog from '$lib/components/api-keys/ApiKeyDetailsDialog.svelte';
-	import ServerCountBadge from '$lib/components/api-keys/ServerCountBadge.svelte';
 	import { Info, KeyRound, Plus, ReceiptText, Trash2 } from 'lucide-svelte';
 	import { untrack } from 'svelte';
 

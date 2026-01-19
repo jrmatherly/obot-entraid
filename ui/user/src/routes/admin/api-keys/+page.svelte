@@ -2,6 +2,8 @@
 	import Confirm from '$lib/components/Confirm.svelte';
 	import DotDotDot from '$lib/components/DotDotDot.svelte';
 	import Layout from '$lib/components/Layout.svelte';
+	import ApiKeyDetailsDialog from '$lib/components/api-keys/ApiKeyDetailsDialog.svelte';
+	import ServerCountBadge from '$lib/components/api-keys/ServerCountBadge.svelte';
 	import Table from '$lib/components/table/Table.svelte';
 	import { ApiKeysService } from '$lib/services';
 	import type { OrgUser } from '$lib/services/admin/types';
@@ -11,8 +13,6 @@
 	import { getUserDisplayName } from '$lib/utils';
 	import ApiKeyRevealDialog from '../../keys/ApiKeyRevealDialog.svelte';
 	import CreateApiKeyDialog from '../../keys/CreateApiKeyDialog.svelte';
-	import ApiKeyDetailsDialog from '$lib/components/api-keys/ApiKeyDetailsDialog.svelte';
-	import ServerCountBadge from '$lib/components/api-keys/ServerCountBadge.svelte';
 	import { KeyRound, Plus, ReceiptText, Trash2 } from 'lucide-svelte';
 	import { untrack } from 'svelte';
 
