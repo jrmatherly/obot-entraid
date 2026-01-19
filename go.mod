@@ -4,7 +4,7 @@ go 1.25.5
 
 replace (
 	github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.8
-	github.com/obot-platform/mcp-oauth-proxy => github.com/jrmatherly/mcp-oauth-proxy v0.0.0-20260106135339-3745d9b14a30
+	github.com/obot-platform/mcp-oauth-proxy => github.com/jrmatherly/mcp-oauth-proxy v0.1.0
 	github.com/obot-platform/nah => github.com/jrmatherly/nah v0.1.2
 	github.com/obot-platform/namegenerator => github.com/jrmatherly/namegenerator v0.0.0-20241217121223-fc58bdb7dca2
 	github.com/obot-platform/obot/apiclient => ./apiclient
