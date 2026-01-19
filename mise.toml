@@ -12,7 +12,7 @@
 [tools]
 # Frontend tools (extends root)
 node = "24"
-pnpm = "9"  # Native mise backend (not npm:pnpm which times out)
+pnpm = "10"
 
 [env]
 PROJECT_NAME = "obot-entraid"

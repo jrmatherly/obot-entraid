@@ -8,7 +8,46 @@ globs:
 
 ## K8s v0.35.0+ Breaking Changes
 
-### 1. Bookmark Interval (CRITICAL)
+### 1. Initial-Events-End Bookmark (CRITICAL)
+
+client-go v0.35.0 introduced the **watch-list pattern** where `WaitForCacheSync` blocks until an `initial-events-end` bookmark is received. Without this bookmark, controllers NEVER reach ready state.
+
+**Problem**: `WaitForCacheSync` blocks forever because:
+
+1. The reflector calls `watchList()` which expects a special bookmark
+2. The bookmark must have annotation `metav1.InitialEventsAnnotationKey: "true"`
+3. Without it, `DeltaFIFO.HasSynced()` never returns true
+
+**Symptoms**:
+
+- Health check returns HTTP 503 "controllers not ready"
+- No "bookmark expired" warnings (different from timeout issue)
+- Server starts but never becomes healthy
+
+**Fix in kinm** (`pkg/db/strategy.go`):
+
+```go
+// After streaming initial events, send the initial-events-end bookmark
+if needsInitialEventsEndBookmark {
+    bookmarkObj := s.New()
+    bookmarkObj.SetResourceVersion(opts.ResourceVersion)
+    bookmarkObj.SetAnnotations(map[string]string{
+        metav1.InitialEventsAnnotationKey: "true",  // CRITICAL
+    })
+    ch <- watch.Event{Type: watch.Bookmark, Object: bookmarkObj}
+}
+```
+
+**Detection logic** - send bookmark when:
+
+1. `SendInitialEvents=true` (explicit API call), OR
+2. `AllowWatchBookmarks=true` AND original `ResourceVersion=""` or `"0"` (inferred initial sync)
+
+The inferred case is critical because controller-runtime/nah doesn't propagate `SendInitialEvents`.
+
+**Reference**: <https://github.com/kubernetes/kubernetes/issues/120348>
+
+### 2. Bookmark Interval
 
 client-go v0.35.0 has a **hardcoded 10-second timeout** for watch bookmarks:
 
@@ -35,7 +74,7 @@ Controllers never reach ready state.
 ticker := time.NewTicker(5 * time.Second)  // Was 60s
 ```
 
-### 2. REST Client ContentType (CRITICAL)
+### 3. REST Client ContentType (CRITICAL)
 
 client-go v0.35.0 changed default content negotiation. Servers must accept JSON:
 
@@ -50,7 +89,7 @@ Without this fix:
 the body of the request was in an unknown format - accepted media types include: application/json
 ```
 
-### 3. client.WithWatch Interface
+### 4. client.WithWatch Interface
 
 K8s v0.35.0+ requires `Apply()` method:
 
@@ -69,7 +108,7 @@ func (c *client) Apply(ctx context.Context, obj runtime.ApplyConfiguration, opts
 }
 ```
 
-### 4. Cache SyncPeriod
+### 5. Cache SyncPeriod
 
 Controller-runtime v0.22+ changed cache sync behavior. Increase sync period to reduce churn:
 
@@ -111,28 +150,38 @@ If upstream dependencies (nah, kinm) don't support new K8s version:
 
 HTTP 503 on health check usually means:
 
-1. **Database check failing** - Verify DSN propagation to background process
-2. **Controllers not ready** - Check bookmark warnings in logs
-3. **Cache never syncs** - Bookmark interval too slow
+1. **Missing initial-events-end bookmark** - kinm not sending the special bookmark (see section 1)
+2. **Database check failing** - Verify DSN propagation to background process
+3. **Controllers not ready** - Check bookmark warnings in logs
+4. **Cache never syncs** - Bookmark interval too slow
 
 **Diagnostic steps**:
 
 ```bash
-# Check for bookmark warnings
+# Check for bookmark warnings (indicates timeout, not missing bookmark)
 grep "bookmark expired" obot.log
+
+# Check if initial-events-end bookmark is being sent (add debug logging to kinm)
+# Look for: SendInitialEvents=nil, AllowWatchBookmarks=true, RV=""
 
 # Verify DSN reaches process
 echo "$OBOT_SERVER_DSN" | head -c 20
 
 # Check controller ready state
 curl -v http://localhost:8080/api/healthz
+
+# Test with WatchListClient disabled (workaround to confirm issue)
+KUBE_FEATURE_WatchListClient=false go run . server
 ```
+
+**Key insight**: If server starts but health never returns 200, and there are NO "bookmark expired" warnings, the issue is likely the missing `initial-events-end` bookmark, not the bookmark interval.
 
 ## Validation Checklist
 
 - [ ] All k8s.io packages at same version
 - [ ] controller-runtime compatible with K8s version
+- [ ] **kinm sends initial-events-end bookmark** (with `InitialEventsAnnotationKey` annotation)
 - [ ] Bookmark interval ≤ 10 seconds
 - [ ] ContentType set to application/json
 - [ ] Cache SyncPeriod configured
-- [ ] Integration tests pass
+- [ ] Integration tests pass (health check returns 200)
