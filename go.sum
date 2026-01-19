@@ -494,8 +494,8 @@ github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8Hm
 github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
 github.com/joshdk/go-junit v1.0.0 h1:S86cUKIdwBHWwA6xCmFlf3RTLfVXYQfvanM5Uh+K6GE=
 github.com/joshdk/go-junit v1.0.0/go.mod h1:TiiV0PqkaNfFXjEiyjWM3XXrhVyCa1K4Zfga6W52ung=
-github.com/jrmatherly/kinm v0.1.6 h1:hWc3Exc7B+RBQ4aUbqYm+ofLUbIhUgZYYXBweVElrjc=
-github.com/jrmatherly/kinm v0.1.6/go.mod h1:e6GTmwBKj6NrNKxZ/wyYaVHfHXZxSZra+SZJXfFXYGA=
+github.com/jrmatherly/kinm v0.1.7 h1:Ase7/sVSLkDZeMjI12H48Ak7sW2NQUmxTgsp9kPo5Jc=
+github.com/jrmatherly/kinm v0.1.7/go.mod h1:e6GTmwBKj6NrNKxZ/wyYaVHfHXZxSZra+SZJXfFXYGA=
 github.com/jrmatherly/mcp-oauth-proxy v0.0.0-20260106135339-3745d9b14a30 h1:7rqkQ9ZWYKM6vTxCD+fsr+cA2qFRgnevAE4U8GoIuJ8=
 github.com/jrmatherly/mcp-oauth-proxy v0.0.0-20260106135339-3745d9b14a30/go.mod h1:8I+MeGRPsv42hk7/MCSqWHvz4p7xvIR0CIh1GG3vtXM=
 github.com/jrmatherly/nah v0.1.1 h1:KrnDs9yLi2zMRwDigBi3arlLiN5BN8fnRKCJ1pqaJcI=
