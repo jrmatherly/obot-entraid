@@ -155,6 +155,7 @@ export interface Profile {
 	email: string;
 	iconURL: string;
 	role: number;
+	effectiveRole: number;
 	groups: string[];
 	loaded?: boolean;
 	hasAdminAccess?: () => boolean;
@@ -448,6 +449,7 @@ export interface ProjectMCP {
 	icon?: string;
 	configured?: boolean;
 	needsUpdate?: boolean;
+	needsK8sUpdate?: boolean;
 	needsURL?: boolean;
 	runtime?: Runtime;
 }
@@ -756,6 +758,7 @@ export interface MCPCatalogServer {
 	mcpServerInstanceUserCount?: number;
 	manifest: MCPServer;
 	needsUpdate?: boolean;
+	needsK8sUpdate?: boolean;
 	needsURL?: boolean;
 	toolPreviewsLastGenerated?: string;
 	lastUpdated?: string;

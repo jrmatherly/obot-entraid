@@ -83,6 +83,7 @@ export interface MCPCatalogEntry {
 	isCatalogEntry: boolean;
 	needsUpdate?: boolean;
 	canConnect?: boolean;
+	needsK8sUpdate?: boolean;
 }
 
 // Matches the backend compositeDeletionDependency struct used when preventing
@@ -145,6 +146,7 @@ export interface OrgUser {
 	email: string;
 	explicitRole: boolean;
 	role: number;
+	effectiveRole: number;
 	groups: string[];
 	iconURL: string;
 	id: string;

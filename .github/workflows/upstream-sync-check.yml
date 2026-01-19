@@ -63,12 +63,14 @@ jobs:
           if git merge --no-commit --no-ff upstream/main; then
             echo "✅ Merge appears clean (no conflicts detected)"
             echo "merge_status=clean" >> $GITHUB_OUTPUT
-            git merge --abort
+            # Abort merge state (ignore failures - may not have active merge in edge cases)
+            git merge --abort 2>/dev/null || git reset --hard HEAD
           else
             echo "⚠️ Merge conflicts detected:"
             echo "merge_status=conflicts" >> $GITHUB_OUTPUT
             git status | grep "both modified" || true
-            git merge --abort
+            # Abort merge state (ignore failures - may fail in conflict edge cases)
+            git merge --abort 2>/dev/null || git reset --hard HEAD
             exit 1
           fi
 
