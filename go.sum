@@ -484,8 +484,8 @@ github.com/joshdk/go-junit v1.0.0 h1:S86cUKIdwBHWwA6xCmFlf3RTLfVXYQfvanM5Uh+K6GE
 github.com/joshdk/go-junit v1.0.0/go.mod h1:TiiV0PqkaNfFXjEiyjWM3XXrhVyCa1K4Zfga6W52ung=
 github.com/jrmatherly/kinm v0.1.8 h1:Td8/RWxIDi9XEHGrOpvJ07WJcamjgbcmPXLghYmC41s=
 github.com/jrmatherly/kinm v0.1.8/go.mod h1:UT/m9DchYZns84pFr6leK5U2Q6WIdg/tbBg/W4SK6uc=
-github.com/jrmatherly/mcp-oauth-proxy v0.0.0-20260106135339-3745d9b14a30 h1:7rqkQ9ZWYKM6vTxCD+fsr+cA2qFRgnevAE4U8GoIuJ8=
-github.com/jrmatherly/mcp-oauth-proxy v0.0.0-20260106135339-3745d9b14a30/go.mod h1:8I+MeGRPsv42hk7/MCSqWHvz4p7xvIR0CIh1GG3vtXM=
+github.com/jrmatherly/mcp-oauth-proxy v0.1.0 h1:Leebsta8q7qD7lxTuUaraDi7nIaxQY/RI/FqBpjyDUE=
+github.com/jrmatherly/mcp-oauth-proxy v0.1.0/go.mod h1:8I+MeGRPsv42hk7/MCSqWHvz4p7xvIR0CIh1GG3vtXM=
 github.com/jrmatherly/nah v0.1.2 h1:QL0gCRgla7oB0hMtyV7/c4Oy4ncr9bCGQP4TfPeCqSc=
 github.com/jrmatherly/nah v0.1.2/go.mod h1:XSi5wHUGDSWRIY6f8vNh/3NKYljmaQUGl7pdUS8kdBU=
 github.com/jrmatherly/namegenerator v0.0.0-20241217121223-fc58bdb7dca2 h1:SDmq57yp4aHBERRcrznRcpYhsaTGOXGCQbl7KNKKBLY=
