@@ -19,12 +19,8 @@ func NewMCPCapacityHandler(mcpSessionManager *mcp.SessionManager) *MCPCapacityHa
 }
 
 // GetCapacity returns capacity information for the MCP namespace.
-// This endpoint is admin/owner-only.
+// This endpoint is admin/owner-only (enforced via authz.go).
 func (h *MCPCapacityHandler) GetCapacity(req api.Context) error {
-	if !req.UserIsAdmin() && !req.UserIsOwner() {
-		return types.NewErrForbidden("admin access required")
-	}
-
 	info, err := h.mcpSessionManager.GetCapacityInfo(req.Context())
 	if err != nil {
 		// If backend doesn't support capacity info (e.g., Docker), return empty info
