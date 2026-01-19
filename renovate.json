@@ -31,6 +31,21 @@
   },
   "packageRules": [
     {
+      "description": "Auto-merge jrmatherly fork updates (patch/minor)",
+      "matchPackageNames": ["/^github.com/jrmatherly//"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "automergeType": "pr",
+      "minimumReleaseAge": "0 days",
+      "schedule": ["at any time"],
+      "prPriority": 10
+    },
+    {
+      "description": "Group jrmatherly fork packages",
+      "groupName": "jrmatherly forks",
+      "matchPackageNames": ["/^github.com/jrmatherly//"]
+    },
+    {
       "description": "Group gptscript-ai packages",
       "groupName": "gptscript packages",
       "matchPackageNames": ["/^github.com/gptscript-ai//"]
