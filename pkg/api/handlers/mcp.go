@@ -44,14 +44,16 @@ type MCPHandler struct {
 	mcpSessionManager *mcp.SessionManager
 	mcpOAuthChecker   MCPOAuthChecker
 	acrHelper         *accesscontrolrule.Helper
+	mcpBackend        string
 	serverURL         string
 }
 
-func NewMCPHandler(mcpLoader *mcp.SessionManager, acrHelper *accesscontrolrule.Helper, mcpOAuthChecker MCPOAuthChecker, serverURL string) *MCPHandler {
+func NewMCPHandler(mcpLoader *mcp.SessionManager, acrHelper *accesscontrolrule.Helper, mcpOAuthChecker MCPOAuthChecker, mcpBackend, serverURL string) *MCPHandler {
 	return &MCPHandler{
 		mcpSessionManager: mcpLoader,
 		mcpOAuthChecker:   mcpOAuthChecker,
 		acrHelper:         acrHelper,
+		mcpBackend:        mcpBackend,
 		serverURL:         serverURL,
 	}
 }
@@ -2974,6 +2976,13 @@ func (m *MCPHandler) CheckK8sSettingsStatus(req api.Context) error {
 
 // RedeployWithK8sSettings redeploys a server with the current K8s settings
 func (m *MCPHandler) RedeployWithK8sSettings(req api.Context) error {
+	switch m.mcpBackend {
+	case "kubernetes", "k8s":
+		// Supported
+	default:
+		return types.NewErrBadRequest("Redeployment with K8s settings is only supported for Kubernetes backend")
+	}
+
 	catalogID := req.PathValue("catalog_id")
 	workspaceID := req.PathValue("workspace_id")
 	entryID := req.PathValue("entry_id")
@@ -3005,11 +3014,8 @@ func (m *MCPHandler) RedeployWithK8sSettings(req api.Context) error {
 		return types.NewErrNotFound("MCP server not found")
 	}
 
-	// Check if server has K8sSettingsHash in Status (only populated for Kubernetes runtime)
+	// Check if server has K8sSettingsHash in Status
 	deployedHash := server.Status.K8sSettingsHash
-	if deployedHash == "" {
-		return types.NewErrBadRequest("Redeployment is only supported for Kubernetes runtime")
-	}
 
 	// Get current K8s settings to compute current hash
 	var k8sSettings v1.K8sSettings
@@ -3024,16 +3030,17 @@ func (m *MCPHandler) RedeployWithK8sSettings(req api.Context) error {
 	currentHash := mcp.ComputeK8sSettingsHash(k8sSettings.Spec)
 	needsUpdate := deployedHash != currentHash
 
-	if !needsUpdate {
-		return types.NewErrBadRequest("Server is already using the current K8s settings")
-	}
-
-	// Trigger restart to force redeployment with new settings
-	if err := m.mcpSessionManager.RestartServerDeployment(req.Context(), serverConfig); err != nil {
-		if nse := (*mcp.ErrNotSupportedByBackend)(nil); errors.As(err, &nse) {
-			return types.NewErrBadRequest("Restart is not supported by the current backend")
+	if needsUpdate {
+		// Trigger restart to force redeployment with new settings
+		if err := m.mcpSessionManager.RestartServerDeployment(req.Context(), serverConfig); err != nil {
+			if nse := (*mcp.ErrNotSupportedByBackend)(nil); errors.As(err, &nse) {
+				return types.NewErrBadRequest("Restart is not supported by the current backend")
+			}
+			return fmt.Errorf("failed to redeploy server: %w", err)
 		}
-		return fmt.Errorf("failed to redeploy server: %w", err)
+
+		// We are assuming the redeployment will succeed, so we can clear the flag here.
+		server.Status.NeedsK8sUpdate = false
 	}
 
 	// Get credential for server
