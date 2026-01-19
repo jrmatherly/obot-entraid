@@ -53,7 +53,7 @@ require (
 	github.com/prometheus/client_golang v1.23.2
 	github.com/pterm/pterm v0.12.82
 	github.com/rs/cors v1.11.1
-	github.com/sethvargo/go-limiter v1.0.0
+	github.com/sethvargo/go-limiter v1.1.0
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	github.com/tidwall/gjson v1.18.0
