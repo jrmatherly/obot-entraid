@@ -7,6 +7,7 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/obot-platform/obot/apiclient/types"
+	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
 )
 
@@ -59,7 +60,11 @@ func (g *GCSProvider) createClient(ctx context.Context, config types.StorageConf
 	}
 
 	if gcsConfig.ServiceAccountJSON != "" {
-		return storage.NewClient(ctx, option.WithCredentialsJSON([]byte(gcsConfig.ServiceAccountJSON)))
+		creds, err := google.CredentialsFromJSON(ctx, []byte(gcsConfig.ServiceAccountJSON), storage.ScopeReadWrite)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create credentials from JSON: %w", err)
+		}
+		return storage.NewClient(ctx, option.WithCredentials(creds))
 	}
 
 	return storage.NewClient(ctx)
