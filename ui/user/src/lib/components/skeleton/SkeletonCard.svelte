@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { twMerge } from 'tailwind-merge';
 	import Skeleton from './Skeleton.svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	interface Props {
 		showAvatar?: boolean;

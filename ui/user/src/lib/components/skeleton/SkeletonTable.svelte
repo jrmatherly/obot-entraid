@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { twMerge } from 'tailwind-merge';
 	import Skeleton from './Skeleton.svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	interface Props {
 		rows?: number;
@@ -20,7 +20,7 @@
 >
 	{#if showHeader}
 		<div class="dark:bg-surface3 flex gap-4 border-b bg-gray-50 p-4">
-			{#each Array(columns) as _}
+			{#each Array(columns) as _, i (i)}
 				<div class="flex-1">
 					<Skeleton variant="text" width="60%" height="14px" />
 				</div>
@@ -29,9 +29,9 @@
 	{/if}
 
 	<div class="divide-y dark:divide-gray-700">
-		{#each Array(rows) as _}
+		{#each Array(rows) as _, rowIndex (rowIndex)}
 			<div class="flex items-center gap-4 p-4">
-				{#each Array(columns) as _, colIndex}
+				{#each Array(columns) as _, colIndex (colIndex)}
 					<div class="flex-1">
 						{#if colIndex === 0}
 							<div class="flex items-center gap-3">

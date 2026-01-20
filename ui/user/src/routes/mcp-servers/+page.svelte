@@ -2,10 +2,10 @@
 	import { browser } from '$app/environment';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
-	import { EmptyState } from '$lib/components/empty-state';
 	import Layout from '$lib/components/Layout.svelte';
 	import Search from '$lib/components/Search.svelte';
 	import McpServerEntryForm from '$lib/components/admin/McpServerEntryForm.svelte';
+	import { EmptyState } from '$lib/components/empty-state';
 	import ConnectorsView from '$lib/components/mcp/ConnectorsView.svelte';
 	import McpConfirmDelete from '$lib/components/mcp/McpConfirmDelete.svelte';
 	import SelectServerType from '$lib/components/mcp/SelectServerType.svelte';

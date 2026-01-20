@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { twMerge } from 'tailwind-merge';
 	import Skeleton from './Skeleton.svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	interface Props {
 		items?: number;
@@ -13,7 +13,7 @@
 </script>
 
 <div class={twMerge('flex flex-col divide-y dark:divide-gray-700', className)}>
-	{#each Array(items) as _}
+	{#each Array(items) as _, i (i)}
 		<div class="flex items-center gap-4 py-4">
 			{#if showAvatar}
 				<Skeleton variant="avatar" />

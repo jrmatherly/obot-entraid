@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
 	import { parseErrorContent } from '$lib/errors';
-	import { AlertCircle, TriangleAlert, X } from 'lucide-svelte';
 	import CopyButton from './CopyButton.svelte';
+	import { AlertCircle, TriangleAlert, X } from 'lucide-svelte';
+	import { fade } from 'svelte/transition';
 	import { twMerge } from 'tailwind-merge';
 
 	interface Props {
@@ -39,7 +39,7 @@
 <div in:fade class="flex items-center justify-center">
 	<div
 		class={twMerge(
-			"dark:bg-surface2 dark:border-surface3 bg-background relative flex w-full flex-col items-center gap-4 rounded-lg p-4 dark:border",
+			'dark:bg-surface2 dark:border-surface3 bg-background relative flex w-full flex-col items-center gap-4 rounded-lg p-4 dark:border',
 			classes?.root
 		)}
 	>
@@ -69,7 +69,11 @@
 					{error.message}
 				</span>
 			</p>
-			<CopyButton text={error.message} tooltipText="Copy error details" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" />
+			<CopyButton
+				text={error.message}
+				tooltipText="Copy error details"
+				class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+			/>
 		</div>
 
 		{#if onClick}

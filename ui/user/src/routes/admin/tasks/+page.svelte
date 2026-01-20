@@ -2,9 +2,9 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { tooltip } from '$lib/actions/tooltip.svelte';
-	import { EmptyState } from '$lib/components/empty-state';
 	import Layout from '$lib/components/Layout.svelte';
 	import Search from '$lib/components/Search.svelte';
+	import { EmptyState } from '$lib/components/empty-state';
 	import Table from '$lib/components/table/Table.svelte';
 	import {
 		AdminService,

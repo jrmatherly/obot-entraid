@@ -48,7 +48,7 @@
 
 {#if variant === 'text' && lines > 1}
 	<div class={twMerge('flex flex-col gap-2', className)}>
-		{#each Array(lines) as _, i}
+		{#each Array(lines) as _, i (i)}
 			<div
 				class={twMerge(baseClasses, animationClasses, variantClasses[variant])}
 				style:width={i === lines - 1 ? '75%' : computedWidth}

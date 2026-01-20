@@ -2,8 +2,8 @@
 	import { page } from '$app/stores';
 	import Layout from '$lib/components/Layout.svelte';
 	import DebugCallFrames from '$lib/components/chat/DebugCallFrames.svelte';
-	import MessageComponent from '$lib/components/messages/Message.svelte';
 	import { EmptyState } from '$lib/components/empty-state';
+	import MessageComponent from '$lib/components/messages/Message.svelte';
 	import { AdminService, type ProjectThread } from '$lib/services';
 	import { Thread } from '$lib/services/chat/thread.svelte';
 	import type { CallFrame, Project } from '$lib/services/chat/types';
