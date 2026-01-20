@@ -119,7 +119,7 @@ jobs:
     services:
       postgres:
         # Use postgres:14 for compatibility (matches upstream)
-        image: postgres:14
+        image: postgres:18
         env:
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testpass
