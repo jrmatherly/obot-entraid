@@ -10,6 +10,7 @@
 		onMouseUp?: (e: MouseEvent) => void;
 		compact?: boolean;
 		value?: string;
+		showHint?: boolean;
 	}
 
 	let {
@@ -20,6 +21,7 @@
 		onMouseUp,
 		compact,
 		value = '',
+		showHint = false,
 		...restProps
 	}: Props = $props();
 	let searchTimeout: ReturnType<typeof setTimeout>;
@@ -89,5 +91,15 @@
 		>
 			<X class={twMerge('size-5', compact && 'size-4')} />
 		</button>
+		{#if showHint}
+			<span
+				class={twMerge(
+					'text-gray absolute right-14 top-1/2 -translate-y-1/2 text-xs',
+					compact && 'right-10 text-[10px]'
+				)}
+			>
+				Esc to clear
+			</span>
+		{/if}
 	{/if}
 </div>
