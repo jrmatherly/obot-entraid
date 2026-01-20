@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { parseErrorContent } from '$lib/errors';
-	import { AlertCircle, TriangleAlert } from 'lucide-svelte';
+	import { AlertCircle, TriangleAlert, X } from 'lucide-svelte';
 	import CopyButton from './CopyButton.svelte';
 
 	interface Props {
 		onClick?: (() => void) | null;
+		onClose?: (() => void) | null;
 		error: Error;
 	}
 
-	let { onClick = null, error }: Props = $props();
+	let { onClick = null, onClose = null, error }: Props = $props();
 
 	// Parse error content to extract status code and categorize
 	const errorContent = $derived(parseErrorContent(error));
@@ -20,8 +21,14 @@
 <!--error component-->
 <div in:fade class="flex items-center justify-center">
 	<div
-		class="dark:bg-surface2 dark:border-surface3 bg-background flex w-full flex-col items-center gap-4 rounded-lg p-4 dark:border"
+		class="dark:bg-surface2 dark:border-surface3 bg-background relative flex w-full flex-col items-center gap-4 rounded-lg p-4 dark:border"
 	>
+		{#if onClose}
+			<button type="button" onclick={onClose} class="icon-button absolute end-2.5 top-3 ms-auto">
+				<X class="h-5 w-5" />
+				<span class="sr-only">Close error</span>
+			</button>
+		{/if}
 		<h3 class="text-on-background text-2xl font-semibold">Error</h3>
 
 		<div
@@ -46,7 +53,13 @@
 		</div>
 
 		{#if onClick}
-			<button class="text-on-background mt-2 hover:underline" onclick={onClick}>Try again</button>
+			<button
+				onclick={onClick}
+				type="button"
+				class="inline-flex min-h-10 items-center rounded-3xl bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800"
+			>
+				Try again
+			</button>
 		{/if}
 	</div>
 </div>
