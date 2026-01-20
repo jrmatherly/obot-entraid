@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { SearchIcon } from 'lucide-svelte';
+	import { SearchIcon, X } from 'lucide-svelte';
 	import { twMerge } from 'tailwind-merge';
 
 	interface Props {
@@ -24,6 +24,7 @@
 	}: Props = $props();
 	let searchTimeout: ReturnType<typeof setTimeout>;
 	let input = $state<HTMLInputElement | null>(null);
+	let hasValue = $derived(value.length > 0);
 
 	function search(e: Event) {
 		const value = (e.target as HTMLInputElement).value;
@@ -54,6 +55,7 @@
 		class={twMerge(
 			'bg-surface1 peer hover:ring-primary focus:ring-primary w-full rounded-lg px-2.5 py-3 pl-12 ring-2 ring-transparent transition-all duration-200 hover:ring-2 focus:w-full focus:ring-2 focus:outline-hidden',
 			compact && 'py-2 pl-8',
+			hasValue && 'pr-10',
 			klass
 		)}
 		oninput={search}
@@ -69,4 +71,16 @@
 	>
 		<SearchIcon class={twMerge(compact && 'size-4')} />
 	</button>
+	{#if hasValue}
+		<button
+			class={twMerge(
+				'text-gray hover:text-on-surface absolute top-1/2 right-3 -translate-y-1/2 transition-colors',
+				compact && 'right-2'
+			)}
+			onclick={clear}
+			type="button"
+		>
+			<X class={twMerge('size-5', compact && 'size-4')} />
+		</button>
+	{/if}
 </div>
