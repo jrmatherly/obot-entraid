@@ -36,9 +36,12 @@
 	aria-label="Empty state"
 >
 	<!-- Icon -->
-	<div class="mb-4 text-gray-400" aria-hidden="true">
-		<svelte:component this={icon} class="w-16 h-16 stroke-1" />
-	</div>
+	{#if icon}
+		{@const Icon = icon}
+		<div class="mb-4 text-gray-400" aria-hidden="true">
+			<Icon class="w-16 h-16 stroke-1" />
+		</div>
+	{/if}
 
 	<!-- Heading -->
 	<h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">

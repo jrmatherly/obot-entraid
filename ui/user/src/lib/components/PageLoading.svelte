@@ -26,7 +26,7 @@
 		show,
 		text,
 		longLoadMessage,
-		longLoadDuration = 30000,
+		longLoadDuration = 5000,
 		progress,
 		isProgressBar,
 		error,
