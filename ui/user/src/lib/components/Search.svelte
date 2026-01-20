@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { SearchIcon, X } from 'lucide-svelte';
+	import { LoaderCircle, SearchIcon, X } from 'lucide-svelte';
 	import { twMerge } from 'tailwind-merge';
 
 	interface Props {
@@ -11,6 +11,7 @@
 		compact?: boolean;
 		value?: string;
 		showHint?: boolean;
+		showLoadingIndicator?: boolean;
 	}
 
 	let {
@@ -22,11 +23,13 @@
 		compact,
 		value = '',
 		showHint = false,
+		showLoadingIndicator = false,
 		...restProps
 	}: Props = $props();
 	let searchTimeout: ReturnType<typeof setTimeout>;
 	let input = $state<HTMLInputElement | null>(null);
 	let hasValue = $derived(value.length > 0);
+	let isDebouncing = $state(false);
 
 	function search(e: Event) {
 		const value = (e.target as HTMLInputElement).value;
@@ -34,9 +37,13 @@
 		// Clear previous timeout
 		if (searchTimeout) clearTimeout(searchTimeout);
 
+		// Set debouncing state to true when user types
+		isDebouncing = true;
+
 		// Set new timeout for debounced search
 		searchTimeout = setTimeout(() => {
 			onChange(value);
+			isDebouncing = false;
 		}, 300);
 	}
 
@@ -50,6 +57,8 @@
 		if (input) {
 			input.value = '';
 		}
+		if (searchTimeout) clearTimeout(searchTimeout);
+		isDebouncing = false;
 		onChange('');
 	}
 </script>
@@ -78,7 +87,11 @@
 		)}
 		onclick={() => input?.focus()}
 	>
-		<SearchIcon class={twMerge(compact && 'size-4')} />
+		{#if showLoadingIndicator && isDebouncing}
+			<LoaderCircle class={twMerge('animate-spin', compact && 'size-4')} />
+		{:else}
+			<SearchIcon class={twMerge(compact && 'size-4')} />
+		{/if}
 	</button>
 	{#if hasValue}
 		<button
