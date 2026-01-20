@@ -16,6 +16,19 @@
 	const errorContent = $derived(parseErrorContent(error));
 	const isClientError = $derived(errorContent.status >= 400 && errorContent.status < 500);
 	const isServerError = $derived(errorContent.status >= 500);
+
+	// Determine contextual error heading based on error category
+	const errorHeading = $derived(() => {
+		if (isServerError) {
+			return 'Server Error';
+		} else if (isClientError) {
+			return 'Request Failed';
+		} else if (!errorContent.status || errorContent.status === 0) {
+			return 'Connection Error';
+		} else {
+			return 'Error Occurred';
+		}
+	});
 </script>
 
 <!--error component-->
@@ -29,7 +42,7 @@
 				<span class="sr-only">Close error</span>
 			</button>
 		{/if}
-		<h3 class="text-on-background text-2xl font-semibold">Error</h3>
+		<h3 class="text-on-background text-2xl font-semibold">{errorHeading}</h3>
 
 		<div
 			class="{isServerError
