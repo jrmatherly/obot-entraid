@@ -3,12 +3,13 @@
 	import Layout from '$lib/components/Layout.svelte';
 	import DebugCallFrames from '$lib/components/chat/DebugCallFrames.svelte';
 	import MessageComponent from '$lib/components/messages/Message.svelte';
+	import { EmptyState } from '$lib/components/empty-state';
 	import { AdminService, type ProjectThread } from '$lib/services';
 	import { Thread } from '$lib/services/chat/thread.svelte';
 	import type { CallFrame, Project } from '$lib/services/chat/types';
 	import type { Messages } from '$lib/services/chat/types';
 	import { formatTimeAgo } from '$lib/time';
-	import { LoaderCircle, MessageCircle } from 'lucide-svelte';
+	import { LoaderCircle } from 'lucide-svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { fly, fade } from 'svelte/transition';
 
@@ -313,13 +314,10 @@
 							</div>
 						</div>
 					{:else}
-						<div class="flex items-center justify-center py-12 text-center">
-							<div class="text-on-surface1">
-								<MessageCircle class="mx-auto mb-4 size-16" />
-								<h3 class="mb-2 text-lg font-medium">No Messages Found</h3>
-								<p class="text-sm">This thread doesn't have any messages yet.</p>
-							</div>
-						</div>
+						<EmptyState
+							heading="No Messages Found"
+							description="This thread doesn't have any messages yet."
+						/>
 					{/if}
 				</div>
 			</div>
