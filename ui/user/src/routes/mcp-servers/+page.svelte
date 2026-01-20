@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
+	import { EmptyState } from '$lib/components/empty-state';
 	import Layout from '$lib/components/Layout.svelte';
 	import Search from '$lib/components/Search.svelte';
 	import McpServerEntryForm from '$lib/components/admin/McpServerEntryForm.svelte';
@@ -203,23 +204,19 @@
 				{usersMap}
 			>
 				{#snippet noDataContent()}
-					<div class="my-12 flex w-md flex-col items-center gap-4 self-center text-center">
-						<Server class="text-on-surface1 size-24 opacity-25" />
-						<h4 class="text-on-surface1 text-lg font-semibold">No created MCP servers</h4>
-						<p class="text-on-surface1 text-sm font-light">
-							{#if isAtLeastPowerUser}
-								Looks like you don't have any servers created yet. <br />
-								Click the button below to get started.
-							{:else}
-								There are no servers available to connect to yet. <br />
-								Please check back later or contact your administrator.
-							{/if}
-						</p>
-
-						{#if isAtLeastPowerUser}
-							{@render addServerButton()}
-						{/if}
-					</div>
+					<EmptyState
+						icon={Server}
+						heading="No MCP Servers"
+						description={isAtLeastPowerUser
+							? "You don't have any servers created yet. Click the button below to get started."
+							: 'There are no servers available to connect to yet. Please check back later or contact your administrator.'}
+						actionText={isAtLeastPowerUser ? 'Add MCP Server' : undefined}
+						onAction={isAtLeastPowerUser
+							? () => {
+									selectServerTypeDialog?.open();
+								}
+							: undefined}
+					/>
 				{/snippet}
 			</ConnectorsView>
 		</div>
