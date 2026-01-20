@@ -2,6 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import { parseErrorContent } from '$lib/errors';
 	import { AlertCircle, TriangleAlert } from 'lucide-svelte';
+	import CopyButton from './CopyButton.svelte';
 
 	interface Props {
 		onClick?: (() => void) | null;
@@ -35,12 +36,13 @@
 			{:else}
 				<AlertCircle class="size-6 text-red-500" />
 			{/if}
-			<p class="flex flex-col text-sm font-light">
+			<p class="flex flex-1 flex-col text-sm font-light">
 				<span class="font-semibold">Error Details:</span>
 				<span class="break-all">
 					{error.message}
 				</span>
 			</p>
+			<CopyButton text={error.message} tooltipText="Copy error details" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" />
 		</div>
 
 		{#if onClick}
