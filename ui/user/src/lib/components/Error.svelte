@@ -3,14 +3,18 @@
 	import { parseErrorContent } from '$lib/errors';
 	import { AlertCircle, TriangleAlert, X } from 'lucide-svelte';
 	import CopyButton from './CopyButton.svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	interface Props {
 		onClick?: (() => void) | null;
 		onClose?: (() => void) | null;
 		error: Error;
+		classes?: {
+			root?: string;
+		};
 	}
 
-	let { onClick = null, onClose = null, error }: Props = $props();
+	let { onClick = null, onClose = null, error, classes }: Props = $props();
 
 	// Parse error content to extract status code and categorize
 	const errorContent = $derived(parseErrorContent(error));
@@ -18,7 +22,7 @@
 	const isServerError = $derived(errorContent.status >= 500);
 
 	// Determine contextual error heading based on error category
-	const errorHeading = $derived(() => {
+	const errorHeading = $derived.by(() => {
 		if (isServerError) {
 			return 'Server Error';
 		} else if (isClientError) {
@@ -34,11 +38,14 @@
 <!--error component-->
 <div in:fade class="flex items-center justify-center">
 	<div
-		class="dark:bg-surface2 dark:border-surface3 bg-background relative flex w-full flex-col items-center gap-4 rounded-lg p-4 dark:border"
+		class={twMerge(
+			"dark:bg-surface2 dark:border-surface3 bg-background relative flex w-full flex-col items-center gap-4 rounded-lg p-4 dark:border",
+			classes?.root
+		)}
 	>
 		{#if onClose}
 			<button type="button" onclick={onClose} class="icon-button absolute end-2.5 top-3 ms-auto">
-				<X class="h-5 w-5" />
+				<X class="h-6 w-6" />
 				<span class="sr-only">Close error</span>
 			</button>
 		{/if}
