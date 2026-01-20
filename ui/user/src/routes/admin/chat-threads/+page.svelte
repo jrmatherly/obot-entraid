@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { tooltip } from '$lib/actions/tooltip.svelte';
+	import { EmptyState } from '$lib/components/empty-state';
 	import Layout from '$lib/components/Layout.svelte';
 	import Search from '$lib/components/Search.svelte';
 	import Table from '$lib/components/table/Table.svelte';
@@ -19,7 +20,7 @@
 	} from '$lib/url';
 	import { openUrl } from '$lib/utils';
 	import { debounce } from 'es-toolkit';
-	import { Eye, LoaderCircle, MessageCircle } from 'lucide-svelte';
+	import { Eye, LoaderCircle } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { twMerge } from 'tailwind-merge';
@@ -141,13 +142,10 @@
 						<LoaderCircle class="text-primary size-8 animate-spin" />
 					</div>
 				{:else if filteredThreads.length === 0}
-					<div class="flex w-full flex-col items-center justify-center py-12 text-center">
-						<MessageCircle class="text-on-surface1 size-24 opacity-50" />
-						<h3 class="text-on-surface1 mt-4 text-lg font-semibold">No threads available</h3>
-						<p class="text-on-surface1 mt-2 text-sm font-light">
-							Threads will appear here once they are created.
-						</p>
-					</div>
+					<EmptyState
+						heading="No Threads Available"
+						description="Threads will appear here once they are created."
+					/>
 				{:else}
 					<Table
 						data={tableData}

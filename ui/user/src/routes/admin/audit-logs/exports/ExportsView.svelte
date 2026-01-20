@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { tooltip } from '$lib/actions/tooltip.svelte';
 	import Confirm from '$lib/components/Confirm.svelte';
+	import { EmptyState } from '$lib/components/empty-state';
 	import Table from '$lib/components/table/Table.svelte';
 	import { AdminService } from '$lib/services';
 	import type { AuditLogExport } from '$lib/services/admin/types';
@@ -140,13 +141,10 @@
 			<LoaderCircle class="size-6 animate-spin" />
 		</div>
 	{:else if exports.length === 0}
-		<div class="my-12 flex w-md flex-col items-center gap-4 self-center text-center">
-			<FileArchive class="text-surface3 size-24 opacity-25" />
-			<h4 class="text-on-surface1 text-lg font-semibold">No exports found.</h4>
-			<p class="text-on-surface1 text-sm font-light">
-				Create your first audit log export to get started.
-			</p>
-		</div>
+		<EmptyState
+			heading="No Exports Found"
+			description="Create your first audit log export to get started."
+		/>
 	{:else}
 		<Table
 			bind:this={tableRef}
