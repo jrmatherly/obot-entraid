@@ -38,6 +38,12 @@
 		}, 300);
 	}
 
+	function handleKeyDown(e: KeyboardEvent) {
+		if (e.key === 'Escape') {
+			clear();
+		}
+	}
+
 	export function clear() {
 		if (input) {
 			input.value = '';
@@ -59,6 +65,7 @@
 			klass
 		)}
 		oninput={search}
+		onkeydown={handleKeyDown}
 		onmousedown={onMouseDown}
 		onmouseup={onMouseUp}
 	/>
