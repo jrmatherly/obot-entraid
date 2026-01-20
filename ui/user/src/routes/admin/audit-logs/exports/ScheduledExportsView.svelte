@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Confirm from '$lib/components/Confirm.svelte';
 	import DotDotDot from '$lib/components/DotDotDot.svelte';
+	import { EmptyState } from '$lib/components/empty-state';
 	import Table from '$lib/components/table/Table.svelte';
 	import { AdminService } from '$lib/services';
 	import type { ScheduledAuditLogExport } from '$lib/services/admin/types';
@@ -180,13 +181,10 @@
 			<LoaderCircle class="size-6 animate-spin" />
 		</div>
 	{:else if scheduledExports.length === 0}
-		<div class="my-12 flex w-md flex-col items-center gap-4 self-center text-center">
-			<Calendar class="text-surface3 size-24 opacity-50" />
-			<h4 class="text-on-surface1 text-lg font-semibold">No export schedules found.</h4>
-			<p class="text-on-surface1 text-sm font-light">
-				Create your first export schedule to automate your audit log exports.
-			</p>
-		</div>
+		<EmptyState
+			heading="No export schedules found"
+			description="Create your first export schedule to automate your audit log exports."
+		/>
 	{:else}
 		<Table
 			bind:this={tableRef}
