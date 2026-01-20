@@ -3,10 +3,10 @@ module github.com/obot-platform/obot
 go 1.25.5
 
 replace (
-	github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.9
-	github.com/obot-platform/mcp-oauth-proxy => github.com/jrmatherly/mcp-oauth-proxy v0.1.3
-	github.com/obot-platform/nah => github.com/jrmatherly/nah v0.1.2
-	github.com/obot-platform/namegenerator => github.com/jrmatherly/namegenerator v0.1.0
+	github.com/obot-platform/kinm => github.com/jrmatherly/kinm v0.1.10
+	github.com/obot-platform/mcp-oauth-proxy => github.com/jrmatherly/mcp-oauth-proxy v0.1.4
+	github.com/obot-platform/nah => github.com/jrmatherly/nah v0.1.4
+	github.com/obot-platform/namegenerator => github.com/jrmatherly/namegenerator v0.1.1
 	github.com/obot-platform/obot/apiclient => ./apiclient
 	github.com/obot-platform/obot/logger => ./logger
 )
@@ -78,7 +78,7 @@ require (
 	k8s.io/component-base v0.35.0
 	k8s.io/gengo/v2 v2.0.0-20251215205346-5ee0d033ba5b
 	k8s.io/kube-openapi v0.0.0-20251125145642-4e65d59e963e
-	sigs.k8s.io/controller-runtime v0.22.4
+	sigs.k8s.io/controller-runtime v0.23.0
 	sigs.k8s.io/yaml v1.6.0
 )
 

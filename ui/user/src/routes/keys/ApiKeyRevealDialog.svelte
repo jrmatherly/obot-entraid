@@ -45,7 +45,7 @@
 			</div>
 
 			<div class="flex flex-col gap-2">
-				<label class="text-sm font-medium">Your API Key</label>
+				<span class="text-sm font-medium">Your API Key</span>
 				<div class="flex items-center gap-2">
 					<div class="bg-surface1 flex flex-1 items-center gap-2 rounded-md border px-3 py-2">
 						<KeyRound class="text-on-surface1 size-4 flex-shrink-0" />

@@ -2,9 +2,9 @@
 	// Imports
 	import { resolve } from '$app/paths';
 	import { BoxIcon } from 'lucide-svelte';
-	import { type Component } from 'svelte';
 
 	// Props with TypeScript types
+	// Use typeof BoxIcon for icon type since lucide-svelte icons don't match Svelte 5 Component type
 	let {
 		icon = BoxIcon,
 		heading,
@@ -13,7 +13,7 @@
 		actionHref,
 		onAction
 	} = $props<{
-		icon?: Component;
+		icon?: typeof BoxIcon;
 		heading: string;
 		description: string;
 		actionText?: string;

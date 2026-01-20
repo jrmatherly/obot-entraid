@@ -161,8 +161,8 @@
 				<p class="input-description">Leave empty for no expiration</p>
 			</div>
 
-			<div class="flex flex-col gap-2">
-				<label class="input-label">MCP Servers</label>
+			<div class="flex flex-col gap-2" role="group" aria-labelledby="mcp-servers-label">
+				<span id="mcp-servers-label" class="input-label">MCP Servers</span>
 				<p class="input-description">Select which MCP servers this API key can access</p>
 				{#if serverError}
 					<p class="text-xs text-red-600 dark:text-red-400">Select at least one server</p>
