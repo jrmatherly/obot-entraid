@@ -17,7 +17,7 @@ require (
 	github.com/coreos/go-oidc/v3 v3.14.1 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20220118164431-d8423dcdf344 // indirect
-	github.com/go-jose/go-jose/v4 v4.1.1 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
@@ -31,7 +31,6 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.46.0 // indirect
 	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sys v0.39.0 // indirect
