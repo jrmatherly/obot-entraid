@@ -30,11 +30,11 @@ require (
 	github.com/go-git/go-git/v5 v5.16.4
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/uuid v1.6.0
-	github.com/gptscript-ai/chat-completion-client v0.0.0-20250224164718-139cb4507b1d
-	github.com/gptscript-ai/cmd v0.0.0-20250530150401-bc71fddf8070
-	github.com/gptscript-ai/datasets v0.0.0-20251105164704-09ff940a99ef
-	github.com/gptscript-ai/go-gptscript v0.9.8
-	github.com/gptscript-ai/gptscript v0.9.8
+	github.com/gptscript-ai/chat-completion-client v0.0.0-20260529163740-88dd50945c18
+	github.com/gptscript-ai/cmd v0.0.0-20260729144516-2d3c9c953ff3
+	github.com/gptscript-ai/datasets v0.0.0-20260411003342-f47a32078675
+	github.com/gptscript-ai/go-gptscript v0.9.9
+	github.com/gptscript-ai/gptscript v0.9.9
 	github.com/jackc/pgx/v5 v5.8.0
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de
 	github.com/moby/moby/api v1.52.0-alpha.1

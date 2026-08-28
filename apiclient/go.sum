@@ -5,8 +5,10 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
 github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
-github.com/gptscript-ai/go-gptscript v0.9.8 h1:F2XciaODaQYUum4sBXtDLymkoEpD7DivdXNER6p7+Ng=
-github.com/gptscript-ai/go-gptscript v0.9.8/go.mod h1:UDBhrLZmLDB0EMo8NZH6lu9Mm4iacMTfk9teUmDYlHs=
+github.com/google/jsonschema-go v0.4.2 h1:tmrUohrwoLZZS/P3x7ex0WAVknEkBZM46iALbcqoRA8=
+github.com/google/jsonschema-go v0.4.2/go.mod h1:r5quNTdLOYEz95Ru18zA0ydNbBuYoo9tgaYcxEYhJVE=
+github.com/gptscript-ai/go-gptscript v0.9.9 h1:7X9FteRK5li546JGTcfF0vgPl/DJ5TZNZCyb74P8u6g=
+github.com/gptscript-ai/go-gptscript v0.9.9/go.mod h1:8JGZNO+x4tkTrkT1q5PMrVCKY2AcnS/Ru8WCNvzLYIg=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
