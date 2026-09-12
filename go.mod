@@ -42,8 +42,8 @@ require (
 	github.com/modelcontextprotocol/go-sdk v0.2.0
 	github.com/nanobot-ai/nanobot v0.0.50
 	github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037
-	github.com/obot-platform/kinm v0.0.0-20250905213846-3c65d6845f83
-	github.com/obot-platform/nah v0.0.0-20250418220644-1b9278409317
+	github.com/obot-platform/kinm v0.0.0-20260909184906-93ece09a484c
+	github.com/obot-platform/nah v0.0.0-20260903153505-fafe94344bbd
 	github.com/obot-platform/obot/apiclient v0.0.0-20260113205558-6d1a7813b244
 	github.com/obot-platform/obot/logger v0.0.0-20260113205558-6d1a7813b244
 	github.com/onsi/gomega v1.39.0
