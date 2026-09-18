@@ -8,7 +8,7 @@ replace github.com/oauth2-proxy/oauth2-proxy/v7 => github.com/obot-platform/oaut
 
 require (
 	github.com/lib/pq v1.10.9
-	github.com/oauth2-proxy/oauth2-proxy/v7 v7.8.1
+	github.com/oauth2-proxy/oauth2-proxy/v7 v7.15.2
 )
 
 require (
